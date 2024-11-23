@@ -4,7 +4,7 @@ My solutions to the Advent of Code 2024 puzzles in Rust 🦀
 
 ## Requirements
 
-* [Rust](https://www.rust-lang.org/) 1.56.1 or later
+* [Rust](https://www.rust-lang.org/) 1.70.0 or later
 
 ## Running the tests
 
