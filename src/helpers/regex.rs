@@ -8,7 +8,7 @@ pub trait CapturesHelper {
         T: FromStr;
 }
 
-impl<'h> CapturesHelper for Captures<'h> {
+impl CapturesHelper for Captures<'_> {
     fn ez_get<T>(&self, name: &str) -> T
     where
         T: FromStr,
