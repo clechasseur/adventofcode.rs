@@ -10,7 +10,7 @@ pub fn part_1() -> i64 {
 pub fn part_2() -> i64 {
     let counts = list(deux).counts();
     list(un)
-        .map(|n| n * (counts.get(&n).copied().unwrap_or(0) as i64))
+        .map(|n| n * (counts.get(&n).copied().unwrap_or_default() as i64))
         .sum()
 }
 
