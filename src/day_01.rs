@@ -1,10 +1,9 @@
 use itertools::Itertools;
-use num::abs;
 
 use crate::input::day_01::INPUT;
 
 pub fn part_1() -> i64 {
-    list(un).zip(list(deux)).map(|(a, b)| abs(a - b)).sum()
+    list(un).zip(list(deux)).map(|(a, b)| (a - b).abs()).sum()
 }
 
 pub fn part_2() -> i64 {
