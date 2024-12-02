@@ -26,6 +26,10 @@ cargo_tarpaulin := tool + (if toolchain != "" { " +" + toolchain } else { " +1.7
 default:
     @just --list
 
+# Run main executable
+run *extra_args:
+    {{cargo}} run {{all_features_flag}} {{target_tuple_flag}} {{ if extra_args != '' { '-- ' + extra_args } else { '' } }}
+
 # Run clippy and rustfmt on workspace files
 tidy: clippy fmt
 
