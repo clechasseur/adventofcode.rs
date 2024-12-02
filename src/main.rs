@@ -49,7 +49,7 @@ struct Cli {
 
 fn parse_day(day: &str) -> Result<u32, String> {
     let day = day.parse().map_err(|e| format!("{e:?}"))?;
-    if (1..(RUNNERS.len() as u32)).contains(&day) {
+    if (1..=(RUNNERS.len() as u32)).contains(&day) {
         Ok(day)
     } else {
         Err(format!("{day} is not in 1..={}", RUNNERS.len()))

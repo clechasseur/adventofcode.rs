@@ -113,6 +113,33 @@ impl Input {
     {
         self.into_pairs().unwrap()
     }
+
+    pub fn into_vecs<T>(self) -> Result<Vec<Vec<T>>, anyhow::Error>
+    where
+        T: FromStr,
+        <T as FromStr>::Err: std::fmt::Debug,
+    {
+        String::try_from(self)?
+            .lines()
+            .map(|line| {
+                line.split_ascii_whitespace()
+                    .map(|value| {
+                        value
+                            .parse()
+                            .map_err(|e| anyhow::anyhow!("failed to parse \"{line}\": {e:?}"))
+                    })
+                    .collect()
+            })
+            .collect()
+    }
+
+    pub fn safe_into_vecs<T>(self) -> Vec<Vec<T>>
+    where
+        T: FromStr,
+        <T as FromStr>::Err: std::fmt::Debug,
+    {
+        self.into_vecs().unwrap()
+    }
 }
 
 impl TryFrom<Input> for String {
@@ -149,4 +176,12 @@ where
     <T as FromStr>::Err: std::fmt::Debug,
 {
     Input::year(year).day(day).safe_get().safe_into_pairs()
+}
+
+pub fn safe_get_input_as_vecs<T>(year: i32, day: u32) -> Vec<Vec<T>>
+where
+    T: FromStr,
+    <T as FromStr>::Err: std::fmt::Debug,
+{
+    Input::year(year).day(day).safe_get().safe_into_vecs()
 }
