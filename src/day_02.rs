@@ -2,16 +2,15 @@ use itertools::Itertools;
 
 use crate::helpers::input::safe_get_input_as_vecs;
 
-pub fn part_1() -> String {
-    input().into_iter().filter(|v| safe(v)).count().to_string()
+pub fn part_1() -> usize {
+    input().into_iter().filter(safe).count()
 }
 
-pub fn part_2() -> String {
+pub fn part_2() -> usize {
     input()
         .into_iter()
-        .filter(|v| dampened(v).iter().any(|v| safe(v)))
+        .filter(|v| dampened(v).iter().any(safe))
         .count()
-        .to_string()
 }
 
 fn input() -> Vec<Vec<i64>> {
@@ -29,7 +28,8 @@ fn example_input() -> Vec<Vec<i64>> {
     ]
 }
 
-fn safe(levels: &[i64]) -> bool {
+#[allow(clippy::ptr_arg)]
+fn safe(levels: &Vec<i64>) -> bool {
     let signum = (levels[0] - levels[1]).signum();
     levels.iter().tuple_windows().all(|(&a, &b)| {
         let new_diff = a - b;
