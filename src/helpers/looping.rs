@@ -112,7 +112,6 @@ impl<T> ExactSizeIterator for Looping<T> where T: Clone {}
 impl<T> FusedIterator for Looping<T> where T: Clone {}
 
 #[cfg(test)]
-#[cfg(feature = "utils")]
 mod tests {
     use super::*;
 

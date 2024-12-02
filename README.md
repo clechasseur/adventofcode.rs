@@ -4,36 +4,42 @@ My solutions to the Advent of Code 2024 puzzles in Rust 🦀
 
 ## Requirements
 
-* [Rust](https://www.rust-lang.org/) 1.70.0 or later
+* [Rust](https://www.rust-lang.org/) 1.74.1 or later
+* [aocf](https://crates.io/crates/aocf) CLI
 
-## Running the tests
+## Setting your session cookie
 
-### All puzzles for each day
+* Get your AoC session cookie by following [these instructions](https://github.com/nuxeh/aocf/blob/HEAD/cookie.md)
+* Save it locally by running:
 
-```sh
+```shell
+aocf set-cookie <COOKIE>
+```
+
+## Finding solutions
+
+### All solutions
+
+```shell
+cargo run
+```
+
+### Only a specific day
+
+```shell
+cargo run -- --day 1
+```
+
+### Only a specific part
+
+```shell
+cargo run -- --day 1 --part 1
+```
+
+## Running tests
+
+The tests are only for the helpers.
+
+```shell
 cargo test
-```
-
-#### With slow tests
-
-```sh
-cargo test --features slow
-```
-
-#### With tests for utility functions
-
-```sh
-cargo test --features utils
-```
-
-### Both puzzles for one day
-
-```sh
-cargo test day_01 --all-features
-```
-
-### Single puzzle
-
-```sh
-cargo test day_01_part_1 --all-features
 ```

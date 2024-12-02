@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        all-features: [ false, true ]
+        all-features: [ false ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -65,7 +65,7 @@ jobs:
         toolchain: [ 1.74.1, stable ]
         os: [ ubuntu ]
         ignore-lock: [ false ]
-        all-features: [ true ]
+        all-features: [ false ]
         include:
           - experimental: false
     runs-on: ${{ matrix.os }}-latest
