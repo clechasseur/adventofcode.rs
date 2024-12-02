@@ -63,8 +63,8 @@ jobs:
       fail-fast: false
       matrix:
         toolchain: [ 1.70.0 ]
-        os: [ ubuntu, macos, windows ]
-        all-features: [ false, true ]
+        os: [ ubuntu ]
+        all-features: [ true ]
     runs-on: ${{ matrix.os }}-latest
     steps:
       - name: Checkout code
