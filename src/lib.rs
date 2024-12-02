@@ -4,4 +4,3 @@
 
 pub mod day_01;
 pub(crate) mod helpers;
-pub(crate) mod input;

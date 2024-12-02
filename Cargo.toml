@@ -9,6 +9,8 @@ slow = []
 utils = []
 
 [dependencies]
+aocf = "0.1.21"
+anyhow = "1.0.93"
 itertools = "0.13.0"
 num = "0.4.3"
 regex = "1.11.1"

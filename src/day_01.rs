@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-use crate::input::day_01::INPUT;
+use crate::helpers::input::safe_get_input_as_pairs;
 
 pub fn part_1() -> i64 {
     list(un).zip(list(deux)).map(|(a, b)| (a - b).abs()).sum()
@@ -15,15 +15,18 @@ pub fn part_2() -> i64 {
 
 fn list<F>(f: F) -> impl Iterator<Item = i64>
 where
-    F: Fn(&(i64, i64)) -> i64,
+    F: Fn((i64, i64)) -> i64,
 {
-    INPUT.iter().map(f).sorted_unstable()
+    safe_get_input_as_pairs(2024, 1)
+        .into_iter()
+        .map(f)
+        .sorted_unstable()
 }
 
-fn un(value: &(i64, i64)) -> i64 {
+fn un(value: (i64, i64)) -> i64 {
     value.0
 }
 
-fn deux(value: &(i64, i64)) -> i64 {
+fn deux(value: (i64, i64)) -> i64 {
     value.1
 }
