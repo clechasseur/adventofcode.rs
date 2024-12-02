@@ -5,8 +5,8 @@ edition = "2021"
 rust-version = "1.74.1"
 
 [dependencies]
-aocf = "0.1.21"
 anyhow = "1.0.93"
+aocf = "0.1.21"
 clap = { version = "4.5.21", features = ["derive"] }
 itertools = "0.13.0"
 num = "0.4.3"
