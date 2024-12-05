@@ -140,6 +140,23 @@ impl Input {
     {
         self.into_vecs().unwrap()
     }
+
+    pub fn into_matrix<T>(self) -> Result<Vec<Vec<T>>, anyhow::Error>
+    where
+        T: From<char>,
+    {
+        Ok(String::try_from(self)?
+            .lines()
+            .map(|line| line.chars().map(Into::into).collect())
+            .collect())
+    }
+
+    pub fn safe_into_matrix<T>(self) -> Vec<Vec<T>>
+    where
+        T: From<char>,
+    {
+        self.into_matrix().unwrap()
+    }
 }
 
 impl TryFrom<Input> for String {
@@ -184,4 +201,11 @@ where
     <T as FromStr>::Err: std::fmt::Debug,
 {
     Input::year(year).day(day).safe_get().safe_into_vecs()
+}
+
+pub fn safe_get_input_as_matrix<T>(year: i32, day: u32) -> Vec<Vec<T>>
+where
+    T: From<char>,
+{
+    Input::year(year).day(day).safe_get().safe_into_matrix()
 }
