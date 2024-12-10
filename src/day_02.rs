@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-use crate::helpers::input::safe_get_input_as_vecs;
+use crate::helpers::input::safe_get_input_as_many_vecs;
 
 pub fn part_1() -> usize {
     input().into_iter().filter(safe).count()
@@ -14,7 +14,7 @@ pub fn part_2() -> usize {
 }
 
 fn input() -> Vec<Vec<i64>> {
-    safe_get_input_as_vecs(2024, 2)
+    safe_get_input_as_many_vecs(2024, 2)
 }
 
 #[allow(clippy::ptr_arg)]
