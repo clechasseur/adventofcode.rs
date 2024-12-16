@@ -1,6 +1,7 @@
 pub mod direction;
 pub mod direction_4;
 pub mod direction_8;
+pub mod forth;
 pub mod input;
 pub mod looping;
 pub mod pt;

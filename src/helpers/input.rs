@@ -4,7 +4,7 @@ use anyhow::anyhow;
 use aocf::Aoc;
 use itertools::Itertools;
 
-pub const DEFAULT_DATA_SEPARATORS: &[char] = &[' ', '\t', '|', ','];
+pub const DEFAULT_DATA_SEPARATORS: &[char] = &[' ', '\t', '|', ',', ':'];
 
 #[derive(Debug)]
 pub struct Input<'a> {
@@ -210,10 +210,11 @@ impl<'a> Input<'a> {
             .map(|line| {
                 let line = line.as_ref();
                 line.split(separators)
+                    .filter(|value| !value.is_empty())
                     .map(|value| {
-                        value
-                            .parse()
-                            .map_err(|e| anyhow::anyhow!("failed to parse \"{line}\": {e:?}"))
+                        value.parse().map_err(|e| {
+                            anyhow::anyhow!("failed to parse \"{value}\" in \"{line}\": {e:?}")
+                        })
                     })
                     .collect()
             })
