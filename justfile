@@ -17,6 +17,9 @@ message_format_flag := if message_format != "" { "--message-format " + message_f
 target_tuple := ""
 target_tuple_flag := if target_tuple != "" { "--target " + target_tuple } else { "" }
 
+release := "false"
+release_flag := if release == "true" { "--release" } else { "" }
+
 # Note: there seems to be an issue in `cargo-tarpaulin` when using Rust 1.75.0 or later - it reports some missing line coverage.
 # I've entered an issue: https://github.com/xd009642/tarpaulin/issues/1438
 # In the meantime, let's pin the Rust version used for code coverage to 1.74.1 until we know what's happening.
@@ -28,7 +31,7 @@ default:
 
 # Run main executable
 run *extra_args:
-    {{cargo}} run {{all_features_flag}} {{target_tuple_flag}} {{ if extra_args != '' { '-- ' + extra_args } else { '' } }}
+    {{cargo}} run {{all_features_flag}} {{target_tuple_flag}} {{release_flag}} {{ if extra_args != '' { '-- ' + extra_args } else { '' } }}
 
 # Run clippy and rustfmt on workspace files
 tidy: clippy fmt
@@ -43,15 +46,15 @@ fmt:
 
 # Run `cargo check` on workspace
 check *extra_args:
-    {{cargo}} check --workspace {{all_targets_flag}} {{all_features_flag}} {{message_format_flag}} {{target_tuple_flag}} {{extra_args}}
+    {{cargo}} check --workspace {{all_targets_flag}} {{all_features_flag}} {{message_format_flag}} {{target_tuple_flag}} {{release_flag}} {{extra_args}}
 
 # Run `cargo build` on workspace
 build *extra_args:
-    {{cargo}} build --workspace {{all_targets_flag}} {{all_features_flag}} {{message_format_flag}} {{target_tuple_flag}} {{extra_args}}
+    {{cargo}} build --workspace {{all_targets_flag}} {{all_features_flag}} {{message_format_flag}} {{target_tuple_flag}} {{release_flag}} {{extra_args}}
 
 # Run `cargo test` on workspace
 test *extra_args:
-    {{cargo}} test --workspace {{all_features_flag}} {{message_format_flag}} {{target_tuple_flag}} {{extra_args}}
+    {{cargo}} test --workspace {{all_features_flag}} {{message_format_flag}} {{target_tuple_flag}} {{release_flag}} {{extra_args}}
 
 # Run `cargo update` to update dependencies in Cargo.lock
 update *extra_args:

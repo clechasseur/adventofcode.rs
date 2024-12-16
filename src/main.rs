@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use adventofcode2024_clp::helpers::solvers::Solvers;
 use adventofcode2024_clp::solvers;
 use clap::Parser;
@@ -31,7 +33,10 @@ fn run_day(solvers: &Solvers, day: u32, part: Option<u32>) {
 }
 
 fn run_part(solvers: &Solvers, day: u32, part: u32) {
-    println!("  Part {part}: {}", solvers.solve(day as usize, part as usize));
+    let start = Instant::now();
+    let solution = solvers.solve(day as usize, part as usize);
+    let elapsed = start.elapsed();
+    println!("  Part {part}: {solution} ({elapsed:.2?})");
 }
 
 /// Find solution(s) to Advent of Code 2024 challenges

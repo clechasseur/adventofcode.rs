@@ -7,6 +7,7 @@ pub mod day_02;
 pub mod day_03;
 pub mod day_04;
 pub mod day_05;
+pub mod day_06;
 pub mod helpers;
 
-build_solvers!(01, 02, 03, 04, 05);
+build_solvers!(01, 02, 03, 04, 05, 06);

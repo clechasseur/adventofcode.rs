@@ -2,10 +2,8 @@ use std::cmp::min;
 use std::iter::FusedIterator;
 use std::vec;
 
-use itertools::Itertools;
-
 pub trait LoopingItertools: Iterator {
-    fn looping(self, size: usize) -> Looping<Self::Item>
+    fn looping(self, size: usize) -> Option<Looping<Self::Item>>
     where
         Self: Sized,
         Self::Item: PartialEq,
@@ -13,16 +11,19 @@ pub trait LoopingItertools: Iterator {
         let mut prefix = Vec::new();
 
         for e in self {
-            match prefix.iter().find_position(|&ve| *ve == e) {
-                Some((start, _)) => {
+            match prefix.iter().position(|ve| *ve == e) {
+                Some(start) => {
                     let cycle = prefix.split_off(start);
-                    return Looping::new(prefix, cycle, size);
+                    return Some(Looping::new(prefix, cycle, size));
                 },
                 None => prefix.push(e),
             }
+            if prefix.len() == size {
+                break;
+            }
         }
 
-        panic!("no loop detected");
+        None
     }
 }
 
@@ -31,20 +32,30 @@ impl<I> LoopingItertools for I where I: Iterator + ?Sized {}
 #[derive(Debug, Clone)]
 pub struct Looping<T> {
     prefix: vec::IntoIter<T>,
+    prefix_len: usize,
     cycle: Vec<T>,
     cycle_pos: usize,
     cycle_size: usize,
 }
 
 impl<T> Looping<T> {
-    pub fn new(prefix: Vec<T>, cycle: Vec<T>, size: usize) -> Self {
+    fn new(prefix: Vec<T>, cycle: Vec<T>, size: usize) -> Self {
         let prefix_len = prefix.len();
         Self {
             prefix: prefix.into_iter(),
+            prefix_len,
             cycle,
             cycle_pos: 0,
             cycle_size: size.saturating_sub(prefix_len),
         }
+    }
+
+    pub fn prefix_len(&self) -> usize {
+        self.prefix_len
+    }
+
+    pub fn cycle_items(&self) -> &[T] {
+        &self.cycle
     }
 
     fn cycle_len(&self) -> usize {
@@ -113,19 +124,21 @@ impl<T> FusedIterator for Looping<T> where T: Clone {}
 
 #[cfg(test)]
 mod tests {
+    use itertools::Itertools;
+
     use super::*;
 
     const DATA: &[usize] = &[1, 2, 3, 4, 5, 6, 3];
 
     #[test]
     fn test_iterator() {
-        let v = DATA.iter().looping(11).copied().collect_vec();
+        let v = DATA.iter().looping(11).unwrap().copied().collect_vec();
         assert_eq!([1, 2, 3, 4, 5, 6, 3, 4, 5, 6, 3], *v.as_slice());
     }
 
     #[test]
     fn test_exact_size() {
-        let mut i = DATA.iter().looping(11);
+        let mut i = DATA.iter().looping(11).unwrap();
         assert_eq!(11, i.len());
         assert_eq!((11, Some(11)), i.size_hint());
 
@@ -145,10 +158,10 @@ mod tests {
 
     #[test]
     fn test_count() {
-        let i = DATA.iter().looping(11);
+        let i = DATA.iter().looping(11).unwrap();
         assert_eq!(11, i.count());
 
-        let mut i = DATA.iter().looping(11);
+        let mut i = DATA.iter().looping(11).unwrap();
         let _ = i.next();
         let _ = i.next();
         let _ = i.next();
@@ -157,16 +170,16 @@ mod tests {
 
     #[test]
     fn test_last() {
-        let i = DATA.iter().copied().looping(11);
+        let i = DATA.iter().copied().looping(11).unwrap();
         assert_eq!(Some(3), i.last());
 
-        let mut i = DATA.iter().copied().looping(11);
+        let mut i = DATA.iter().copied().looping(11).unwrap();
         let _ = i.next();
         let _ = i.next();
         let _ = i.next();
         assert_eq!(Some(3), i.last());
 
-        let mut i = DATA.iter().copied().looping(11);
+        let mut i = DATA.iter().copied().looping(11).unwrap();
         while i.next().is_some() {}
         assert_eq!(None, i.last());
     }
@@ -176,23 +189,28 @@ mod tests {
     fn test_nth() {
         let expected = [1, 2, 3, 4, 5, 6, 3, 4, 5, 6, 3];
 
-        let mut i = DATA.iter().copied().looping(11);
+        let mut i = DATA.iter().copied().looping(11).unwrap();
         let mut ei = expected.iter().copied();
         while let Some(e) = i.nth(0) {
-            println!("{}", e);
             assert_eq!(ei.next(), Some(e));
         }
         assert!(ei.next().is_none());
 
-        let mut i = DATA.iter().copied().looping(11);
+        let mut i = DATA.iter().copied().looping(11).unwrap();
         assert_eq!(Some(2), i.nth(1));
         assert_eq!(Some(4), i.nth(1));
         assert_eq!(Some(3), i.nth(2));
         assert!(i.nth(7).is_none());
         assert!(i.next().is_none());
 
-        let mut i = DATA.iter().copied().looping(11);
+        let mut i = DATA.iter().copied().looping(11).unwrap();
         assert_eq!(Some(3), i.nth(10));
         assert!(i.next().is_none());
+    }
+
+    #[test]
+    fn test_no_loop() {
+        let data = [1, 2, 3, 4, 5, 6];
+        assert!(data.iter().copied().looping(11).is_none());
     }
 }
