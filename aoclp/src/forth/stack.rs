@@ -2,8 +2,8 @@
 
 use std::ops::Deref;
 
-use crate::helpers::forth;
-use crate::helpers::forth::Value;
+use crate::forth;
+use crate::forth::Value;
 
 /// A simple stack wrapper over [`Vec`].
 ///

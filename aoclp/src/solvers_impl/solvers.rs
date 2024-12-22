@@ -8,11 +8,11 @@ use itertools::Itertools;
 macro_rules! build_solvers {
     ( $({ $year:literal, [$($day:literal),+] }),+ ) => {
         ::paste::paste! {
-            pub fn solvers() -> $crate::helpers::solvers::Solvers {
-                let mut solvers = $crate::helpers::solvers::Solvers::default();
+            pub fn solvers() -> $crate::solvers_impl::solvers::Solvers {
+                let mut solvers = $crate::solvers_impl::solvers::Solvers::default();
                 $(
                     $(
-                        solvers.push_day($year, $crate::[<y $year>]::[<day_ $day>]::part_1, $crate::[<y $year>]::[<day_ $day>]::part_2);
+                        solvers.push_day($year, [<y $year>]::[<day_ $day>]::part_1, [<y $year>]::[<day_ $day>]::part_2);
                     )+
                 )+
                 solvers

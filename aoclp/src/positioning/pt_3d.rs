@@ -6,7 +6,7 @@ use std::sync::OnceLock;
 use num::{zero, Signed, Zero};
 use regex::Regex;
 
-use crate::helpers::regex::CapturesHelper;
+use crate::regex::CapturesHelper;
 
 /// A point in 3D space.
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]

@@ -99,14 +99,24 @@ dependencies = [
 ]
 
 [[package]]
-name = "aoclp_solutions"
+name = "aoclp"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "aocf",
- "clap 4.5.23",
  "itertools",
  "num",
+ "regex",
+ "strum",
+]
+
+[[package]]
+name = "aoclp_solutions"
+version = "0.1.0"
+dependencies = [
+ "aoclp",
+ "clap 4.5.23",
+ "itertools",
  "paste",
  "regex",
  "strum",

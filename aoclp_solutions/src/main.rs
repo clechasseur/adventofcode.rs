@@ -1,6 +1,6 @@
 use std::time::Instant;
 
-use aoclp_solutions::helpers::solvers::Solvers;
+use aoclp::solvers_impl::solvers::Solvers;
 use aoclp_solutions::solvers;
 use clap::Parser;
 

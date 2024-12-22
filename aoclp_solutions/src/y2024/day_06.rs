@@ -3,13 +3,12 @@ use std::iter::successors;
 use std::ops::Range;
 use std::rc::Rc;
 
+use aoclp::looping::LoopingItertools;
+use aoclp::positioning::direction::four_points::Direction4;
+use aoclp::positioning::pt::Pt;
+use aoclp::positioning::turtle::Turtle;
+use aoclp::solvers_impl::input::safe_get_input_as_matrix;
 use itertools::Itertools;
-
-use crate::helpers::direction_4::Direction4;
-use crate::helpers::input::safe_get_input_as_matrix;
-use crate::helpers::looping::LoopingItertools;
-use crate::helpers::pt::Pt;
-use crate::helpers::turtle::Turtle;
 
 pub fn part_1() -> usize {
     input()

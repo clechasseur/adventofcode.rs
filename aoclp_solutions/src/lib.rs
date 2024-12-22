@@ -2,7 +2,8 @@
 
 #![allow(dead_code)]
 
-pub mod helpers;
+use aoclp::build_solvers;
+
 pub mod y2024;
 
 build_solvers! {

@@ -44,15 +44,15 @@ impl<'a> Input<'a> {
         self
     }
 
-    pub fn get(mut self) -> Result<Self, anyhow::Error> {
+    pub fn get(mut self) -> crate::Result<Self> {
         let mut aoc = Aoc::new()
             .year(Some(self.year))
             .day(Some(self.day.ok_or(anyhow!("day not set"))?))
             .parse_cli(false)
             .init()
-            .map_err(|e| anyhow::anyhow!(e))?;
+            .map_err(|e| anyhow!(e))?;
 
-        self.data = Some(aoc.get_input(self.force).map_err(|e| anyhow::anyhow!(e))?);
+        self.data = Some(aoc.get_input(self.force).map_err(|e| anyhow!(e))?);
         Ok(self)
     }
 
@@ -60,7 +60,7 @@ impl<'a> Input<'a> {
         self.get().unwrap()
     }
 
-    pub fn into<T>(self) -> Result<T, anyhow::Error>
+    pub fn into<T>(self) -> crate::Result<T>
     where
         T: FromStr,
         <T as FromStr>::Err: std::fmt::Debug,
@@ -68,7 +68,7 @@ impl<'a> Input<'a> {
         self.data
             .ok_or(anyhow!("data not set"))?
             .parse()
-            .map_err(|e| anyhow::anyhow!("failed to parse data: {e:?}"))
+            .map_err(|e| anyhow!("failed to parse data: {e:?}"))
     }
 
     pub fn safe_into<T>(self) -> T
@@ -79,7 +79,7 @@ impl<'a> Input<'a> {
         self.into().unwrap()
     }
 
-    pub fn into_many<T>(self) -> Result<Vec<T>, anyhow::Error>
+    pub fn into_many<T>(self) -> crate::Result<Vec<T>>
     where
         T: FromStr,
         <T as FromStr>::Err: std::fmt::Debug,
@@ -88,7 +88,7 @@ impl<'a> Input<'a> {
             .lines()
             .map(|line| {
                 line.parse()
-                    .map_err(|e| anyhow::anyhow!("failed to parse \"{line}\": {e:?}"))
+                    .map_err(|e| anyhow!("failed to parse \"{line}\": {e:?}"))
             })
             .collect()
     }
@@ -101,7 +101,7 @@ impl<'a> Input<'a> {
         self.into_many().unwrap()
     }
 
-    pub fn into_many_pairs<T>(self) -> Result<Vec<(T, T)>, anyhow::Error>
+    pub fn into_many_pairs<T>(self) -> crate::Result<Vec<(T, T)>>
     where
         T: FromStr,
         <T as FromStr>::Err: std::fmt::Debug,
@@ -114,7 +114,7 @@ impl<'a> Input<'a> {
                     .split(separators)
                     .filter(|value| !value.is_empty())
                     .collect_tuple()
-                    .ok_or(anyhow::anyhow!("invalid number of elements in \"{line}\""))?;
+                    .ok_or(anyhow!("invalid number of elements in \"{line}\""))?;
                 Ok((
                     a.parse()
                         .map_err(|e| anyhow!("failed to parse \"{a}\": {e:?}"))?,
@@ -133,7 +133,7 @@ impl<'a> Input<'a> {
         self.into_many_pairs().unwrap()
     }
 
-    pub fn into_many_vecs<T>(self) -> Result<Vec<Vec<T>>, anyhow::Error>
+    pub fn into_many_vecs<T>(self) -> Result<Vec<Vec<T>>, crate::Error>
     where
         T: FromStr,
         <T as FromStr>::Err: std::fmt::Debug,
@@ -151,9 +151,7 @@ impl<'a> Input<'a> {
     }
 
     #[allow(clippy::type_complexity)]
-    pub fn into_many_vecs_of_two_types<T, U>(
-        self,
-    ) -> Result<(Vec<Vec<T>>, Vec<Vec<U>>), anyhow::Error>
+    pub fn into_many_vecs_of_two_types<T, U>(self) -> crate::Result<(Vec<Vec<T>>, Vec<Vec<U>>)>
     where
         T: FromStr,
         U: FromStr,
@@ -182,7 +180,7 @@ impl<'a> Input<'a> {
         self.into_many_vecs_of_two_types().unwrap()
     }
 
-    pub fn into_matrix<T>(self) -> Result<Vec<Vec<T>>, anyhow::Error>
+    pub fn into_matrix<T>(self) -> crate::Result<Vec<Vec<T>>>
     where
         T: From<char>,
     {
@@ -199,7 +197,7 @@ impl<'a> Input<'a> {
         self.into_matrix().unwrap()
     }
 
-    fn parse_many_vecs<T, L, S>(lines: L, separators: &[char]) -> Result<Vec<Vec<T>>, anyhow::Error>
+    fn parse_many_vecs<T, L, S>(lines: L, separators: &[char]) -> crate::Result<Vec<Vec<T>>>
     where
         T: FromStr,
         <T as FromStr>::Err: std::fmt::Debug,
@@ -224,7 +222,7 @@ impl<'a> Input<'a> {
 }
 
 impl<'a> TryFrom<Input<'a>> for String {
-    type Error = anyhow::Error;
+    type Error = crate::Error;
 
     fn try_from(input: Input<'a>) -> Result<Self, Self::Error> {
         input.data.ok_or(anyhow!("data not set"))

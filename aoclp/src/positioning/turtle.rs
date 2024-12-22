@@ -3,9 +3,9 @@ use std::ops::{Add, Neg};
 
 use num::{zero, One, Zero};
 
-use crate::helpers::direction::{Direction, MovementDirection};
-use crate::helpers::direction_4::Direction4;
-use crate::helpers::pt::Pt;
+use crate::positioning::direction::four_points::Direction4;
+use crate::positioning::direction::{Direction, MovementDirection};
+use crate::positioning::pt::Pt;
 
 /// A [turtle] moving around 2D space.
 ///

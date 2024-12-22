@@ -2,9 +2,9 @@
 
 use std::rc::Rc;
 
-use crate::helpers::forth;
-use crate::helpers::forth::stack::Stack;
-use crate::helpers::forth::word::{Word, WordRc, Words};
+use crate::forth;
+use crate::forth::stack::Stack;
+use crate::forth::word::{Word, WordRc, Words};
 
 /// A custom (e.g. user-defined) [`Word`].
 ///
@@ -30,12 +30,12 @@ impl Word for CustomWord {
     /// ```
     /// use std::ops::Deref;
     ///
-    /// use aoclp_solutions::helpers::forth;
-    /// use aoclp_solutions::helpers::forth::stack::Stack;
-    /// use aoclp_solutions::helpers::forth::word::builtins::add_builtin_words;
-    /// use aoclp_solutions::helpers::forth::word::custom::CustomWord;
-    /// use aoclp_solutions::helpers::forth::word::value::ValueWord;
-    /// use aoclp_solutions::helpers::forth::word::Words;
+    /// use aoclp::forth;
+    /// use aoclp::forth::stack::Stack;
+    /// use aoclp::forth::word::builtins::add_builtin_words;
+    /// use aoclp::forth::word::custom::CustomWord;
+    /// use aoclp::forth::word::value::ValueWord;
+    /// use aoclp::forth::word::Words;
     ///
     /// let mut words = Words::new();
     /// add_builtin_words(&mut words);

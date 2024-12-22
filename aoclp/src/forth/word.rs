@@ -9,8 +9,8 @@ use std::collections::HashMap;
 use std::hash::Hash;
 use std::rc::Rc;
 
-use crate::helpers::forth;
-use crate::helpers::forth::stack::Stack;
+use crate::forth;
+use crate::forth::stack::Stack;
 
 /// Implementation of a Forth word.
 ///
@@ -100,9 +100,9 @@ where
 /// ```
 /// use std::ops::Deref;
 ///
-/// use aoclp_solutions::helpers::forth;
-/// use aoclp_solutions::helpers::forth::stack::Stack;
-/// use aoclp_solutions::helpers::forth::word::{wrap_fn_word, Words};
+/// use aoclp::forth;
+/// use aoclp::forth::stack::Stack;
+/// use aoclp::forth::word::{wrap_fn_word, Words};
 ///
 /// fn add_10(stack: &mut Stack, _dictionary: &Words) -> forth::Result<()> {
 ///     let value = stack.pop()?;

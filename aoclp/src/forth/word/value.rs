@@ -2,10 +2,10 @@
 
 use std::rc::Rc;
 
-use crate::helpers::forth;
-use crate::helpers::forth::stack::Stack;
-use crate::helpers::forth::word::{Word, WordRc, Words};
-use crate::helpers::forth::Value;
+use crate::forth;
+use crate::forth::stack::Stack;
+use crate::forth::word::{Word, WordRc, Words};
+use crate::forth::Value;
 
 /// A Forth [`Word`] that pushes a [`Value`] on the [`Stack`] when [`call`]ed.
 ///

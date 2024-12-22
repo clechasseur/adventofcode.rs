@@ -1,6 +1,5 @@
+use aoclp::solvers_impl::input::safe_get_input_as_many_vecs;
 use itertools::Itertools;
-
-use crate::helpers::input::safe_get_input_as_many_vecs;
 
 pub fn part_1() -> usize {
     input().into_iter().filter(safe).count()

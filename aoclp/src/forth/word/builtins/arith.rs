@@ -1,9 +1,9 @@
 //! Definition of built-in arithmetic Forth words, like `+`.
 
-use crate::helpers::forth;
-use crate::helpers::forth::stack::Stack;
-use crate::helpers::forth::word::Words;
-use crate::helpers::forth::Value;
+use crate::forth;
+use crate::forth::stack::Stack;
+use crate::forth::word::Words;
+use crate::forth::Value;
 
 // A little helper macro to save on code duplication for simple arithmetic operators.
 macro_rules! arith_op {
@@ -12,7 +12,7 @@ macro_rules! arith_op {
         $vis:vis $nam:ident($arith_op:tt);
     ) => {
         $(#[$attr])*
-        $vis fn $nam(stack: &mut $crate::helpers::forth::stack::Stack, _dictionary: &$crate::helpers::forth::word::Words) -> $crate::helpers::forth::Result<()> {
+        $vis fn $nam(stack: &mut $crate::forth::stack::Stack, _dictionary: &$crate::forth::word::Words) -> $crate::forth::Result<()> {
             let b = stack.pop()?;
             let a = stack.pop()?;
             stack.push(a $arith_op b);

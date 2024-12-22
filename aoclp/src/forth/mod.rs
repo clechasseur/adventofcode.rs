@@ -54,11 +54,11 @@
 pub mod stack;
 pub mod word;
 
-use crate::helpers::forth::stack::Stack;
-use crate::helpers::forth::word::builtins::add_builtin_words;
-use crate::helpers::forth::word::custom::CustomWord;
-use crate::helpers::forth::word::value::ValueWord;
-use crate::helpers::forth::word::{WordRc, Words};
+use crate::forth::stack::Stack;
+use crate::forth::word::builtins::add_builtin_words;
+use crate::forth::word::custom::CustomWord;
+use crate::forth::word::value::ValueWord;
+use crate::forth::word::{WordRc, Words};
 
 /// Values that can be pushed to a Forth [`Stack`] (`i64`s).
 pub type Value = i64;
@@ -79,7 +79,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// # Examples
 ///
 /// ```
-/// use aoclp_solutions::helpers::forth::Forth;
+/// use aoclp::forth::Forth;
 ///
 /// let mut forth = Forth::new();
 /// assert!(forth.eval("1 2 + 3 * DUP 4 SWAP").is_ok());
@@ -106,8 +106,8 @@ pub enum Error {
     /// # Examples
     ///
     /// ```
-    /// use aoclp_solutions::helpers::forth;
-    /// use aoclp_solutions::helpers::forth::Forth;
+    /// use aoclp::forth;
+    /// use aoclp::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert_eq!(Err(forth::Error::DivisionByZero), forth.eval("42 0 /"));
@@ -119,8 +119,8 @@ pub enum Error {
     /// # Examples
     ///
     /// ```
-    /// use aoclp_solutions::helpers::forth;
-    /// use aoclp_solutions::helpers::forth::Forth;
+    /// use aoclp::forth;
+    /// use aoclp::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert_eq!(Err(forth::Error::StackUnderflow), forth.eval("1 DROP DROP"));
@@ -132,8 +132,8 @@ pub enum Error {
     /// # Examples
     ///
     /// ```
-    /// use aoclp_solutions::helpers::forth;
-    /// use aoclp_solutions::helpers::forth::Forth;
+    /// use aoclp::forth;
+    /// use aoclp::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert_eq!(
@@ -152,8 +152,8 @@ pub enum Error {
     /// # Examples
     ///
     /// ```
-    /// use aoclp_solutions::helpers::forth;
-    /// use aoclp_solutions::helpers::forth::Forth;
+    /// use aoclp::forth;
+    /// use aoclp::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert_eq!(Err(forth::Error::InvalidWord), forth.eval(": 1 2 ;"));
@@ -224,7 +224,7 @@ impl Forth {
     /// Corresponding Rust example:
     ///
     /// ```
-    /// use aoclp_solutions::helpers::forth::Forth;
+    /// use aoclp::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert!(forth.eval(": foo 2 dup ; foo").is_ok());
@@ -251,7 +251,7 @@ impl Forth {
     /// Corresponding Rust example:
     ///
     /// ```
-    /// use aoclp_solutions::helpers::forth::Forth;
+    /// use aoclp::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert!(forth
@@ -277,7 +277,7 @@ impl Forth {
     /// Corresponding Rust example:
     ///
     /// ```
-    /// use aoclp_solutions::helpers::forth::Forth;
+    /// use aoclp::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert!(forth.eval("1 2 + : + - ; 3 4 +").is_ok());
@@ -302,7 +302,7 @@ impl Forth {
     /// Corresponding Rust example:
     ///
     /// ```
-    /// use aoclp_solutions::helpers::forth::Forth;
+    /// use aoclp::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert!(forth.eval(": foo : bar 2 ; bar bar ; foo bar").is_ok());
@@ -328,7 +328,7 @@ impl Forth {
     /// Corresponding Rust example:
     ///
     /// ```
-    /// use aoclp_solutions::helpers::forth::Forth;
+    /// use aoclp::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert!(forth.eval(": foo : foo 2 ; foo ; foo foo").is_ok());
@@ -342,8 +342,8 @@ impl Forth {
     /// be executed. For example:
     ///
     /// ```
-    /// use aoclp_solutions::helpers::forth;
-    /// use aoclp_solutions::helpers::forth::Forth;
+    /// use aoclp::forth;
+    /// use aoclp::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert_eq!(Err(forth::Error::UnknownWord), forth.eval("foo 1 2"));
@@ -355,7 +355,7 @@ impl Forth {
     /// Words are evaluated in a case-insensitive manner. For example:
     ///
     /// ```
-    /// use aoclp_solutions::helpers::forth::Forth;
+    /// use aoclp::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert!(forth.eval("1 DUP dup DuP dUp").is_ok());

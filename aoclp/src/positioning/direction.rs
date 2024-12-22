@@ -1,4 +1,7 @@
-use crate::helpers::pt::Pt;
+pub mod eight_points;
+pub mod four_points;
+
+use crate::positioning::pt::Pt;
 
 pub trait Direction {
     fn turn_left(&self) -> Self;

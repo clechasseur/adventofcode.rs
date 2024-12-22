@@ -1,6 +1,5 @@
+use aoclp::solvers_impl::input::safe_get_input_as_many_pairs;
 use itertools::Itertools;
-
-use crate::helpers::input::safe_get_input_as_many_pairs;
 
 pub fn part_1() -> i64 {
     list(un).zip(list(deux)).map(|(a, b)| (a - b).abs()).sum()

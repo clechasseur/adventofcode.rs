@@ -1,9 +1,8 @@
 use std::iter::once;
 
+use aoclp::forth::Forth;
+use aoclp::solvers_impl::input::safe_get_input_as_many_vecs;
 use itertools::{repeat_n, Itertools};
-
-use crate::helpers::forth::Forth;
-use crate::helpers::input::safe_get_input_as_many_vecs;
 
 pub fn part_1() -> i64 {
     solve(true)

@@ -1,11 +1,10 @@
 use std::collections::HashMap;
 use std::iter::successors;
 
+use aoclp::positioning::direction::eight_points::Direction8;
+use aoclp::positioning::pt::Pt;
+use aoclp::solvers_impl::input::safe_get_input_as_matrix;
 use strum::IntoEnumIterator;
-
-use crate::helpers::direction_8::Direction8;
-use crate::helpers::input::safe_get_input_as_matrix;
-use crate::helpers::pt::Pt;
 
 pub fn part_1() -> usize {
     WordSearch::default().xmas_count()

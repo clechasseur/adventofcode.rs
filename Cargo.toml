@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["aoclp_solutions"]
+members = ["aoclp", "aoclp_solutions"]
 default-members = ["aoclp_solutions"]
 
 [workspace.dependencies]

@@ -1,8 +1,8 @@
 //! Definition of built-in Forth words related to stack manipulation, like `DUP`.
 
-use crate::helpers::forth;
-use crate::helpers::forth::stack::Stack;
-use crate::helpers::forth::word::Words;
+use crate::forth;
+use crate::forth::stack::Stack;
+use crate::forth::word::Words;
 
 /// Duplicates the top stack value.
 ///
