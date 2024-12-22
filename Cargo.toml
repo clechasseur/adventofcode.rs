@@ -1,10 +1,9 @@
-[package]
-name = "adventofcode2024-clp"
-version = "0.1.0"
-edition = "2021"
-rust-version = "1.74.1"
+[workspace]
+resolver = "2"
+members = ["aoclp_solutions"]
+default-members = ["aoclp_solutions"]
 
-[dependencies]
+[workspace.dependencies]
 anyhow = "1.0.94"
 aocf = "0.1.21"
 clap = { version = "4.5.23", features = ["derive"] }

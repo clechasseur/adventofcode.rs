@@ -1,0 +1,15 @@
+[package]
+name = "aoclp_solutions"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.74.1"
+
+[dependencies]
+anyhow = { workspace = true }
+aocf = { workspace = true }
+clap = { workspace = true, features = ["derive"] }
+itertools = { workspace = true }
+num = { workspace = true }
+paste = { workspace = true }
+regex = { workspace = true }
+strum = { workspace = true, features = ["derive"] }

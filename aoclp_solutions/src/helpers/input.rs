@@ -112,6 +112,7 @@ impl<'a> Input<'a> {
             .map(|line| {
                 let (a, b) = line
                     .split(separators)
+                    .filter(|value| !value.is_empty())
                     .collect_tuple()
                     .ok_or(anyhow::anyhow!("invalid number of elements in \"{line}\""))?;
                 Ok((
