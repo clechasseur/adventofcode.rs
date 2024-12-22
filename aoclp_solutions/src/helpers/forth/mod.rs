@@ -50,6 +50,7 @@
 //! I'm a big fan of the [just](https://github.com/casey/just) command runner, so I included the `justfile` I used
 //! during development as part of the submission. It's based on a simple [template](https://github.com/clechasseur/rust-template/blob/main/justfile)
 //! I use for many of my Rust projects.
+
 pub mod stack;
 pub mod word;
 
@@ -78,7 +79,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// # Examples
 ///
 /// ```
-/// use adventofcode2024_clp::helpers::forth::Forth;
+/// use aoclp_solutions::helpers::forth::Forth;
 ///
 /// let mut forth = Forth::new();
 /// assert!(forth.eval("1 2 + 3 * DUP 4 SWAP").is_ok());
@@ -105,8 +106,8 @@ pub enum Error {
     /// # Examples
     ///
     /// ```
-    /// use adventofcode2024_clp::helpers::forth;
-    /// use adventofcode2024_clp::helpers::forth::Forth;
+    /// use aoclp_solutions::helpers::forth;
+    /// use aoclp_solutions::helpers::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert_eq!(Err(forth::Error::DivisionByZero), forth.eval("42 0 /"));
@@ -118,8 +119,8 @@ pub enum Error {
     /// # Examples
     ///
     /// ```
-    /// use adventofcode2024_clp::helpers::forth;
-    /// use adventofcode2024_clp::helpers::forth::Forth;
+    /// use aoclp_solutions::helpers::forth;
+    /// use aoclp_solutions::helpers::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert_eq!(Err(forth::Error::StackUnderflow), forth.eval("1 DROP DROP"));
@@ -131,8 +132,8 @@ pub enum Error {
     /// # Examples
     ///
     /// ```
-    /// use adventofcode2024_clp::helpers::forth;
-    /// use adventofcode2024_clp::helpers::forth::Forth;
+    /// use aoclp_solutions::helpers::forth;
+    /// use aoclp_solutions::helpers::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert_eq!(
@@ -151,8 +152,8 @@ pub enum Error {
     /// # Examples
     ///
     /// ```
-    /// use adventofcode2024_clp::helpers::forth;
-    /// use adventofcode2024_clp::helpers::forth::Forth;
+    /// use aoclp_solutions::helpers::forth;
+    /// use aoclp_solutions::helpers::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert_eq!(Err(forth::Error::InvalidWord), forth.eval(": 1 2 ;"));
@@ -223,7 +224,7 @@ impl Forth {
     /// Corresponding Rust example:
     ///
     /// ```
-    /// use adventofcode2024_clp::helpers::forth::Forth;
+    /// use aoclp_solutions::helpers::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert!(forth.eval(": foo 2 dup ; foo").is_ok());
@@ -250,7 +251,7 @@ impl Forth {
     /// Corresponding Rust example:
     ///
     /// ```
-    /// use adventofcode2024_clp::helpers::forth::Forth;
+    /// use aoclp_solutions::helpers::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert!(forth
@@ -276,7 +277,7 @@ impl Forth {
     /// Corresponding Rust example:
     ///
     /// ```
-    /// use adventofcode2024_clp::helpers::forth::Forth;
+    /// use aoclp_solutions::helpers::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert!(forth.eval("1 2 + : + - ; 3 4 +").is_ok());
@@ -301,7 +302,7 @@ impl Forth {
     /// Corresponding Rust example:
     ///
     /// ```
-    /// use adventofcode2024_clp::helpers::forth::Forth;
+    /// use aoclp_solutions::helpers::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert!(forth.eval(": foo : bar 2 ; bar bar ; foo bar").is_ok());
@@ -327,7 +328,7 @@ impl Forth {
     /// Corresponding Rust example:
     ///
     /// ```
-    /// use adventofcode2024_clp::helpers::forth::Forth;
+    /// use aoclp_solutions::helpers::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert!(forth.eval(": foo : foo 2 ; foo ; foo foo").is_ok());
@@ -341,8 +342,8 @@ impl Forth {
     /// be executed. For example:
     ///
     /// ```
-    /// use adventofcode2024_clp::helpers::forth;
-    /// use adventofcode2024_clp::helpers::forth::Forth;
+    /// use aoclp_solutions::helpers::forth;
+    /// use aoclp_solutions::helpers::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert_eq!(Err(forth::Error::UnknownWord), forth.eval("foo 1 2"));
@@ -354,7 +355,7 @@ impl Forth {
     /// Words are evaluated in a case-insensitive manner. For example:
     ///
     /// ```
-    /// use adventofcode2024_clp::helpers::forth::Forth;
+    /// use aoclp_solutions::helpers::forth::Forth;
     ///
     /// let mut forth = Forth::new();
     /// assert!(forth.eval("1 DUP dup DuP dUp").is_ok());

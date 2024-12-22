@@ -30,12 +30,12 @@ impl Word for CustomWord {
     /// ```
     /// use std::ops::Deref;
     ///
-    /// use adventofcode2024_clp::helpers::forth;
-    /// use adventofcode2024_clp::helpers::forth::stack::Stack;
-    /// use adventofcode2024_clp::helpers::forth::word::builtins::add_builtin_words;
-    /// use adventofcode2024_clp::helpers::forth::word::custom::CustomWord;
-    /// use adventofcode2024_clp::helpers::forth::word::value::ValueWord;
-    /// use adventofcode2024_clp::helpers::forth::word::Words;
+    /// use aoclp_solutions::helpers::forth;
+    /// use aoclp_solutions::helpers::forth::stack::Stack;
+    /// use aoclp_solutions::helpers::forth::word::builtins::add_builtin_words;
+    /// use aoclp_solutions::helpers::forth::word::custom::CustomWord;
+    /// use aoclp_solutions::helpers::forth::word::value::ValueWord;
+    /// use aoclp_solutions::helpers::forth::word::Words;
     ///
     /// let mut words = Words::new();
     /// add_builtin_words(&mut words);

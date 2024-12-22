@@ -100,9 +100,9 @@ where
 /// ```
 /// use std::ops::Deref;
 ///
-/// use adventofcode2024_clp::helpers::forth;
-/// use adventofcode2024_clp::helpers::forth::stack::Stack;
-/// use adventofcode2024_clp::helpers::forth::word::{wrap_fn_word, Words};
+/// use aoclp_solutions::helpers::forth;
+/// use aoclp_solutions::helpers::forth::stack::Stack;
+/// use aoclp_solutions::helpers::forth::word::{wrap_fn_word, Words};
 ///
 /// fn add_10(stack: &mut Stack, _dictionary: &Words) -> forth::Result<()> {
 ///     let value = stack.pop()?;
