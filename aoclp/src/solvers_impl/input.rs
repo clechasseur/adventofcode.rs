@@ -1,8 +1,9 @@
 use std::str::FromStr;
 
-use anyhow::anyhow;
-use aocf::Aoc;
 use itertools::Itertools;
+
+use crate::anyhow::anyhow;
+use crate::aocf::Aoc;
 
 pub const DEFAULT_DATA_SEPARATORS: &[char] = &[' ', '\t', '|', ',', ':'];
 

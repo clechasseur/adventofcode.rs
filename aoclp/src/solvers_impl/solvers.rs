@@ -7,8 +7,13 @@ use itertools::Itertools;
 #[macro_export]
 macro_rules! build_solvers {
     ( $({ $year:literal, [$($day:literal),+] }),+ ) => {
-        ::paste::paste! {
-            pub fn solvers() -> $crate::solvers_impl::solvers::Solvers {
+        build_solvers! {
+            solvers, $({ $year, [$($day),+] }),+
+        }
+    };
+    ( $fn_name:ident, $({ $year:literal, [$($day:literal),+] }),+ ) => {
+        $crate::paste::paste! {
+            pub fn $fn_name() -> $crate::solvers_impl::solvers::Solvers {
                 let mut solvers = $crate::solvers_impl::solvers::Solvers::default();
                 $(
                     $(

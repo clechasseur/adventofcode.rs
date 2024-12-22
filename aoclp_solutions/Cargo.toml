@@ -8,6 +8,5 @@ rust-version = "1.74.1"
 aoclp = { path = "../aoclp" }
 clap = { workspace = true, features = ["derive"] }
 itertools = { workspace = true }
-paste = { workspace = true }
 regex = { workspace = true }
 strum = { workspace = true, features = ["derive"] }
