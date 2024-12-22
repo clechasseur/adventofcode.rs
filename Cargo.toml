@@ -4,7 +4,7 @@ members = ["aoclp", "aoclp_solutions"]
 default-members = ["aoclp_solutions"]
 
 [workspace.dependencies]
-anyhow = "1.0.94"
+anyhow = "1.0.95"
 aocf = "0.1.21"
 clap = { version = "4.5.23", features = ["derive"] }
 itertools = "0.13.0"
