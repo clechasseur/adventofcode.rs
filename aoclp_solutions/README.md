@@ -4,7 +4,7 @@ My solutions to Advent of Code puzzles in Rust 🦀
 
 ## Requirements
 
-* [Rust](https://www.rust-lang.org/) 1.74.1 or later
+* [Rust](https://www.rust-lang.org/) 1.75.0 or later
 * [aocf](https://crates.io/crates/aocf) CLI
 
 ## Setting your session cookie
@@ -36,12 +36,4 @@ cargo run -- --year 2024 --day 1
 
 ```shell
 cargo run -- --year 2024 --day 1 --part 1
-```
-
-## Running tests
-
-The tests are only for the helpers.
-
-```shell
-cargo test
 ```

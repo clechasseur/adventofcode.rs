@@ -62,7 +62,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        toolchain: [ 1.74.1, stable ]
+        toolchain: [ 1.75.0, stable ]
         os: [ ubuntu ]
         ignore-lock: [ false ]
         all-features: [ false ]
