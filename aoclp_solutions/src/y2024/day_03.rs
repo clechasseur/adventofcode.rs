@@ -1,6 +1,6 @@
-use aoclp::regex::CapturesHelper;
+use aoclp::captures::CapturesHelper;
+use aoclp::regex::Regex;
 use aoclp::solvers_impl::input::safe_get_input;
-use regex::Regex;
 
 pub fn part_1() -> i64 {
     sum_of_muls(false)

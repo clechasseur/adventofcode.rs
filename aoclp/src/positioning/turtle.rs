@@ -1,8 +1,7 @@
 use std::fmt::{Display, Formatter};
 use std::ops::{Add, Neg};
 
-use num::{zero, One, Zero};
-
+use crate::num::{zero, One, Zero};
 use crate::positioning::direction::four_points::Direction4;
 use crate::positioning::direction::{Direction, MovementDirection};
 use crate::positioning::pt::Pt;

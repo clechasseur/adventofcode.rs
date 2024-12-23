@@ -3,7 +3,7 @@ use std::iter::successors;
 
 use aoclp::positioning::direction::eight_points::Direction8;
 use aoclp::positioning::pt::Pt;
-use aoclp::solvers_impl::input::safe_get_input_as_matrix;
+use aoclp::solvers_impl::input::safe_get_input_as_terrain;
 use strum::IntoEnumIterator;
 
 pub fn part_1() -> usize {
@@ -85,6 +85,6 @@ impl From<Vec<Vec<char>>> for WordSearch {
 
 impl Default for WordSearch {
     fn default() -> Self {
-        safe_get_input_as_matrix(2024, 4).into()
+        safe_get_input_as_terrain(2024, 4).into()
     }
 }

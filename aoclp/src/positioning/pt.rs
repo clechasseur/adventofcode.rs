@@ -3,10 +3,9 @@ use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::str::FromStr;
 use std::sync::OnceLock;
 
-use num::{zero, Signed, Zero};
-use regex::Regex;
-
-use crate::regex::CapturesHelper;
+use crate::captures::CapturesHelper;
+use crate::num::{zero, Signed, Zero};
+use crate::regex::Regex;
 
 /// A point in 2D space.
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]

@@ -74,6 +74,6 @@ impl From<Vec<i64>> for Equation {
 fn input() -> Vec<Equation> {
     safe_get_input_as_many_vecs(2024, 7)
         .into_iter()
-        .map(Into::into)
+        .map_into()
         .collect()
 }

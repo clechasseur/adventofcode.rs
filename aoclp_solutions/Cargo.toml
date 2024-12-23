@@ -6,7 +6,9 @@ rust-version = "1.74.1"
 
 [dependencies]
 aoclp = { path = "../aoclp" }
+bit-vec = { workspace = true }
 clap = { workspace = true, features = ["derive"] }
 itertools = { workspace = true }
-regex = { workspace = true }
+paste = { workspace = true }
+primes = { workspace = true }
 strum = { workspace = true, features = ["derive"] }

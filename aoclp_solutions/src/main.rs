@@ -12,12 +12,18 @@ fn main() {
 
     if let Some(day) = args.day {
         run_day(&solvers, args.year.unwrap_or_else(|| default_year(&solvers)), day, args.part);
+    } else if let Some(year) = args.year {
+        run_year(&solvers, year, args.part);
     } else {
         for year in solvers.years() {
-            for day in solvers.days(year) {
-                run_day(&solvers, year, day as u32, args.part);
-            }
+            run_year(&solvers, year, args.part);
         }
+    }
+}
+
+fn run_year(solvers: &Solvers, year: i32, part: Option<u32>) {
+    for day in solvers.days(year) {
+        run_day(solvers, year, day as u32, part);
     }
 }
 

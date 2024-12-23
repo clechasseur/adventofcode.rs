@@ -1,9 +1,9 @@
 use std::str::FromStr;
 
+use aocf::Aoc;
 use itertools::Itertools;
 
 use crate::anyhow::anyhow;
-use crate::aocf::Aoc;
 
 pub const DEFAULT_DATA_SEPARATORS: &[char] = &[' ', '\t', '|', ',', ':'];
 
@@ -53,7 +53,16 @@ impl<'a> Input<'a> {
             .init()
             .map_err(|e| anyhow!(e))?;
 
-        self.data = Some(aoc.get_input(self.force).map_err(|e| anyhow!(e))?);
+        self.data = Some(
+            aoc.get_input(self.force)
+                .map(|mut input| {
+                    if input.ends_with('\n') {
+                        input.remove(input.len() - 1);
+                    }
+                    input
+                })
+                .map_err(|e| anyhow!(e))?,
+        );
         Ok(self)
     }
 
@@ -181,7 +190,24 @@ impl<'a> Input<'a> {
         self.into_many_vecs_of_two_types().unwrap()
     }
 
-    pub fn into_matrix<T>(self) -> crate::Result<Vec<Vec<T>>>
+    pub fn into_one_vec<T>(self) -> Result<Vec<T>, crate::Error>
+    where
+        T: FromStr,
+        <T as FromStr>::Err: std::fmt::Debug,
+    {
+        self.into_many_vecs()
+            .and_then(|vecs| vecs.into_iter().next().ok_or_else(|| anyhow!("empty data")))
+    }
+
+    pub fn safe_into_one_vec<T>(self) -> Vec<T>
+    where
+        T: FromStr,
+        <T as FromStr>::Err: std::fmt::Debug,
+    {
+        self.into_one_vec().unwrap()
+    }
+
+    pub fn into_terrain<T>(self) -> crate::Result<Vec<Vec<T>>>
     where
         T: From<char>,
     {
@@ -191,11 +217,11 @@ impl<'a> Input<'a> {
             .collect())
     }
 
-    pub fn safe_into_matrix<T>(self) -> Vec<Vec<T>>
+    pub fn safe_into_terrain<T>(self) -> Vec<Vec<T>>
     where
         T: From<char>,
     {
-        self.into_matrix().unwrap()
+        self.into_terrain().unwrap()
     }
 
     fn parse_many_vecs<T, L, S>(lines: L, separators: &[char]) -> crate::Result<Vec<Vec<T>>>
@@ -266,6 +292,14 @@ where
     Input::year(year).day(day).safe_get().safe_into_many_vecs()
 }
 
+pub fn safe_get_input_as_one_vec<T>(year: i32, day: u32) -> Vec<T>
+where
+    T: FromStr,
+    <T as FromStr>::Err: std::fmt::Debug,
+{
+    Input::year(year).day(day).safe_get().safe_into_one_vec()
+}
+
 pub fn safe_get_input_as_many_vecs_of_two_types<T, U>(
     year: i32,
     day: u32,
@@ -282,9 +316,9 @@ where
         .safe_into_many_vecs_of_two_types()
 }
 
-pub fn safe_get_input_as_matrix<T>(year: i32, day: u32) -> Vec<Vec<T>>
+pub fn safe_get_input_as_terrain<T>(year: i32, day: u32) -> Vec<Vec<T>>
 where
     T: From<char>,
 {
-    Input::year(year).day(day).safe_get().safe_into_matrix()
+    Input::year(year).day(day).safe_get().safe_into_terrain()
 }

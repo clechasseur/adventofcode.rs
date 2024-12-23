@@ -1,8 +1,8 @@
 use std::ops::{Add, AddAssign, Neg, Sub, SubAssign};
 
-use num::{one, zero, One, Zero};
 use strum::{Display, EnumCount, EnumIter, EnumProperty, FromRepr};
 
+use crate::num::{one, zero, One, Zero};
 use crate::positioning::direction::{Direction, MovementDirection};
 use crate::positioning::pt::Pt;
 

@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use regex::Captures;
+use crate::regex::Captures;
 
 pub trait CapturesHelper {
     fn ez_get<T>(&self, name: &str) -> T

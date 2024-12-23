@@ -7,7 +7,7 @@ use aoclp::looping::LoopingItertools;
 use aoclp::positioning::direction::four_points::Direction4;
 use aoclp::positioning::pt::Pt;
 use aoclp::positioning::turtle::Turtle;
-use aoclp::solvers_impl::input::safe_get_input_as_matrix;
+use aoclp::solvers_impl::input::safe_get_input_as_terrain;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
@@ -116,5 +116,5 @@ impl From<Vec<Vec<char>>> for Lab {
 }
 
 fn input() -> Lab {
-    safe_get_input_as_matrix(2024, 6).into()
+    safe_get_input_as_terrain(2024, 6).into()
 }

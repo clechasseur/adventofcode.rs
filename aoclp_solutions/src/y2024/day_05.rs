@@ -23,7 +23,7 @@ pub fn part_2() -> u64 {
 
 fn input() -> (Vec<Rule>, Vec<Update>) {
     let (rules, updates) = safe_get_input_as_many_vecs_of_two_types(2024, 5);
-    (rules.into_iter().map(Into::into).collect(), updates.into_iter().map(Into::into).collect())
+    (rules.into_iter().map_into().collect(), updates.into_iter().map_into().collect())
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
