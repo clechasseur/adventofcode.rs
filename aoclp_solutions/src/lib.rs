@@ -1,4 +1,4 @@
-//! Solutions to Advent of Code puzzles in Rust 🦀
+//! Solutions to [Advent of Code](https://adventofcode.com/) puzzles in Rust 🦀
 
 #![allow(dead_code)]
 

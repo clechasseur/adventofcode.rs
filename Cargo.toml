@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["aoclp", "aoclp_solutions"]
+members = ["aoclp", "aoclp_solutions", "codingquest_clp", "codingquest_clp_solutions"]
 default-members = ["aoclp_solutions"]
 
 [workspace.dependencies]

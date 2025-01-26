@@ -30,6 +30,17 @@ default:
 run *extra_args:
     {{cargo}} run {{all_features_flag}} {{target_tuple_flag}} {{release_flag}} {{ if extra_args != '' { '-- ' + extra_args } else { '' } }}
 
+_run_solutions bin_name *extra_args:
+    {{cargo}} run --package {{bin_name}} {{all_features_flag}} {{target_tuple_flag}} {{release_flag}} {{ if extra_args != '' { '-- ' + extra_args } else { '' } }}
+
+# Run AoC solutions executable
+@aoc *extra_args:
+    just _run_solutions aoclp_solutions {{extra_args}}
+
+# Run CodingQuest.io solutions executable
+@cq *extra_args:
+    just _run_solutions codingquest_clp_solutions {{extra_args}}
+
 # Run clippy and rustfmt on workspace files
 tidy: clippy fmt
 

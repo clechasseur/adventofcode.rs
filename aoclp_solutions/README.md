@@ -1,6 +1,6 @@
 # aoclp_solutions
 
-My solutions to Advent of Code puzzles in Rust 🦀
+My solutions to [Advent of Code](https://adventofcode.com/) puzzles in Rust 🦀
 
 ## Requirements
 
