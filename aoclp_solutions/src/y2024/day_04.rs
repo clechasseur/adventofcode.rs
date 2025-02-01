@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::iter::successors;
 
 use aoclp::positioning::direction::eight_points::Direction8;
-use aoclp::positioning::pt::Pt;
+use aoclp::positioning::pt::{matrix_to_map, Pt};
 use aoclp::solvers_impl::input::safe_get_input_as_terrain;
 use strum::IntoEnumIterator;
 
@@ -69,17 +69,7 @@ impl WordSearch {
 
 impl From<Vec<Vec<char>>> for WordSearch {
     fn from(value: Vec<Vec<char>>) -> Self {
-        Self(
-            value
-                .into_iter()
-                .enumerate()
-                .flat_map(|(y, row)| {
-                    row.into_iter()
-                        .enumerate()
-                        .map(move |(x, c)| (Pt::new(x as i64, y as i64), c))
-                })
-                .collect(),
-        )
+        Self(matrix_to_map(value))
     }
 }
 

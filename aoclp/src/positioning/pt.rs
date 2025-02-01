@@ -1,10 +1,17 @@
-use std::fmt::{Display, Formatter};
+use std::collections::HashMap;
+use std::fmt::{Debug, Display, Formatter};
+use std::hash::Hash;
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 use std::str::FromStr;
 use std::sync::OnceLock;
 
+use strum::IntoEnumIterator;
+
 use crate::captures::CapturesHelper;
 use crate::num::{zero, Signed, Zero};
+use crate::positioning::direction::eight_points::Direction8;
+use crate::positioning::direction::four_points::Direction4;
+use crate::positioning::direction::MovementDirection;
 use crate::regex::Regex;
 
 /// A point in 2D space.
@@ -17,6 +24,26 @@ pub struct Pt<T = i64> {
 impl<T> Pt<T> {
     pub const fn new(x: T, y: T) -> Self {
         Self { x, y }
+    }
+}
+
+impl<T> Pt<T>
+where
+    Self: Add<Output = Self> + Copy,
+    Direction4: MovementDirection<T>,
+{
+    pub fn four_neighbours(self) -> impl Iterator<Item = Self> {
+        Direction4::iter().map(move |dir| self + dir.displacement())
+    }
+}
+
+impl<T> Pt<T>
+where
+    Self: Add<Output = Self> + Copy,
+    Direction8: MovementDirection<T>,
+{
+    pub fn eight_neighbours(self) -> impl Iterator<Item = Self> {
+        Direction8::iter().map(move |dir| self + dir.displacement())
     }
 }
 
@@ -134,4 +161,25 @@ where
     T: Signed,
 {
     (a.x - b.x).abs() + (a.y - b.y).abs()
+}
+
+/// Given a two-dimensional matrix of elements, returns a map of
+/// [`Pt`] associated with the element at that position in the matrix.
+pub fn matrix_to_map<M, R, T, PT>(matrix: M) -> HashMap<Pt<PT>, T>
+where
+    M: IntoIterator<Item = R>,
+    R: IntoIterator<Item = T>,
+    PT: TryFrom<usize>,
+    <PT as TryFrom<usize>>::Error: Debug,
+    Pt<PT>: Hash + Eq,
+{
+    matrix
+        .into_iter()
+        .enumerate()
+        .flat_map(|(y, row)| {
+            row.into_iter()
+                .enumerate()
+                .map(move |(x, t)| (Pt::new(x.try_into().unwrap(), y.try_into().unwrap()), t))
+        })
+        .collect()
 }
