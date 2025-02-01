@@ -37,6 +37,7 @@ fn input() -> (Board, Moves) {
     (Board::from_input_data(&input_data), Moves::from_input_data(&input_data))
 }
 
+#[derive(Debug)]
 struct Board {
     tiles: Vec<i32>,
 }
@@ -81,6 +82,7 @@ impl Deref for Board {
     }
 }
 
+#[derive(Debug)]
 struct Moves {
     moves: Vec<(i32, i32)>,
 }

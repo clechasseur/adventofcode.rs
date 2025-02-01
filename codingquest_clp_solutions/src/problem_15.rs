@@ -17,6 +17,7 @@ fn sensor_data() -> Vec<Vec<u64>> {
         .safe_into_many_vecs()
 }
 
+#[derive(Debug)]
 struct CelestialBody(HashMap<Pt, u64>);
 
 impl CelestialBody {
@@ -31,6 +32,7 @@ impl From<HashMap<Pt, u64>> for CelestialBody {
     }
 }
 
+#[derive(Debug)]
 struct CelestialBodies(Vec<CelestialBody>);
 
 impl CelestialBodies {
