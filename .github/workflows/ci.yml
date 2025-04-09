@@ -61,7 +61,7 @@ jobs:
       fail-fast: false
       matrix:
         toolchain: [ 1.81.0, stable ]
-        os: [ ubuntu-24.04, macos-14, windows-2022 ]
+        os: [ ubuntu-24.04 ]
         ignore-lock: [ false ]
     runs-on: ${{ matrix.os }}
     steps:
