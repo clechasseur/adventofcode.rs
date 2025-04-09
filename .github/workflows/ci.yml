@@ -5,16 +5,13 @@ on:
   workflow_dispatch:
 
 env:
+  CARGO_TERM_COLOR: always
   CI: 1
 
 jobs:
   clippy:
-    name: Clippy validation${{ matrix.all-features && ' with all features' || '' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        all-features: [ false ]
-    runs-on: ubuntu-latest
+    name: Clippy validation
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -27,20 +24,21 @@ jobs:
           cache: false
 
       - name: Rust Cache
-        uses: Swatinem/rust-cache@f0deed1e0edfc6a9be95417288c0e1099b1eeec3 # v2.7.7
+        uses: Swatinem/rust-cache@9d47c6ad4b02e050fd481d890b2ea34778fd09d6 # v2.7.8
         with:
-          prefix-key: v1-rust
-          key: all-features-${{ matrix.all-features }}
+          prefix-key: v2-rust
           cache-on-failure: true
 
       - name: Run clippy
         uses: clechasseur/rs-clippy-check@23f6dcf86d7e4e0d98b000bba0bb81ac587c44aa # v4.0.2
         with:
-          args: --workspace --all-targets ${{ matrix.all-features && '--all-features' || '' }} -- -D warnings
+          args: --workspace --all-targets --feature-powerset -- -D warnings
+          tool: cargo-hack
+          cache-key: v1-clippy
 
   fmt:
     name: Rustfmt check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -58,17 +56,14 @@ jobs:
           args: --all
 
   build:
-    name: Build for Rust ${{ matrix.toolchain }}${{ matrix.experimental && ' (experimental)' || '' }} on ${{ matrix.os }}${{ matrix.ignore-lock && ' without Cargo.lock' || '' }}${{ matrix.all-features && ' with all features' || '' }}
+    name: Build for Rust ${{ matrix.toolchain }}${{ matrix.experimental && ' (experimental)' || '' }} on ${{ matrix.os }}${{ matrix.ignore-lock && ' without Cargo.lock' || '' }}
     strategy:
       fail-fast: false
       matrix:
         toolchain: [ 1.75.0, stable ]
-        os: [ ubuntu ]
+        os: [ ubuntu-24.04, macos-14, windows-2022 ]
         ignore-lock: [ false ]
-        all-features: [ false ]
-        include:
-          - experimental: false
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     steps:
       - name: Checkout code
@@ -85,22 +80,21 @@ jobs:
           cache: false
 
       - name: Rust Cache
-        if: ${{ !matrix.experimental }}
-        uses: Swatinem/rust-cache@f0deed1e0edfc6a9be95417288c0e1099b1eeec3 # v2.7.7
+        uses: Swatinem/rust-cache@9d47c6ad4b02e050fd481d890b2ea34778fd09d6 # v2.7.8
         with:
-          prefix-key: v2-rust
-          key: ignore-lock-${{ matrix.ignore-lock }}-all-features-${{ matrix.all-features }}
+          prefix-key: v3-rust
+          key: ignore-lock-${{ matrix.ignore-lock }}
           cache-on-failure: true
 
-      - name: Install just
-        uses: taiki-e/install-action@3c8fc6eaa5fcff049bb133c1f540c6c2287a191f # v2.49.10
+      - name: Install required tools
+        uses: taiki-e/install-action@f1390fd0d8205ae79e5e57b1d1e300dceeb4163e # v2.49.44
         with:
-          tool: just
+          tool: just,cargo-hack
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run checks
-        run: just all_features=${{ matrix.all-features }} check
+      - name: Run checks on feature powerset
+        run: just check-powerset
 
       - name: Run tests
-        run: just all_features=${{ matrix.all-features }} test
+        run: just test
