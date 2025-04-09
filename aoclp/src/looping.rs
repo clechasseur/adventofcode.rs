@@ -93,7 +93,7 @@ where
         self.len()
     }
 
-    fn last(self) -> Option<Self::Item>
+    fn last(mut self) -> Option<Self::Item>
     where
         Self: Sized,
     {
@@ -105,7 +105,7 @@ where
         self.cycle
             .into_iter()
             .nth(last_pos_in_cycle)
-            .or_else(|| self.prefix.last())
+            .or_else(|| self.prefix.next_back())
     }
 
     fn nth(&mut self, n: usize) -> Option<Self::Item> {
