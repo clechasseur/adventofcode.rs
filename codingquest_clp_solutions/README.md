@@ -4,7 +4,7 @@ My solutions to [Coding Quest](https://codingquest.io/) puzzles in Rust 🦀
 
 ## Requirements
 
-* [Rust](https://www.rust-lang.org/) 1.75.0 or later
+* [Rust](https://www.rust-lang.org/) 1.81.0 or later
 
 ## Saving problem input data
 

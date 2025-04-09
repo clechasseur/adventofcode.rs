@@ -4,7 +4,7 @@ My solutions to [Advent of Code](https://adventofcode.com/) puzzles in Rust 🦀
 
 ## Requirements
 
-* [Rust](https://www.rust-lang.org/) 1.75.0 or later
+* [Rust](https://www.rust-lang.org/) 1.81.0 or later
 * [aocf](https://crates.io/crates/aocf) CLI
 
 ## Setting your session cookie

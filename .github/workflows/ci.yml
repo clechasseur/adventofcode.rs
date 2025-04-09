@@ -60,7 +60,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        toolchain: [ 1.75.0, stable ]
+        toolchain: [ 1.81.0, stable ]
         os: [ ubuntu-24.04, macos-14, windows-2022 ]
         ignore-lock: [ false ]
     runs-on: ${{ matrix.os }}
