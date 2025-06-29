@@ -112,9 +112,10 @@ where
         let prefix_len = self.prefix.len();
         self.prefix.nth(n).or_else(|| {
             self.cycle_pos = min(self.cycle_pos + (n - prefix_len), self.cycle_size);
-            match self.cycle_len() {
-                0 => None,
-                _ => self.next(),
+            if self.cycle_len() != 0 {
+                self.next()
+            } else {
+                None
             }
         })
     }
