@@ -24,7 +24,7 @@ impl Disk {
         let input = input();
         Self {
             hashes: (0..128)
-                .map(|row| KnotHash::new(format!("{}-{}", input, row)))
+                .map(|row| KnotHash::new(format!("{input}-{row}")))
                 .collect(),
         }
     }

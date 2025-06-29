@@ -26,14 +26,14 @@ impl Group {
 
         match chars.next() {
             Some('{') => (),
-            Some(c) => panic!("invalid starting character in stream: {}", c),
+            Some(c) => panic!("invalid starting character in stream: {c}"),
             None => panic!("empty stream"),
         }
 
         let root = Self::parse(&mut chars, 0);
 
         if let Some(c) = chars.next() {
-            panic!("invalid character after outermost group in stream: {}", c);
+            panic!("invalid character after outermost group in stream: {c}");
         }
 
         root
@@ -67,7 +67,7 @@ impl Group {
                 '{' => group.children.push(Self::parse(chars, group.score())),
                 '}' => return group,
                 ',' => (),
-                _ => panic!("invalid non-garbage character found in stream: {}", c),
+                _ => panic!("invalid non-garbage character found in stream: {c}"),
             }
         }
 
