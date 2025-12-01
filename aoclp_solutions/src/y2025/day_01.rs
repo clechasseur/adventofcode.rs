@@ -34,8 +34,8 @@ fn all_moves() -> impl Iterator<Item = i64> {
         let from = dial;
         dial = rotation.apply(dial);
 
-        let tick = rotation.direction.one_tick();
-        successors(Some(from), move |int_dial| Some(tick.apply(*int_dial)))
+        let step = rotation.step();
+        successors(Some(from), move |int_dial| Some(step.apply(*int_dial)))
             .skip(1)
             .take(rotation.clicks as usize)
     }))
@@ -46,12 +46,6 @@ fn all_moves() -> impl Iterator<Item = i64> {
 enum RotationDirection {
     Left = -1,
     Right = 1,
-}
-
-impl RotationDirection {
-    fn one_tick(self) -> Rotation {
-        Rotation { direction: self, clicks: 1 }
-    }
 }
 
 impl FromStr for RotationDirection {
@@ -76,6 +70,10 @@ struct Rotation {
 impl Rotation {
     fn apply(&self, dial: i64) -> i64 {
         (dial + self.clicks * (self.direction as i64)).rem_euclid(100)
+    }
+
+    fn step(&self) -> Self {
+        Self { direction: self.direction, clicks: 1 }
     }
 }
 
