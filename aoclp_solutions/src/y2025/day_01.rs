@@ -1,5 +1,6 @@
 use std::iter::{once, successors};
 use std::str::FromStr;
+
 use aoclp::anyhow::anyhow;
 use aoclp::solvers_impl::input::safe_get_input_as_many;
 
@@ -34,9 +35,9 @@ fn all_moves() -> impl Iterator<Item = i64> {
         dial = rotation.apply(dial);
 
         let tick = rotation.direction.one_tick();
-        successors(Some(from), move |int_dial| {
-            Some(tick.apply(*int_dial))
-        }).skip(1).take(rotation.clicks as usize)
+        successors(Some(from), move |int_dial| Some(tick.apply(*int_dial)))
+            .skip(1)
+            .take(rotation.clicks as usize)
     }))
 }
 
