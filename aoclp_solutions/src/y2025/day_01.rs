@@ -41,22 +41,16 @@ fn all_moves() -> impl Iterator<Item = i64> {
     }))
 }
 
+#[repr(i64)]
 #[derive(Debug, Copy, Clone)]
 enum RotationDirection {
-    Left,
-    Right,
+    Left = -1,
+    Right = 1,
 }
 
 impl RotationDirection {
     fn one_tick(self) -> Rotation {
         Rotation { direction: self, clicks: 1 }
-    }
-
-    fn turn_modifier(self) -> i64 {
-        match self {
-            RotationDirection::Left => -1,
-            RotationDirection::Right => 1,
-        }
     }
 }
 
@@ -81,7 +75,7 @@ struct Rotation {
 
 impl Rotation {
     fn apply(&self, dial: i64) -> i64 {
-        (dial + self.clicks * self.direction.turn_modifier()).rem_euclid(100)
+        (dial + self.clicks * (self.direction as i64)).rem_euclid(100)
     }
 }
 
