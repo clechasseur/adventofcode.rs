@@ -3,21 +3,43 @@ use std::str::FromStr;
 
 use aoclp::num::Integer;
 use aoclp::solvers_impl::input::safe_get_input_as_one_vec;
+use fancy_regex::Regex;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
-    input()
-        .into_iter()
-        .flat_map(|range| range.into_iter())
-        .filter(|id| invalid(*id))
-        .sum()
+    match be_fast() {
+        true => sum_fast(invalid),
+        false => sum_slow(Regex::new(r"^(\d+)\1$").unwrap()),
+    }
 }
 
 pub fn part_2() -> usize {
+    match be_fast() {
+        true => sum_fast(invalid),
+        false => sum_slow(Regex::new(r"^(\d+)\1+$").unwrap()),
+    }
+}
+
+fn be_fast() -> bool {
+    true
+}
+
+fn sum_fast<P>(mut pred: P) -> usize
+where
+    P: FnMut(usize) -> bool,
+{
     input()
         .into_iter()
         .flat_map(|range| range.into_iter())
-        .filter(|id| invalid_fancy(*id))
+        .filter(|id| pred(*id))
+        .sum()
+}
+
+fn sum_slow(re: Regex) -> usize {
+    input()
+        .into_iter()
+        .flat_map(|range| range.into_iter())
+        .filter(|id| re.is_match(&id.to_string()).unwrap())
         .sum()
 }
 
