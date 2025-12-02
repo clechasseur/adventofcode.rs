@@ -2,6 +2,7 @@
 
 pub mod captures;
 pub mod forth;
+pub mod functional;
 pub mod looping;
 pub mod positioning;
 pub mod solvers_impl;

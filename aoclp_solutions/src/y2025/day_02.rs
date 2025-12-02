@@ -1,45 +1,39 @@
 use std::ops::RangeInclusive;
 use std::str::FromStr;
 
+use aoclp::functional::PredHelper;
 use aoclp::num::Integer;
 use aoclp::solvers_impl::input::safe_get_input_as_one_vec;
-use fancy_regex::Regex;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
-    match be_fast() {
-        true => sum_fast(invalid),
-        false => sum_slow(Regex::new(r"^(\d+)\1$").unwrap()),
-    }
+    let pred = invalid;
+
+    // Replace `pred` with this for the slow, regex-based approach:
+    // let re = fancy_regex::Regex::new(r"^(\d+)\1$").unwrap();
+    // let pred = |id: usize| re.is_match(&id.to_string()).unwrap();
+
+    sum(pred)
 }
 
 pub fn part_2() -> usize {
-    match be_fast() {
-        true => sum_fast(invalid),
-        false => sum_slow(Regex::new(r"^(\d+)\1+$").unwrap()),
-    }
+    let pred = invalid_fancy;
+
+    // Replace `pred` with this for the slow, regex-based approach:
+    // let re = fancy_regex::Regex::new(r"^(\d+)\1+$").unwrap();
+    // let pred = |id: usize| re.is_match(&id.to_string()).unwrap();
+
+    sum(pred)
 }
 
-fn be_fast() -> bool {
-    true
-}
-
-fn sum_fast<P>(mut pred: P) -> usize
+fn sum<P>(pred: P) -> usize
 where
-    P: FnMut(usize) -> bool,
+    P: Fn(usize) -> bool,
 {
     input()
         .into_iter()
-        .flat_map(|range| range.into_iter())
-        .filter(|id| pred(*id))
-        .sum()
-}
-
-fn sum_slow(re: Regex) -> usize {
-    input()
-        .into_iter()
-        .flat_map(|range| range.into_iter())
-        .filter(|id| re.is_match(&id.to_string()).unwrap())
+        .flat_map(<_>::into_iter)
+        .filter(pred.with_ref())
         .sum()
 }
 
