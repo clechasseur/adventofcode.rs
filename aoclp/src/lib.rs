@@ -5,6 +5,7 @@ pub mod forth;
 pub mod looping;
 pub mod positioning;
 pub mod solvers_impl;
+pub mod str;
 
 pub type Error = anyhow::Error;
 pub type Result<T> = anyhow::Result<T>;

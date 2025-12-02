@@ -3,6 +3,7 @@ use std::str::FromStr;
 
 use aoclp::anyhow::anyhow;
 use aoclp::solvers_impl::input::safe_get_input_as_many;
+use aoclp::str::StrHelper;
 
 pub fn part_1() -> usize {
     moves().filter(|dial| *dial == 0).count()
@@ -81,8 +82,7 @@ impl FromStr for Rotation {
     type Err = aoclp::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let direction: RotationDirection = s[0..1].parse()?;
-        let clicks: i64 = s[1..].parse()?;
+        let (direction, clicks) = s.split_parse_at(1);
         Ok(Self { direction, clicks })
     }
 }
