@@ -1,7 +1,8 @@
 use std::collections::HashMap;
+use std::convert::Infallible;
 use std::fmt::{Debug, Display, Formatter};
 use std::hash::Hash;
-use std::ops::{Add, AddAssign, Sub, SubAssign};
+use std::ops::{Add, AddAssign, RangeBounds, Sub, SubAssign};
 use std::str::FromStr;
 use std::sync::OnceLock;
 
@@ -47,6 +48,19 @@ where
     }
 }
 
+impl<T> Pt<T>
+where
+    T: PartialOrd,
+{
+    pub fn within<XR, YR>(&self, x_bounds: XR, y_bounds: YR) -> bool
+    where
+        XR: RangeBounds<T>,
+        YR: RangeBounds<T>,
+    {
+        x_bounds.contains(&self.x) && y_bounds.contains(&self.y)
+    }
+}
+
 impl<T, U, V> From<(U, V)> for Pt<T>
 where
     U: Into<T>,
@@ -72,7 +86,7 @@ impl<T> FromStr for Pt<T>
 where
     T: FromStr,
 {
-    type Err = ();
+    type Err = Infallible;
 
     /// Parses a [`Pt`] from a string in the form `(x, y)`.
     /// Parentheses and whitespace are optional.

@@ -1,5 +1,6 @@
+use std::convert::Infallible;
 use std::fmt::{Display, Formatter};
-use std::ops::{Add, AddAssign, Sub, SubAssign};
+use std::ops::{Add, AddAssign, RangeBounds, Sub, SubAssign};
 use std::str::FromStr;
 use std::sync::OnceLock;
 
@@ -18,6 +19,20 @@ pub struct Pt3d<T = i64> {
 impl<T> Pt3d<T> {
     pub const fn new(x: T, y: T, z: T) -> Self {
         Self { x, y, z }
+    }
+}
+
+impl<T> Pt3d<T>
+where
+    T: PartialOrd,
+{
+    pub fn within<XR, YR, ZR>(&self, x_bounds: XR, y_bounds: YR, z_bounds: ZR) -> bool
+    where
+        XR: RangeBounds<T>,
+        YR: RangeBounds<T>,
+        ZR: RangeBounds<T>,
+    {
+        x_bounds.contains(&self.x) && y_bounds.contains(&self.y) && z_bounds.contains(&self.z)
     }
 }
 
@@ -47,7 +62,7 @@ impl<T> FromStr for Pt3d<T>
 where
     T: FromStr,
 {
-    type Err = ();
+    type Err = Infallible;
 
     /// Parses a [`Pt3d`] from a string in the form `(x, y, z)`.
     /// Parentheses and whitespace are optional.
