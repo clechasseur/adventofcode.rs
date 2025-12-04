@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::convert::Infallible;
 use std::fmt::{Debug, Display, Formatter};
 use std::hash::Hash;
@@ -193,6 +193,33 @@ where
         .flat_map(|(y, row)| {
             row.into_iter()
                 .enumerate()
+                .map(move |(x, t)| (Pt::new(x.try_into().unwrap(), y.try_into().unwrap()), t))
+        })
+        .collect()
+}
+
+/// Given a two-dimensional matrix of elements, returns a map of
+/// [`Pt`] associated with the element at that position in the matrix,
+/// ignoring any element that are in `skips`.
+pub fn filtered_matrix_to_map<M, R, T, PT, S>(matrix: M, skips: S) -> HashMap<Pt<PT>, T>
+where
+    M: IntoIterator<Item = R>,
+    R: IntoIterator<Item = T>,
+    PT: TryFrom<usize>,
+    <PT as TryFrom<usize>>::Error: Debug,
+    Pt<PT>: Hash + Eq,
+    S: IntoIterator<Item = T>,
+    T: Hash + Eq,
+{
+    let skips: HashSet<_> = skips.into_iter().collect();
+
+    matrix
+        .into_iter()
+        .enumerate()
+        .flat_map(|(y, row)| {
+            row.into_iter()
+                .enumerate()
+                .filter(|(_, t)| !skips.contains(t))
                 .map(move |(x, t)| (Pt::new(x.try_into().unwrap(), y.try_into().unwrap()), t))
         })
         .collect()
