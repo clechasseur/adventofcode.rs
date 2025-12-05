@@ -1,7 +1,7 @@
 use std::ops::RangeInclusive;
 use std::str::FromStr;
 
-use aoclp::functional::PredHelper;
+use aoclp::functional::ConsumingPredHelper;
 use aoclp::num::Integer;
 use aoclp::solvers_impl::input::safe_get_input_as_one_vec;
 use itertools::Itertools;
@@ -85,6 +85,7 @@ impl IntoIterator for IdRange {
     }
 }
 
+// noinspection DuplicatedCode
 impl FromStr for IdRange {
     type Err = aoclp::Error;
 

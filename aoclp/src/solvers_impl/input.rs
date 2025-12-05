@@ -94,13 +94,7 @@ impl<'a> Input<'a> {
         T: FromStr,
         <T as FromStr>::Err: std::fmt::Debug,
     {
-        String::try_from(self)?
-            .lines()
-            .map(|line| {
-                line.parse()
-                    .map_err(|e| anyhow!("failed to parse \"{line}\": {e:?}"))
-            })
-            .collect()
+        Self::parse_many(String::try_from(self)?.lines())
     }
 
     pub fn safe_into_many<T>(self) -> Vec<T>
@@ -117,22 +111,15 @@ impl<'a> Input<'a> {
         <T as FromStr>::Err: std::fmt::Debug,
     {
         let separators = self.separators;
-        String::try_from(self)?
-            .lines()
-            .map(|line| {
-                let (a, b) = line
-                    .split(separators)
-                    .filter(|value| !value.is_empty())
-                    .collect_tuple()
-                    .ok_or(anyhow!("invalid number of elements in \"{line}\""))?;
-                Ok((
-                    a.parse()
-                        .map_err(|e| anyhow!("failed to parse \"{a}\": {e:?}"))?,
-                    b.parse()
-                        .map_err(|e| anyhow!("failed to parse \"{b}\": {e:?}"))?,
-                ))
+        let vecs = Self::parse_many_vecs(String::try_from(self)?.lines(), separators)?;
+
+        Ok(vecs
+            .into_iter()
+            .map(|v| {
+                let (a, b) = v.into_iter().collect_tuple().unwrap();
+                (a, b)
             })
-            .collect()
+            .collect())
     }
 
     pub fn safe_into_many_pairs<T>(self) -> Vec<(T, T)>
@@ -158,6 +145,31 @@ impl<'a> Input<'a> {
         <T as FromStr>::Err: std::fmt::Debug,
     {
         self.into_many_vecs().unwrap()
+    }
+
+    pub fn into_many_of_two_types<T, U>(self) -> crate::Result<(Vec<T>, Vec<U>)>
+    where
+        T: FromStr,
+        U: FromStr,
+        <T as FromStr>::Err: std::fmt::Debug,
+        <U as FromStr>::Err: std::fmt::Debug,
+    {
+        let data: String = self.try_into()?;
+
+        let first = Self::parse_many(data.lines().take_while(|line| !line.is_empty()))?;
+        let second = Self::parse_many(data.lines().skip_while(|line| !line.is_empty()).skip(1))?;
+
+        Ok((first, second))
+    }
+
+    pub fn safe_into_many_of_two_types<T, U>(self) -> (Vec<T>, Vec<U>)
+    where
+        T: FromStr,
+        U: FromStr,
+        <T as FromStr>::Err: std::fmt::Debug,
+        <U as FromStr>::Err: std::fmt::Debug,
+    {
+        self.into_many_of_two_types().unwrap()
     }
 
     #[allow(clippy::type_complexity)]
@@ -222,6 +234,23 @@ impl<'a> Input<'a> {
         T: From<char>,
     {
         self.into_terrain().unwrap()
+    }
+
+    fn parse_many<T, L, S>(lines: L) -> crate::Result<Vec<T>>
+    where
+        T: FromStr,
+        <T as FromStr>::Err: std::fmt::Debug,
+        L: IntoIterator<Item = S>,
+        S: AsRef<str>,
+    {
+        lines
+            .into_iter()
+            .map(|line| {
+                let line = line.as_ref();
+                line.parse()
+                    .map_err(|e| anyhow!("failed to parse \"{line}\": {e:?}"))
+            })
+            .collect()
     }
 
     fn parse_many_vecs<T, L, S>(lines: L, separators: &[char]) -> crate::Result<Vec<Vec<T>>>
@@ -298,6 +327,19 @@ where
     <T as FromStr>::Err: std::fmt::Debug,
 {
     Input::year(year).day(day).safe_get().safe_into_one_vec()
+}
+
+pub fn safe_get_input_as_many_of_two_types<T, U>(year: i32, day: u32) -> (Vec<T>, Vec<U>)
+where
+    T: FromStr,
+    U: FromStr,
+    <T as FromStr>::Err: std::fmt::Debug,
+    <U as FromStr>::Err: std::fmt::Debug,
+{
+    Input::year(year)
+        .day(day)
+        .safe_get()
+        .safe_into_many_of_two_types()
 }
 
 pub fn safe_get_input_as_many_vecs_of_two_types<T, U>(
