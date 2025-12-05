@@ -1,8 +1,7 @@
 use std::cmp::{max, min};
-use std::ops::{Deref, RangeInclusive};
+use std::ops::RangeInclusive;
 use std::str::FromStr;
 
-use aoclp::functional::ByRefPredHelper;
 use aoclp::solvers_impl::input::safe_get_input_as_many_of_two_types;
 use itertools::Itertools;
 
@@ -10,7 +9,7 @@ pub fn part_1() -> usize {
     let (fresh_ids, available_ids) = input();
     available_ids
         .into_iter()
-        .filter(|&id| fresh_ids.iter().any(|r| r.contains(&id)))
+        .filter(|&id| fresh_ids.iter().any(|r| r.0.contains(&id)))
         .count()
 }
 
@@ -18,6 +17,7 @@ pub fn part_2() -> usize {
     let (fresh_ids, _) = input();
     fresh_ids
         .into_iter()
+        .map(|r| r.0)
         .sorted_by(|a, b| a.start().cmp(b.start()).then(a.end().cmp(b.end())))
         .fold(Vec::new(), |mut acc, r| {
             match acc.last() {
@@ -27,14 +27,14 @@ pub fn part_2() -> usize {
                     let from = *min(prev.start(), r.start());
                     let to = *max(prev.end(), r.end());
                     acc.pop();
-                    acc.push(IdRange(from..=to));
+                    acc.push(from..=to);
                 },
             }
 
             acc
         })
         .into_iter()
-        .map(IdRange::len.without_ref())
+        .map(|r| r.count())
         .sum()
 }
 
@@ -43,7 +43,7 @@ struct IdRange(RangeInclusive<usize>);
 
 impl IdRange {
     pub fn len(&self) -> usize {
-        self.end() - self.start() + 1
+        self.0.end() - self.0.start() + 1
     }
 }
 
@@ -54,14 +54,6 @@ impl FromStr for IdRange {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let (from, to) = s.split('-').collect_tuple().unwrap();
         Ok(Self(from.parse()?..=to.parse()?))
-    }
-}
-
-impl Deref for IdRange {
-    type Target = RangeInclusive<usize>;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
     }
 }
 
