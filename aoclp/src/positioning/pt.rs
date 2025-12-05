@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::convert::Infallible;
 use std::fmt::{Debug, Display, Formatter};
 use std::hash::Hash;
@@ -179,48 +179,38 @@ where
 
 /// Given a two-dimensional matrix of elements, returns a map of
 /// [`Pt`] associated with the element at that position in the matrix.
-pub fn matrix_to_map<M, R, T, PT>(matrix: M) -> HashMap<Pt<PT>, T>
+pub fn matrix_to_map<T, M, R, PT>(matrix: M) -> HashMap<Pt<PT>, T>
 where
     M: IntoIterator<Item = R>,
     R: IntoIterator<Item = T>,
     PT: TryFrom<usize>,
     <PT as TryFrom<usize>>::Error: Debug,
-    Pt<PT>: Hash + Eq,
+    Pt<PT>: Copy + Hash + Eq,
 {
-    matrix
-        .into_iter()
-        .enumerate()
-        .flat_map(|(y, row)| {
-            row.into_iter()
-                .enumerate()
-                .map(move |(x, t)| (Pt::new(x.try_into().unwrap(), y.try_into().unwrap()), t))
-        })
-        .collect()
+    filtered_matrix_to_map(matrix, |_, _| true)
 }
 
 /// Given a two-dimensional matrix of elements, returns a map of
-/// [`Pt`] associated with the element at that position in the matrix,
-/// ignoring any element that are in `skips`.
-pub fn filtered_matrix_to_map<M, R, T, PT, S>(matrix: M, skips: S) -> HashMap<Pt<PT>, T>
+/// [`Pt`] associated with the element at that position in the matrix
+/// for all elements for which the predicate `f` returns `true`.
+pub fn filtered_matrix_to_map<T, M, R, PT, F>(matrix: M, f: F) -> HashMap<Pt<PT>, T>
 where
     M: IntoIterator<Item = R>,
     R: IntoIterator<Item = T>,
     PT: TryFrom<usize>,
     <PT as TryFrom<usize>>::Error: Debug,
-    Pt<PT>: Hash + Eq,
-    S: IntoIterator<Item = T>,
-    T: Hash + Eq,
+    Pt<PT>: Copy + Hash + Eq,
+    F: FnMut(Pt<PT>, &T) -> bool + Clone,
 {
-    let skips: HashSet<_> = skips.into_iter().collect();
-
     matrix
         .into_iter()
         .enumerate()
         .flat_map(|(y, row)| {
+            let mut f = f.clone();
             row.into_iter()
                 .enumerate()
-                .filter(|(_, t)| !skips.contains(t))
                 .map(move |(x, t)| (Pt::new(x.try_into().unwrap(), y.try_into().unwrap()), t))
+                .filter(move |(pt, t)| f(*pt, t))
         })
         .collect()
 }

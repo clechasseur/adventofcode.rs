@@ -4,7 +4,9 @@ use aoclp::positioning::pt::{filtered_matrix_to_map, Pt};
 use aoclp::solvers_impl::input::safe_get_input_as_terrain;
 
 pub fn part_1() -> usize {
-    let rolls: HashSet<Pt> = filtered_matrix_to_map(input(), ['.']).into_keys().collect();
+    let rolls: HashSet<Pt> = filtered_matrix_to_map(input(), |_, &c| c != '.')
+        .into_keys()
+        .collect();
 
     rolls
         .iter()
@@ -13,7 +15,9 @@ pub fn part_1() -> usize {
 }
 
 pub fn part_2() -> usize {
-    let mut rolls: BTreeSet<Pt> = filtered_matrix_to_map(input(), ['.']).into_keys().collect();
+    let mut rolls: BTreeSet<Pt> = filtered_matrix_to_map(input(), |_, &c| c != '.')
+        .into_keys()
+        .collect();
 
     let mut removed = 0;
     loop {
