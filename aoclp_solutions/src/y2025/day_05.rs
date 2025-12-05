@@ -34,7 +34,7 @@ pub fn part_2() -> usize {
             acc
         })
         .into_iter()
-        .map(|r| r.count())
+        .map(<_>::count)
         .sum()
 }
 
