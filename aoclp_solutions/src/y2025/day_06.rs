@@ -13,7 +13,7 @@ pub fn part_1() -> usize {
 }
 
 pub fn part_2() -> usize {
-    cephalopod_problems()
+    cephaloproblems()
         .into_iter()
         .map(Problem::answer.without_ref())
         .sum()
@@ -92,7 +92,7 @@ fn problems() -> Vec<Problem> {
         .collect_vec()
 }
 
-fn cephalopod_problems() -> Vec<Problem> {
+fn cephaloproblems() -> Vec<Problem> {
     let input = input();
     let operators = parse_operators(&input);
     let mut operands = Vec::new();
