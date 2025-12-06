@@ -1,69 +1,31 @@
-use std::str::FromStr;
-
-use aoclp::anyhow::anyhow;
-use aoclp::functional::ByRefPredHelper;
+use aoclp::forth::Forth;
 use aoclp::solvers_impl::input::safe_get_input;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
-    problems()
-        .into_iter()
-        .map(Problem::answer.without_ref())
-        .sum()
+    problems().into_iter().map(Problem::answer).sum()
 }
 
 pub fn part_2() -> usize {
-    cephaloproblems()
-        .into_iter()
-        .map(Problem::answer.without_ref())
-        .sum()
-}
-
-#[derive(Debug, Copy, Clone)]
-enum Operator {
-    Plus,
-    Times,
-}
-
-impl Operator {
-    fn initial(self) -> usize {
-        match self {
-            Operator::Plus => 0,
-            Operator::Times => 1,
-        }
-    }
-
-    fn apply(self, a: usize, b: usize) -> usize {
-        match self {
-            Operator::Plus => a + b,
-            Operator::Times => a * b,
-        }
-    }
-}
-
-impl FromStr for Operator {
-    type Err = aoclp::Error;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "+" => Ok(Operator::Plus),
-            "*" => Ok(Operator::Times),
-            op => Err(anyhow!("Unknown operator: {op}")),
-        }
-    }
+    cephaloproblems().into_iter().map(Problem::answer).sum()
 }
 
 #[derive(Debug)]
 struct Problem {
     operands: Vec<usize>,
-    operator: Operator,
+    operator: String,
 }
 
 impl Problem {
-    fn answer(&self) -> usize {
-        self.operands
-            .iter()
-            .fold(self.operator.initial(), |acc, i| self.operator.apply(acc, *i))
+    fn answer(self) -> usize {
+        let mut forth = Forth::new();
+        for operand in self.operands {
+            forth.eval(&operand.to_string()).unwrap();
+        }
+        while forth.stack().len() > 1 {
+            forth.eval(&self.operator).unwrap();
+        }
+        forth.stack()[0] as usize
     }
 }
 
@@ -136,13 +98,13 @@ fn cephaloproblems() -> Vec<Problem> {
         .collect_vec()
 }
 
-fn parse_operators(input: &str) -> Vec<Operator> {
+fn parse_operators(input: &str) -> Vec<String> {
     input
         .lines()
         .last()
         .unwrap()
         .split_ascii_whitespace()
-        .map(|op| op.parse::<Operator>().unwrap())
+        .map(<_>::to_string)
         .collect_vec()
 }
 
