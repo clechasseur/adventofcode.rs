@@ -1,6 +1,7 @@
 //! Helper library for Advent of Code.
 
 pub mod captures;
+pub mod dij;
 pub mod forth;
 pub mod functional;
 pub mod looping;
