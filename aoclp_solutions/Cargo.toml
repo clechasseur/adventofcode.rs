@@ -8,7 +8,7 @@ rust-version = "1.81.0"
 aoclp = { path = "../aoclp" }
 bit-vec = { workspace = true }
 clap = { workspace = true, features = ["derive"] }
-fancy-regex = { workspace = true }
+derive-where = { workspace = true }
 itertools = { workspace = true }
 paste = { workspace = true }
 primes = { workspace = true }

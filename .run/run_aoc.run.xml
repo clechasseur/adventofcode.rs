@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="run_aoc" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
     <option name="buildProfileId" value="dev" />
-    <option name="command" value="run --package aoclp_solutions --bin aoclp_solutions -- --year 2024 --day 9" />
+    <option name="command" value="run --package aoclp_solutions --bin aoclp_solutions -- --year 2025 --day 7" />
     <option name="workingDirectory" value="file://$PROJECT_DIR$" />
     <envs />
     <option name="emulateTerminal" value="true" />
