@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use aoclp::num::Zero;
-use aoclp::positioning::pt_3d::{euclidian, Pt3d};
+use aoclp::positioning::pt_3d::{euclidian_squared, Pt3d};
 use aoclp::solvers_impl::input::safe_get_input_as_many;
 use itertools::Itertools;
 
@@ -29,8 +29,8 @@ fn circuits(all: bool) -> (HashMap<Pt3d, usize>, HashMap<usize, usize>, (Pt3d, P
     boxes
         .into_iter()
         .array_combinations()
-        .map(|[a, b]| (a, b, euclidian(a, b)))
-        .sorted_unstable_by(|(_, _, a), (_, _, b)| a.partial_cmp(b).unwrap())
+        .map(|[a, b]| (a, b, euclidian_squared(a, b)))
+        .sorted_unstable_by_key(|(_, _, d)| *d)
         .take(if all { 1_000_000 } else { 1_000 })
         .for_each(|(a, b, _)| match (circuits.get(&a).copied(), circuits.get(&b).copied()) {
             (Some(a_id), Some(b_id)) if a_id == b_id => (),

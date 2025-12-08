@@ -184,13 +184,13 @@ where
     (a.x - b.x).abs() + (a.y - b.y).abs() + (a.z - b.z).abs()
 }
 
-/// Returns the [Euclidian distance] between two points in 3D space.
+/// Returns the square of the [Euclidian distance] between two points in 3D space.
 ///
 /// [Euclidian distance]: https://en.wikipedia.org/wiki/Euclidean_distance
-pub fn euclidian<T>(a: Pt3d<T>, b: Pt3d<T>) -> f64
+pub fn euclidian_squared<T>(a: Pt3d<T>, b: Pt3d<T>) -> T
 where
-    T: NumCast,
+    T: Signed + Clone,
 {
-    let (a, b) = (a.cast::<f64>(), b.cast::<f64>());
-    ((a.x - b.x).abs().powi(2) + (a.y - b.y).abs().powi(2) + (a.z - b.z).abs().powi(2)).sqrt()
+    let (x, y, z) = ((a.x - b.x).abs(), (a.y - b.y).abs(), (a.z - b.z).abs());
+    (x.clone() * x) + (y.clone() * y) + (z.clone() * z)
 }
