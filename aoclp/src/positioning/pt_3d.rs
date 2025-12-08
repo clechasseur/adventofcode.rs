@@ -4,6 +4,8 @@ use std::ops::{Add, AddAssign, RangeBounds, Sub, SubAssign};
 use std::str::FromStr;
 use std::sync::OnceLock;
 
+use num::{cast, NumCast};
+
 use crate::captures::CapturesHelper;
 use crate::num::{zero, Signed, Zero};
 use crate::regex::Regex;
@@ -26,6 +28,7 @@ impl<T> Pt3d<T>
 where
     T: PartialOrd,
 {
+    /// Checks if this [`Pt3d`] is within the given bounds.
     pub fn within<XR, YR, ZR>(&self, x_bounds: XR, y_bounds: YR, z_bounds: ZR) -> bool
     where
         XR: RangeBounds<T>,
@@ -33,6 +36,29 @@ where
         ZR: RangeBounds<T>,
     {
         x_bounds.contains(&self.x) && y_bounds.contains(&self.y) && z_bounds.contains(&self.z)
+    }
+}
+
+impl<T> Pt3d<T>
+where
+    T: NumCast,
+{
+    /// Casts this [`Pt3d`] to another numeric type.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use aoclp::positioning::pt_3d::Pt3d;
+    ///
+    /// let p: Pt3d<i32> = Pt3d::new(42, 23, 11);
+    /// let fp: Pt3d<f64> = p.cast();
+    /// assert_eq!(Pt3d::new(42.0, 23.0, 11.0), fp);
+    /// ```
+    pub fn cast<U>(self) -> Pt3d<U>
+    where
+        U: NumCast,
+    {
+        Pt3d::new(cast(self.x).unwrap(), cast(self.y).unwrap(), cast(self.z).unwrap())
     }
 }
 
@@ -156,4 +182,15 @@ where
     T: Signed,
 {
     (a.x - b.x).abs() + (a.y - b.y).abs() + (a.z - b.z).abs()
+}
+
+/// Returns the [Euclidian distance] between two points in 3D space.
+///
+/// [Euclidian distance]: https://en.wikipedia.org/wiki/Euclidean_distance
+pub fn euclidian<T>(a: Pt3d<T>, b: Pt3d<T>) -> f64
+where
+    T: NumCast,
+{
+    let (a, b) = (a.cast::<f64>(), b.cast::<f64>());
+    ((a.x - b.x).abs().powi(2) + (a.y - b.y).abs().powi(2) + (a.z - b.z).abs().powi(2)).sqrt()
 }
