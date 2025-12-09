@@ -10,6 +10,5 @@ bit-vec = { workspace = true }
 clap = { workspace = true, features = ["derive"] }
 derive-where = { workspace = true }
 itertools = { workspace = true }
-paste = { workspace = true }
 primes = { workspace = true }
 strum = { workspace = true, features = ["derive"] }

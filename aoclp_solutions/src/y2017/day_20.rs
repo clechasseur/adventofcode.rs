@@ -57,7 +57,7 @@ fn distance_to_0(c: Coords) -> i64 {
 
 macro_rules! cmp_attribute {
     ($attr:ident) => {
-        ::paste::paste! {
+        ::aoclp::paste::paste! {
             fn [<cmp_ $attr>](p1: &Particle, p2: &Particle) -> ::std::cmp::Ordering {
                 distance_to_0(p1.$attr).cmp(&distance_to_0(p2.$attr))
             }
