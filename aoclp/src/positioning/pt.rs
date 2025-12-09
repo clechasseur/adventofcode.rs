@@ -177,6 +177,15 @@ where
     (a.x - b.x).abs() + (a.y - b.y).abs()
 }
 
+/// Returns the size of the rectangle formed between two points in 2D space,
+/// as if the points were two of the rectangle's opposing corners.
+pub fn rectangular_area<T>(a: Pt<T>, b: Pt<T>) -> T
+where
+    T: Signed,
+{
+    ((a.x - b.x).abs() + T::one()) * ((a.y - b.y).abs() + T::one())
+}
+
 /// Given a two-dimensional matrix of elements, returns a map of
 /// [`Pt`] associated with the element at that position in the matrix.
 pub fn matrix_to_map<T, M, R, PT>(matrix: M) -> HashMap<Pt<PT>, T>
