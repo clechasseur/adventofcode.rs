@@ -2,7 +2,7 @@
 name = "aoclp_solutions"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.81.0"
+rust-version = "1.82.0"
 
 [dependencies]
 aoclp = { path = "../aoclp" }
@@ -11,4 +11,5 @@ clap = { workspace = true, features = ["derive"] }
 derive-where = { workspace = true }
 itertools = { workspace = true }
 primes = { workspace = true }
+rayon = { workspace = true }
 strum = { workspace = true, features = ["derive"] }
