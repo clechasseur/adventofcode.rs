@@ -1,13 +1,11 @@
-use std::cmp::{max, min};
-use std::collections::BTreeSet;
-use std::iter::successors;
+use std::fmt;
+use std::iter::once;
 
 use aoclp::positioning::direction::four_points::Direction4;
 use aoclp::positioning::direction::{Direction, MovementDirection};
-use aoclp::positioning::pt::{rectangular_area, Pt};
+use aoclp::positioning::pt::{min_max, rectangle_corners, rectangular_area, Pt};
 use aoclp::solvers_impl::input::safe_get_input_as_many;
 use itertools::Itertools;
-use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use strum::IntoEnumIterator;
 
 pub fn part_1() -> i64 {
@@ -21,40 +19,108 @@ pub fn part_1() -> i64 {
 
 pub fn part_2() -> i64 {
     let red_tiles = input();
-
-    let red_zone: BTreeSet<_> = build_red_zone(&red_tiles).collect();
-    let safe_rectangle = |a: Pt, b: Pt| {
-        let corners = vec![
-            Pt::new(min(a.x, b.x), min(a.y, b.y)),
-            Pt::new(max(a.x, b.x), min(a.y, b.y)),
-            Pt::new(max(a.x, b.x), max(a.y, b.y)),
-            Pt::new(min(a.x, b.x), max(a.y, b.y)),
-            Pt::new(min(a.x, b.x), min(a.y, b.y)),
-        ];
-        let edges: BTreeSet<_> = corners
-            .into_iter()
-            .tuple_windows()
-            .flat_map(|(a, b)| {
-                let displacement = Pt::new((b.x - a.x).signum(), (b.y - a.y).signum());
-                successors(Some(a), move |&p| (p != b).then_some(p + displacement))
-            })
-            .collect();
-        edges.is_disjoint(&red_zone)
-    };
+    let walls = walls(&red_tiles).collect_vec();
 
     red_tiles
         .into_iter()
         .array_combinations()
-        .map(|[a, b]| (a, b, rectangular_area(a, b)))
-        .sorted_unstable_by(|(_, _, area_a), (_, _, area_b)| area_b.cmp(area_a))
-        .collect_vec()
-        .into_par_iter()
-        .find_first(|(a, b, _)| safe_rectangle(*a, *b))
-        .map(|(_, _, area)| area)
+        .filter(|[a, b]| {
+            let corners = rectangle_corners(*a, *b);
+            corners
+                .into_iter()
+                .chain(once(corners[0]))
+                .tuple_windows()
+                .map(|(a, b)| GridLine::from_endpoints(a, b))
+                .all(|line| !walls.iter().any(|w| w.intersects(line)))
+        })
+        .map(|[a, b]| rectangular_area(a, b))
+        .max()
         .unwrap()
 }
 
-fn build_red_zone(red_tiles: &[Pt]) -> impl Iterator<Item = Pt> + use<'_> {
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+enum GridLine {
+    Horizontal {
+        y: i64,
+        left_x: i64,
+        right_x: i64,
+    },
+    Vertical {
+        x: i64,
+        top_y: i64,
+        bottom_y: i64,
+    },
+    Point(Pt),
+}
+
+impl GridLine {
+    fn from_endpoints(a: Pt, b: Pt) -> Self {
+        let (a, b) = min_max(a, b);
+        match (a.x == b.x, a.y == b.y) {
+            (true, true) => Self::Point(a),
+            (true, false) => Self::Vertical { x: a.x, top_y: a.y, bottom_y: b.y },
+            (false, true) => Self::Horizontal { y: a.y, left_x: a.x, right_x: b.x },
+            (false, false) => panic!("{a} and {b} do not form a line snapped to the grid"),
+        }
+    }
+
+    fn extend(self, direction: Direction4, len: i64) -> Self {
+        match (self, direction) {
+            (Self::Horizontal { y, left_x, right_x }, Direction4::Left) => {
+                Self::Horizontal { y, left_x: left_x - len, right_x }
+            },
+            (Self::Horizontal { y, left_x, right_x }, Direction4::Right) => {
+                Self::Horizontal { y, left_x, right_x: right_x + len}
+            },
+            (Self::Vertical { x, top_y, bottom_y }, Direction4::Up) => {
+                Self::Vertical { x, top_y: top_y - len, bottom_y }
+            },
+            (Self::Vertical { x, top_y, bottom_y }, Direction4::Down) => {
+                Self::Vertical { x, top_y, bottom_y: bottom_y + len }
+            },
+            (Self::Point(p), direction) => {
+                Self::from_endpoints(p, p + (direction.displacement() * len))
+            },
+            (line, direction) => {
+                panic!("line {line} cannot be extended {direction}");
+            },
+        }
+    }
+
+    fn intersects(self, rhs: Self) -> bool {
+        match (self, rhs) {
+            (Self::Horizontal { y, left_x, right_x }, Self::Vertical { x, top_y, bottom_y }) |
+            (Self::Vertical { x, top_y, bottom_y }, Self::Horizontal { y, left_x, right_x }) => {
+                (top_y..=bottom_y).contains(&y) && (left_x..=right_x).contains(&x)
+            },
+            (Self::Horizontal { y, left_x, right_x }, Self::Point(p)) |
+            (Self::Point(p), Self::Horizontal { y, left_x, right_x }) => {
+                p.y == y && (left_x..=right_x).contains(&p.x)
+            },
+            (Self::Vertical { x, top_y, bottom_y }, Self::Point(p)) |
+            (Self::Point(p), Self::Vertical { x, top_y, bottom_y }) => {
+                p.x == x && (top_y..=bottom_y).contains(&p.y)
+            },
+            _ => false,
+        }
+    }
+}
+
+impl fmt::Display for GridLine {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match *self {
+            Self::Horizontal { y, left_x, right_x } => {
+                write!(f, "{} - {}", Pt::new(left_x, y), Pt::new(right_x, y))
+            },
+            Self::Vertical { x, top_y, bottom_y } => {
+                write!(f, "{} - {}", Pt::new(x, top_y), Pt::new(x, bottom_y))
+            },
+            Self::Point(p) => write!(f, "{p} - {p}"),
+        }
+    }
+}
+
+fn walls(red_tiles: &[Pt]) -> impl Iterator<Item = GridLine> + use<'_> {
     let starting_point = red_tiles
         .iter()
         .sorted_by(|a, b| a.x.cmp(&b.x).then(a.y.cmp(&b.y)))
@@ -76,27 +142,18 @@ fn build_red_zone(red_tiles: &[Pt]) -> impl Iterator<Item = Pt> + use<'_> {
         .skip_while(move |&p| p != starting_point)
         .take(red_tiles.len() + 2)
         .tuple_windows()
-        .flat_map(move |(a, b, c)| {
+        .map(move |(a, b, c)| {
             let direction = get_direction(a, b);
-            let turning_left = get_direction(b, c) == direction.turn_left();
+            let turning_right = get_direction(b, c) == direction.turn_right();
 
-            let tail = if turning_left {
-                vec![]
-            } else {
-                vec![
-                    b + direction.turn_left(),
-                    b + direction + direction.turn_left(),
-                    b + direction,
-                ]
-            };
-
-            successors(Some(a), move |&p| {
-                let next = p + direction;
-                (next != b).then_some(next)
-            })
-            .skip(1)
-            .map(move |p| p + (direction.turn_left()))
-            .chain(tail)
+            let mut line = GridLine::from_endpoints(
+                a + direction + direction.turn_left(),
+                b + direction.turn_around() + direction.turn_left(),
+            );
+            if turning_right {
+                line = line.extend(direction, 2);
+            }
+            line
         })
 }
 

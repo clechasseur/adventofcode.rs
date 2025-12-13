@@ -1,8 +1,9 @@
+use std::cmp::{max, min};
 use std::collections::HashMap;
 use std::convert::Infallible;
 use std::fmt::{Debug, Display, Formatter};
 use std::hash::Hash;
-use std::ops::{Add, AddAssign, RangeBounds, Sub, SubAssign};
+use std::ops::{Add, AddAssign, Mul, MulAssign, RangeBounds, Sub, SubAssign};
 use std::str::FromStr;
 use std::sync::OnceLock;
 
@@ -154,6 +155,27 @@ where
     }
 }
 
+impl<T> Mul<T> for Pt<T>
+where
+    T: Mul<Output = T> + Copy,
+{
+    type Output = Self;
+
+    fn mul(self, rhs: T) -> Self::Output {
+        Self::new(self.x * rhs, self.y * rhs)
+    }
+}
+
+impl<T> MulAssign<T> for Pt<T>
+where
+    T: MulAssign + Copy,
+{
+    fn mul_assign(&mut self, rhs: T) {
+        self.x *= rhs;
+        self.y *= rhs;
+    }
+}
+
 impl<T> Zero for Pt<T>
 where
     T: Zero,
@@ -175,6 +197,42 @@ where
     T: Signed,
 {
     (a.x - b.x).abs() + (a.y - b.y).abs()
+}
+
+/// Given two arbitrary points `a` and `b` in 2D space, returns the point with the
+/// minimum `x` and `y` values of `a` and `b`, and the point with the maximum
+/// `x` and `y` values of `a` and `b`.
+///
+/// Put another way, if we see `a` and `b` as being  any two opposite corners of a
+/// rectangle, then this function returns the top-left and bottom-right corners of
+/// that rectangle, in that order.
+pub fn min_max<T>(a: Pt<T>, b: Pt<T>) -> (Pt<T>, Pt<T>)
+where
+    T: Ord + Copy,
+{
+    (
+        Pt::new(min(a.x, b.x), min(a.y, b.y)),
+        Pt::new(max(a.x, b.x), max(a.y, b.y)),
+    )
+}
+
+/// Given two points representing any two opposite corners of a rectangle in 2D space,
+/// returns points representing the four corners of that rectangle, in this order:
+///
+/// - top-left
+/// - top-right
+/// - bottom-right
+/// - bottom-left
+pub fn rectangle_corners<T>(a: Pt<T>, b: Pt<T>) -> [Pt<T>; 4]
+where
+    T: Ord + Copy,
+{
+    [
+        Pt::new(min(a.x, b.x), min(a.y, b.y)),
+        Pt::new(max(a.x, b.x), min(a.y, b.y)),
+        Pt::new(max(a.x, b.x), max(a.y, b.y)),
+        Pt::new(min(a.x, b.x), max(a.y, b.y)),
+    ]
 }
 
 /// Returns the size of the rectangle formed between two points in 2D space,
