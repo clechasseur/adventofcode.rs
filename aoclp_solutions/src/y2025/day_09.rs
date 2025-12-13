@@ -7,6 +7,7 @@ use aoclp::positioning::direction::{Direction, MovementDirection};
 use aoclp::positioning::pt::{rectangular_area, Pt};
 use aoclp::solvers_impl::input::safe_get_input_as_many;
 use itertools::Itertools;
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use strum::IntoEnumIterator;
 
 pub fn part_1() -> i64 {
@@ -46,7 +47,9 @@ pub fn part_2() -> i64 {
         .array_combinations()
         .map(|[a, b]| (a, b, rectangular_area(a, b)))
         .sorted_unstable_by(|(_, _, area_a), (_, _, area_b)| area_b.cmp(area_a))
-        .find(|&(a, b, _)| safe_rectangle(a, b))
+        .collect_vec()
+        .into_par_iter()
+        .find_first(|(a, b, _)| safe_rectangle(*a, *b))
         .map(|(_, _, area)| area)
         .unwrap()
 }
