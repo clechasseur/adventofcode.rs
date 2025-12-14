@@ -1,11 +1,14 @@
-use std::ops::Range;
 use std::str::FromStr;
 use std::sync::OnceLock;
 use itertools::Itertools;
 use aoclp::anyhow::Context;
 use aoclp::regex::Regex;
+use aoclp::solvers_impl::input::safe_get_input;
 
 pub fn part_1() -> usize {
+    let input = input();
+    println!("Presents: {}, regions: {}", input.0.len(), input.1.len());
+
     0
 }
 
@@ -73,18 +76,58 @@ impl FromStr for Region {
     }
 }
 
+fn input() -> (Vec<Present>, Vec<Region>) {
+    parse_input(safe_get_input(2025, 12).lines())
+}
+
 fn parse_input<I, S>(input: I) -> (Vec<Present>, Vec<Region>)
 where
     I: IntoIterator<Item = S>,
+    <I as IntoIterator>::IntoIter: Clone,
     S: AsRef<str>,
 {
-    let mut it = input.into_iter();
+    static INDEX_REGEX: OnceLock<Regex> = OnceLock::new();
+    let index_re =
+        INDEX_REGEX.get_or_init(|| {
+            Regex::new(r"^(?<idx>\d+):\s*$").unwrap()
+        });
 
+    let mut it = input.into_iter().peekable();
     let mut presents = Vec::new();
-    for i in 0.. {
-        let index = it.next();
-        if 
+    let mut i = 0;
+    loop {
+        // if let Some(line) = it.peek() && line.as_ref().trim_ascii().is_empty() {
+        //
+        // }
+
+        let index_s = it.next().expect("end of data before regions!");
+        let index_s = index_s.as_ref();
+        if index_s.trim_ascii().is_empty() {
+            continue;
+        }
+
+        match index_re.captures(index_s) {
+            None => break,
+            Some(index_cap) => {
+                let index = &index_cap["idx"];
+                let index: usize = index.parse().unwrap();
+                if index != i {
+                    panic!("expected present #{i}, found present #{index}");
+                }
+
+                let present: Present = it.clone().take(3).into();
+                presents.push(present);
+
+                it = it.dropping(3);
+                i += 1;
+            },
+        }
     }
 
-    todo!()
+    let regions = it
+        .skip_while(|l| l.as_ref().trim_ascii().is_empty())
+        .map(|l| l.as_ref().parse().unwrap())
+        .collect();
+
+    (presents, regions)
 }
