@@ -1,13 +1,13 @@
-use std::cmp::min;
-use std::collections::HashMap;
 use std::str::FromStr;
 use std::sync::OnceLock;
 
 use aoclp::anyhow::Context;
 use aoclp::regex::Regex;
-use aoclp::solvers_impl::input::safe_get_input_as_many;
+use aoclp::solvers_impl::input::{safe_get_input_as_many, Input};
 use itertools::Itertools;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
+use z3::ast::Int;
+use z3::{Optimize, SatResult};
 
 pub fn part_1() -> usize {
     input().iter().map(Machine::fewest_presses_for_lights).sum()
@@ -54,47 +54,44 @@ impl Machine {
     }
 
     fn fewest_presses_for_joltage(&self) -> usize {
-        let mut cache = HashMap::new();
-        let presses = self.fewest_presses_for_joltage_from(
-            vec![0; self.joltage_reqs.len()],
-            0,
-            usize::MAX,
-            &mut cache,
-        );
-        println!("{presses}");
-        presses
-    }
+        let opt = Optimize::new();
 
-    fn fewest_presses_for_joltage_from(
-        &self,
-        cur: Vec<usize>,
-        steps: usize,
-        max_steps: usize,
-        _cache: &mut HashMap<Vec<usize>, usize>,
-    ) -> usize {
-        if *cur == self.joltage_reqs {
-            return steps;
-        // } else if let Some(presses) = cache.get(&cur) {
-        //     return *presses;
-        } else if steps == max_steps
-            || cur
-                .iter()
-                .zip(self.joltage_reqs.iter())
-                .any(|(cur, req)| *cur > *req)
-        {
-            return max_steps;
+        let buttons = (0..self.button_wirings.len())
+            .map(|i| Int::new_const(format!("button{i}")))
+            .collect_vec();
+        for b in &buttons {
+            opt.assert(&b.ge(0));
         }
 
-        let presses = self.button_wirings.iter().fold(max_steps, |max, wiring| {
-            let mut next = cur.clone();
-            for w in wiring {
-                next[*w] += 1;
-            }
-            let next_presses = self.fewest_presses_for_joltage_from(next, steps + 1, max, _cache);
-            min(max, next_presses)
-        });
-        // cache.insert(cur, presses);
-        presses
+        let presses = buttons
+            .iter()
+            .skip(1)
+            .fold(&buttons[0] + 0, |acc, b| acc + b);
+
+        for (i, j_req) in self.joltage_reqs.iter().copied().enumerate() {
+            let matching_buttons = self
+                .button_wirings
+                .iter()
+                .enumerate()
+                .filter(|(_, w)| w.contains(&i))
+                .map(|(wi, _)| &buttons[wi])
+                .collect_vec();
+            let jolt = matching_buttons
+                .iter()
+                .skip(1)
+                .fold(matching_buttons[0] + 0, |acc, b| acc + *b);
+            opt.assert(&jolt.eq(j_req as u64));
+        }
+
+        opt.minimize(&presses);
+        let check = opt.check(&[]);
+        if check != SatResult::Sat {
+            panic!("No combination of presses can reach {:?}", self.joltage_reqs);
+        }
+
+        let model = opt.get_model().unwrap();
+        let presses = model.eval(&presses, true).unwrap();
+        presses.as_u64().unwrap() as usize
     }
 }
 
@@ -133,6 +130,15 @@ impl FromStr for Machine {
     }
 }
 
+const EXAMPLE: &str = "\
+    [.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}\n\
+    [...#.] (0,2,3,4) (2,3) (0,4) (0,1,2) (1,2,3,4) {7,5,12,7,2}\n\
+    [.###.#] (0,1,2,3,4) (0,3,4) (0,1,2,4,5) (1,2) {10,11,11,5,10,5}";
+
 fn input() -> Vec<Machine> {
     safe_get_input_as_many(2025, 10)
+}
+
+fn example() -> Vec<Machine> {
+    Input::for_example(EXAMPLE).safe_into_many()
 }
