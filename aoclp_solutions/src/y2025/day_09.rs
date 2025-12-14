@@ -1,10 +1,11 @@
+use std::collections::HashSet;
 use std::fmt;
 use std::iter::once;
 
 use aoclp::positioning::direction::four_points::Direction4;
 use aoclp::positioning::direction::{Direction, MovementDirection};
 use aoclp::positioning::pt::{min_max, rectangle_corners, rectangular_area, Pt};
-use aoclp::solvers_impl::input::safe_get_input_as_many;
+use aoclp::solvers_impl::input::{safe_get_input_as_many, Input};
 use itertools::Itertools;
 use strum::IntoEnumIterator;
 
@@ -21,21 +22,85 @@ pub fn part_2() -> i64 {
     let red_tiles = input();
     let walls = walls(&red_tiles).collect_vec();
 
-    red_tiles
-        .into_iter()
+    let valid_rectangle = |a: Pt, b: Pt| {
+        let corners = rectangle_corners(a, b);
+        corners
+            .into_iter()
+            .chain(once(corners[0]))
+            .tuple_windows()
+            .map(|(a, b)| GridLine::from_endpoints(a, b))
+            .all(|line| !walls.iter().any(|w| w.intersects(line)))
+    };
+
+    let area = red_tiles
+        .iter()
+        .copied()
         .array_combinations()
-        .filter(|[a, b]| {
-            let corners = rectangle_corners(*a, *b);
-            corners
-                .into_iter()
-                .chain(once(corners[0]))
-                .tuple_windows()
-                .map(|(a, b)| GridLine::from_endpoints(a, b))
-                .all(|line| !walls.iter().any(|w| w.intersects(line)))
-        })
+        .filter(|[a, b]| valid_rectangle(*a, *b))
         .map(|[a, b]| rectangular_area(a, b))
         .max()
-        .unwrap()
+        .unwrap();
+
+    let matching_rects = red_tiles
+        .iter()
+        .copied()
+        .array_combinations()
+        .map(|[a, b]| (a, b, rectangular_area(a, b)))
+        .filter(|(_, _, ar)| *ar == area)
+        .filter(|(a, b, _)| valid_rectangle(*a, *b))
+        .collect_vec();
+
+    println!("The largest rectangle has an area of {area}. Matching rectangles:");
+    for (a, b, _) in matching_rects {
+        println!("  {a} - {b}");
+    }
+
+    // let line_pts = |line: GridLine| {
+    //     match line {
+    //         GridLine::Horizontal { y, left_x, right_x } => {
+    //             (left_x..=right_x).map(|x| Pt::new(x, y)).collect_vec()
+    //         },
+    //         GridLine::Vertical { x, top_y, bottom_y } => {
+    //             (top_y..=bottom_y).map(|y| Pt::new(x, y)).collect_vec()
+    //         },
+    //         GridLine::Point(p) => vec![p],
+    //     }
+    // };
+    //
+    // let red_tiles_s: HashSet<_> = red_tiles.iter().copied().collect();
+    // let path_s: HashSet<_> = red_tiles
+    //     .iter()
+    //     .copied()
+    //     .chain(once(red_tiles[0]))
+    //     .tuple_windows()
+    //     .flat_map(|(a, b)| line_pts(GridLine::from_endpoints(a, b)))
+    //     .collect();
+    // let walls_s: HashSet<_> = walls
+    //     .iter()
+    //     .flat_map(|w| line_pts(*w))
+    //     .collect();
+    //
+    // let max_x = red_tiles.iter().map(|p| p.x).max().unwrap() + 3;
+    // let max_y = red_tiles.iter().map(|p| p.y).max().unwrap() + 3;
+    //
+    // for y in 0..=max_y {
+    //     for x in 0..=max_x {
+    //         let p = Pt::new(x, y);
+    //         if red_tiles_s.contains(&p) {
+    //             print!("#");
+    //         } else if walls_s.contains(&p) {
+    //             print!("!");
+    //         } else if path_s.contains(&p) {
+    //             print!("X");
+    //         } else {
+    //             print!(".");
+    //         }
+    //     }
+    //     println!();
+    // }
+    // println!();
+
+    area
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -142,7 +207,7 @@ fn walls(red_tiles: &[Pt]) -> impl Iterator<Item = GridLine> + use<'_> {
         .skip_while(move |&p| p != starting_point)
         .take(red_tiles.len() + 2)
         .tuple_windows()
-        .map(move |(a, b, c)| {
+        .scan(true, move |turned_right, (a, b, c)| {
             let direction = get_direction(a, b);
             let turning_right = get_direction(b, c) == direction.turn_right();
 
@@ -150,10 +215,15 @@ fn walls(red_tiles: &[Pt]) -> impl Iterator<Item = GridLine> + use<'_> {
                 a + direction + direction.turn_left(),
                 b + direction.turn_around() + direction.turn_left(),
             );
+            if *turned_right {
+                line = line.extend(direction.turn_around(), 1);
+            }
             if turning_right {
                 line = line.extend(direction, 2);
             }
-            line
+
+            *turned_right = turning_right;
+            Some(line)
         })
 }
 
@@ -169,4 +239,8 @@ const EXAMPLE: &str = "\
 
 fn input() -> Vec<Pt> {
     safe_get_input_as_many(2025, 9)
+}
+
+fn example() -> Vec<Pt> {
+    Input::for_example(EXAMPLE).safe_into_many()
 }
