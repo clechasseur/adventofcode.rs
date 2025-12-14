@@ -1,4 +1,3 @@
-use std::collections::HashSet;
 use std::fmt;
 use std::iter::once;
 
@@ -32,89 +31,20 @@ pub fn part_2() -> i64 {
             .all(|line| !walls.iter().any(|w| w.intersects(line)))
     };
 
-    let area = red_tiles
+    red_tiles
         .iter()
         .copied()
         .array_combinations()
         .filter(|[a, b]| valid_rectangle(*a, *b))
         .map(|[a, b]| rectangular_area(a, b))
         .max()
-        .unwrap();
-
-    let matching_rects = red_tiles
-        .iter()
-        .copied()
-        .array_combinations()
-        .map(|[a, b]| (a, b, rectangular_area(a, b)))
-        .filter(|(_, _, ar)| *ar == area)
-        .filter(|(a, b, _)| valid_rectangle(*a, *b))
-        .collect_vec();
-
-    println!("The largest rectangle has an area of {area}. Matching rectangles:");
-    for (a, b, _) in matching_rects {
-        println!("  {a} - {b}");
-    }
-
-    // let line_pts = |line: GridLine| {
-    //     match line {
-    //         GridLine::Horizontal { y, left_x, right_x } => {
-    //             (left_x..=right_x).map(|x| Pt::new(x, y)).collect_vec()
-    //         },
-    //         GridLine::Vertical { x, top_y, bottom_y } => {
-    //             (top_y..=bottom_y).map(|y| Pt::new(x, y)).collect_vec()
-    //         },
-    //         GridLine::Point(p) => vec![p],
-    //     }
-    // };
-    //
-    // let red_tiles_s: HashSet<_> = red_tiles.iter().copied().collect();
-    // let path_s: HashSet<_> = red_tiles
-    //     .iter()
-    //     .copied()
-    //     .chain(once(red_tiles[0]))
-    //     .tuple_windows()
-    //     .flat_map(|(a, b)| line_pts(GridLine::from_endpoints(a, b)))
-    //     .collect();
-    // let walls_s: HashSet<_> = walls
-    //     .iter()
-    //     .flat_map(|w| line_pts(*w))
-    //     .collect();
-    //
-    // let max_x = red_tiles.iter().map(|p| p.x).max().unwrap() + 3;
-    // let max_y = red_tiles.iter().map(|p| p.y).max().unwrap() + 3;
-    //
-    // for y in 0..=max_y {
-    //     for x in 0..=max_x {
-    //         let p = Pt::new(x, y);
-    //         if red_tiles_s.contains(&p) {
-    //             print!("#");
-    //         } else if walls_s.contains(&p) {
-    //             print!("!");
-    //         } else if path_s.contains(&p) {
-    //             print!("X");
-    //         } else {
-    //             print!(".");
-    //         }
-    //     }
-    //     println!();
-    // }
-    // println!();
-
-    area
+        .unwrap()
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 enum GridLine {
-    Horizontal {
-        y: i64,
-        left_x: i64,
-        right_x: i64,
-    },
-    Vertical {
-        x: i64,
-        top_y: i64,
-        bottom_y: i64,
-    },
+    Horizontal { y: i64, left_x: i64, right_x: i64 },
+    Vertical { x: i64, top_y: i64, bottom_y: i64 },
     Point(Pt),
 }
 
@@ -135,7 +65,7 @@ impl GridLine {
                 Self::Horizontal { y, left_x: left_x - len, right_x }
             },
             (Self::Horizontal { y, left_x, right_x }, Direction4::Right) => {
-                Self::Horizontal { y, left_x, right_x: right_x + len}
+                Self::Horizontal { y, left_x, right_x: right_x + len }
             },
             (Self::Vertical { x, top_y, bottom_y }, Direction4::Up) => {
                 Self::Vertical { x, top_y: top_y - len, bottom_y }
@@ -154,16 +84,16 @@ impl GridLine {
 
     fn intersects(self, rhs: Self) -> bool {
         match (self, rhs) {
-            (Self::Horizontal { y, left_x, right_x }, Self::Vertical { x, top_y, bottom_y }) |
-            (Self::Vertical { x, top_y, bottom_y }, Self::Horizontal { y, left_x, right_x }) => {
+            (Self::Horizontal { y, left_x, right_x }, Self::Vertical { x, top_y, bottom_y })
+            | (Self::Vertical { x, top_y, bottom_y }, Self::Horizontal { y, left_x, right_x }) => {
                 (top_y..=bottom_y).contains(&y) && (left_x..=right_x).contains(&x)
             },
-            (Self::Horizontal { y, left_x, right_x }, Self::Point(p)) |
-            (Self::Point(p), Self::Horizontal { y, left_x, right_x }) => {
+            (Self::Horizontal { y, left_x, right_x }, Self::Point(p))
+            | (Self::Point(p), Self::Horizontal { y, left_x, right_x }) => {
                 p.y == y && (left_x..=right_x).contains(&p.x)
             },
-            (Self::Vertical { x, top_y, bottom_y }, Self::Point(p)) |
-            (Self::Point(p), Self::Vertical { x, top_y, bottom_y }) => {
+            (Self::Vertical { x, top_y, bottom_y }, Self::Point(p))
+            | (Self::Point(p), Self::Vertical { x, top_y, bottom_y }) => {
                 p.x == x && (top_y..=bottom_y).contains(&p.y)
             },
             _ => false,

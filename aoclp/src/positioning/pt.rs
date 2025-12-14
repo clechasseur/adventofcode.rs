@@ -210,10 +210,7 @@ pub fn min_max<T>(a: Pt<T>, b: Pt<T>) -> (Pt<T>, Pt<T>)
 where
     T: Ord + Copy,
 {
-    (
-        Pt::new(min(a.x, b.x), min(a.y, b.y)),
-        Pt::new(max(a.x, b.x), max(a.y, b.y)),
-    )
+    (Pt::new(min(a.x, b.x), min(a.y, b.y)), Pt::new(max(a.x, b.x), max(a.y, b.y)))
 }
 
 /// Given two points representing any two opposite corners of a rectangle in 2D space,
