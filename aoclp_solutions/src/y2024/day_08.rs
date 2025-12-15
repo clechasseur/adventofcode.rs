@@ -22,7 +22,7 @@ struct Map {
 }
 
 impl Map {
-    fn antinodes(&self, resonating: bool) -> impl Iterator<Item = Pt> {
+    fn antinodes(&self, resonating: bool) -> impl Iterator<Item = Pt> + use<> {
         let antinodes = self
             .antennas
             .iter()
@@ -51,7 +51,7 @@ impl Map {
         antinodes.into_iter()
     }
 
-    fn dull_antinodes_for(&self, p1: Pt, p2: Pt) -> impl Iterator<Item = Pt> {
+    fn dull_antinodes_for(&self, p1: Pt, p2: Pt) -> impl Iterator<Item = Pt> + use<> {
         let diff = p1 - p2;
         let anti1 = p1 + diff;
         let anti2 = p2 - diff;
