@@ -1,5 +1,5 @@
 [workspace]
-resolver = "2"
+resolver = "3"
 members = ["aoclp", "aoclp_solutions", "codingquest_clp", "codingquest_clp_solutions"]
 default-members = ["aoclp_solutions"]
 
