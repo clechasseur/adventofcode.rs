@@ -10,7 +10,7 @@ pub fn part_1() -> usize {
 
 pub fn part_2() -> usize {
     let input = input();
-    (1usize..)
+    (1_usize..)
         .find(|delay| !input.iter().any(|layer| layer.catches(*delay)))
         .unwrap()
 }

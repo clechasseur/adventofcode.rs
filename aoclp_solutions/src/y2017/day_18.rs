@@ -39,7 +39,7 @@ pub fn part_2() -> usize {
         ),
     ];
 
-    let mut interpreter = 0usize;
+    let mut interpreter = 0_usize;
     let mut wait_count = 0;
     loop {
         let next_interpreter = &mut interpreters[interpreter];

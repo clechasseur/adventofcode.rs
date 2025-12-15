@@ -59,7 +59,7 @@ impl Message {
     {
         let actual_checksum = data
             .into_iter()
-            .fold(0u8, |acc, byte| acc.wrapping_add(byte));
+            .fold(0_u8, |acc, byte| acc.wrapping_add(byte));
         actual_checksum.wrapping_sub(expected_checksum)
     }
 }

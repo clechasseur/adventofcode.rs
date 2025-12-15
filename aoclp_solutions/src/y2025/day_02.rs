@@ -44,7 +44,7 @@ fn num_digits(n: usize) -> usize {
 fn invalid(id: usize) -> bool {
     let num_digits = num_digits(id);
     if num_digits.is_even() {
-        let midpoint = 10usize.pow(num_digits as u32 / 2);
+        let midpoint = 10_usize.pow(num_digits as u32 / 2);
         return (id / midpoint) == (id % midpoint);
     }
 
@@ -58,7 +58,7 @@ fn invalid_fancy(id: usize) -> bool {
 
 fn invalid_of_size(mut id: usize, num_digits: usize, of_size: usize) -> bool {
     if num_digits % of_size == 0 {
-        let window = 10usize.pow(of_size as u32);
+        let window = 10_usize.pow(of_size as u32);
         let expected = id % window;
         while id != 0 {
             let actual = id % window;

@@ -22,7 +22,7 @@ pub fn part_2() -> i64 {
 fn circuits(all: bool) -> (HashMap<Pt3d, usize>, HashMap<usize, usize>, (Pt3d, Pt3d)) {
     let boxes = input();
 
-    let mut circuit_id = 0usize;
+    let mut circuit_id = 0_usize;
     let mut circuits = HashMap::new();
     let mut circuit_sizes = HashMap::new();
     let mut last_pair = (zero(), zero());
@@ -57,7 +57,7 @@ fn circuits(all: bool) -> (HashMap<Pt3d, usize>, HashMap<usize, usize>, (Pt3d, P
             (None, None) => {
                 circuits.insert(a, circuit_id);
                 circuits.insert(b, circuit_id);
-                circuit_sizes.insert(circuit_id, 2usize);
+                circuit_sizes.insert(circuit_id, 2_usize);
                 circuit_id += 1;
             },
         });

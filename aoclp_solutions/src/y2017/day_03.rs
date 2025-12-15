@@ -45,8 +45,8 @@ fn spiral() -> impl Iterator<Item = Pt> {
 
 fn spiral_stress_test() -> impl Iterator<Item = i64> {
     let mut values = HashMap::new();
-    let around: Vec<_> = (-1i64..=1)
-        .cartesian_product(-1i64..=1)
+    let around: Vec<_> = (-1_i64..=1)
+        .cartesian_product(-1_i64..=1)
         .map_into::<Pt>()
         .filter(|pt| !pt.is_zero())
         .collect();
@@ -59,7 +59,7 @@ fn spiral_stress_test() -> impl Iterator<Item = i64> {
                 values.get(&neighbour).copied()
             })
             .sum1()
-            .unwrap_or(1i64);
+            .unwrap_or(1_i64);
         values.insert(pt, value);
         value
     })

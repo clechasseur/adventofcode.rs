@@ -50,7 +50,7 @@ impl KnotHash {
             .cycle()
             .take(num_lengths)
             .map(|&length| length as usize)
-            .fold((numbers.iter().cycle(), 0usize), |(numbers, skip), length| {
+            .fold((numbers.iter().cycle(), 0_usize), |(numbers, skip), length| {
                 Self::swap_range(numbers.clone().take(length));
                 (numbers.dropping(length + skip), skip + 1)
             });
