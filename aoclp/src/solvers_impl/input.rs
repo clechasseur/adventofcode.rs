@@ -281,7 +281,7 @@ impl<'a> TryFrom<Input<'a>> for String {
     type Error = crate::Error;
 
     fn try_from(input: Input<'a>) -> Result<Self, Self::Error> {
-        input.data.ok_or(anyhow!("data not set"))
+        input.data.ok_or_else(|| anyhow!("data not set"))
     }
 }
 

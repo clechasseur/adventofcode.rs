@@ -108,7 +108,7 @@ impl From<Vec<&str>> for TuringStates {
                 .chunk_by(|line| line.is_empty())
                 .into_iter()
                 .enumerate()
-                .filter(|&(i, _)| i % 2 == 0)
+                .filter(|(i, _)| i % 2 == 0)
                 .map(|(_, (_, mut chunk))| {
                     let name = chunk
                         .next()

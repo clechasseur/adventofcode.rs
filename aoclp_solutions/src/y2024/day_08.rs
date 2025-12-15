@@ -27,18 +27,18 @@ impl Map {
             .antennas
             .iter()
             .sorted_by_key(|&(_, &freq)| freq)
-            .chunk_by(|&(_, &freq)| freq)
+            .chunk_by(|(_, freq)| **freq)
             .into_iter()
             .flat_map(|(_, antennas)| {
-                let antennas = antennas.map(|(&pt, _)| pt).collect_vec();
+                let antennas = antennas.map(|(pt, _)| *pt).collect_vec();
                 let antinodes = antennas
                     .iter()
                     .cartesian_product(antennas.iter())
                     .filter(|(p1, p2)| p1 != p2)
-                    .flat_map(|(&p1, &p2)| {
+                    .flat_map(|(p1, p2)| {
                         let antinodes = match resonating {
-                            true => self.resonating_antinodes_for(p1, p2).collect_vec(),
-                            false => self.dull_antinodes_for(p1, p2).collect_vec(),
+                            true => self.resonating_antinodes_for(*p1, *p2).collect_vec(),
+                            false => self.dull_antinodes_for(*p1, *p2).collect_vec(),
                         };
                         antinodes.into_iter()
                     })
@@ -60,13 +60,13 @@ impl Map {
 
     fn resonating_antinodes_for(&self, p1: Pt, p2: Pt) -> impl Iterator<Item = Pt> + use<'_> {
         let diff = p1 - p2;
-        let from_p1 = successors(Some(p1), move |&pt| {
-            let next = pt + diff;
+        let from_p1 = successors(Some(p1), move |pt| {
+            let next = *pt + diff;
             next.within(self.x_bounds.clone(), self.y_bounds.clone())
                 .then_some(next)
         });
-        let from_p2 = successors(Some(p2), move |&pt| {
-            let next = pt - diff;
+        let from_p2 = successors(Some(p2), move |pt| {
+            let next = *pt - diff;
             next.within(self.x_bounds.clone(), self.y_bounds.clone())
                 .then_some(next)
         });
@@ -82,7 +82,7 @@ impl Default for Map {
         let x_bounds = 0..antennas_matrix[0].len() as i64;
         let antennas = matrix_to_map(antennas_matrix)
             .into_iter()
-            .filter(|&(_, c)| c != '.')
+            .filter(|(_, c)| *c != '.')
             .collect();
 
         Self { x_bounds, y_bounds, antennas }

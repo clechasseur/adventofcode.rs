@@ -36,7 +36,7 @@ fn expanding_universe() -> impl Iterator<Item = Universe> {
             let mut distances = universe.distances();
             for (ep1_id, ep2_id, ed) in expanded_universe.distances() {
                 let (_, _, d) = distances
-                    .find(|&(p1_id, p2_id, _)| p1_id == ep1_id && p2_id == ep2_id)
+                    .find(|(p1_id, p2_id, _)| *p1_id == ep1_id && *p2_id == ep2_id)
                     .unwrap();
                 if d >= ed {
                     break 'blue true;
@@ -122,7 +122,7 @@ impl Universe {
                 .into_iter()
                 .sorted_unstable_by_key(|p| p.position)
                 .dedup_by_with_count(|p1, p2| p1.position == p2.position)
-                .filter(|&(count, _)| count == 1)
+                .filter(|(count, _)| *count == 1)
                 .map(|(_, p)| p)
                 .sorted_unstable_by_key(|p| p.id)
                 .collect_vec(),

@@ -40,8 +40,8 @@ impl Move {
                 programs
             },
             Self::Partner(par_a, par_b) => {
-                let pos_a = programs.iter().position(|&c| c == par_a).unwrap();
-                let pos_b = programs.iter().position(|&c| c == par_b).unwrap();
+                let pos_a = programs.iter().position(|c| *c == par_a).unwrap();
+                let pos_b = programs.iter().position(|c| *c == par_b).unwrap();
                 programs.swap(pos_a, pos_b);
                 programs
             },

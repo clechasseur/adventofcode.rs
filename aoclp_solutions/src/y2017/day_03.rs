@@ -14,7 +14,7 @@ pub fn part_1() -> i64 {
 
 pub fn part_2() -> i64 {
     let input = input();
-    spiral_stress_test().find(|&v| v > (input as i64)).unwrap()
+    spiral_stress_test().find(|v| *v > (input as i64)).unwrap()
 }
 
 fn spiral() -> impl Iterator<Item = Pt> {
@@ -54,8 +54,8 @@ fn spiral_stress_test() -> impl Iterator<Item = i64> {
     spiral().map(move |pt| {
         let value = around
             .iter()
-            .filter_map(|&pt_mod| {
-                let neighbour = pt + pt_mod;
+            .filter_map(|pt_mod| {
+                let neighbour = pt + *pt_mod;
                 values.get(&neighbour).copied()
             })
             .sum1()

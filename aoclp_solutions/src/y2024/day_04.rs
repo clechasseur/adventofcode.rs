@@ -21,19 +21,19 @@ impl WordSearch {
     pub fn xmas_count(&self) -> usize {
         self.0
             .iter()
-            .filter(|(_, &c)| c == 'X')
-            .map(|(&pt, _)| self.xmas_count_from(pt))
+            .filter(|(_, c)| **c == 'X')
+            .map(|(pt, _)| self.xmas_count_from(*pt))
             .sum()
     }
 
     fn xmas_count_from(&self, pt: Pt) -> usize {
         Direction8::iter()
-            .filter(|&direction| self.has_xmas(pt, direction))
+            .filter(|direction| self.has_xmas(pt, *direction))
             .count()
     }
 
     fn has_xmas(&self, pt: Pt, direction: Direction8) -> bool {
-        successors(Some(pt), |&pt| Some(pt + direction))
+        successors(Some(pt), |pt| Some(*pt + direction))
             .take(4)
             .map(|pt| self.at(pt))
             .zip("XMAS".chars())
@@ -47,7 +47,7 @@ impl WordSearch {
     pub fn x_mas_count(&self) -> usize {
         self.0
             .iter()
-            .filter(|(&pt, &c)| c == 'A' && self.has_x_mas(pt))
+            .filter(|(pt, c)| **c == 'A' && self.has_x_mas(**pt))
             .count()
     }
 
@@ -55,7 +55,7 @@ impl WordSearch {
         let line = |aft: Direction8, fore: Direction8| -> String {
             [pt + aft, pt, pt + fore]
                 .iter()
-                .map(|&pt| self.at(pt))
+                .map(|pt| self.at(*pt))
                 .collect()
         };
         [

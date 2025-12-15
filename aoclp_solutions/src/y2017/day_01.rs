@@ -13,7 +13,7 @@ fn sum(input: &str, skip: usize) -> u32 {
     input
         .chars()
         .enumerate()
-        .filter(|&(i, c)| c == nth(input, i + skip))
+        .filter(|(i, c)| *c == nth(input, i + skip))
         .map(|(_, c)| c.to_digit(10).unwrap())
         .sum()
 }

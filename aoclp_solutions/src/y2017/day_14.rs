@@ -80,7 +80,7 @@ impl Disk {
 
             Self::NEIGHBOURS
                 .iter()
-                .map(|&n| pt + n)
+                .map(|n| pt + *n)
                 .for_each(|n| self.fill_region(n, region));
         }
     }

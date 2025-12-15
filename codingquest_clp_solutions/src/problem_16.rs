@@ -25,12 +25,12 @@ impl Message {
     pub fn fix(&self) -> u64 {
         let (invalid_row, invalid_row_checksum_diff) = (0..self.data.len())
             .map(|i| (i, Self::checksum_diff(self.row_checksums[i], self.row(i))))
-            .filter(|&(_, diff)| diff != 0)
+            .filter(|(_, diff)| *diff != 0)
             .exactly_one()
             .unwrap();
         let (invalid_col, invalid_col_checksum_diff) = (0..self.data[0].len())
             .map(|i| (i, Self::checksum_diff(self.col_checksums[i], self.col(i))))
-            .filter(|&(_, diff)| diff != 0)
+            .filter(|(_, diff)| *diff != 0)
             .exactly_one()
             .unwrap();
 

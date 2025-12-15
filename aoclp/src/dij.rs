@@ -4,6 +4,7 @@ use std::hash::Hash;
 
 pub trait Graph<T> {
     fn neighbours(&self, node: &T) -> impl Iterator<Item = T>;
+
     fn dist(&self, a: &T, b: &T) -> usize {
         let (_, _) = (a, b);
         1

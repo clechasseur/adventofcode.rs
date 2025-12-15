@@ -28,7 +28,7 @@ impl FromStr for Program {
             neighbours: neighbours
                 .split(", ")
                 .map(FromStr::from_str)
-                .collect::<Result<_, _>>()?,
+                .try_collect()?,
         })
     }
 }
@@ -47,9 +47,9 @@ impl Village {
         let mut seen = HashSet::new();
         let mut count = 0;
 
-        self.0.keys().for_each(|&id| {
-            if !seen.contains(&id) {
-                seen.extend(self.group(id));
+        self.0.keys().for_each(|id| {
+            if !seen.contains(id) {
+                seen.extend(self.group(*id));
                 count += 1;
             }
         });
@@ -64,7 +64,7 @@ impl Village {
             program
                 .neighbours
                 .iter()
-                .for_each(|&neighbour_id| self.fill_group(neighbour_id, group));
+                .for_each(|neighbour_id| self.fill_group(*neighbour_id, group));
         }
     }
 }

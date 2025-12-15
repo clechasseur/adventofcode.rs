@@ -114,7 +114,7 @@ where
         } else {
             Self::MATCHING_ORDERINGS
                 .iter()
-                .filter_map(|&(c, ord)| value.contains(c).then_some(ord))
+                .filter_map(|(c, ord)| value.contains(*c).then_some(*ord))
                 .collect()
         })
     }

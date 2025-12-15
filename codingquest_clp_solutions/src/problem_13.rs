@@ -17,13 +17,13 @@ pub fn solve() -> usize {
 
     let mut p1 = 0;
     let mut p2 = 0;
-    for (count, &(p1_move, p2_move)) in moves.iter().enumerate() {
-        move_player(&mut p1, p1_move);
+    for (count, (p1_move, p2_move)) in moves.iter().enumerate() {
+        move_player(&mut p1, *p1_move);
         if (p1 as usize) >= board.len() {
             return count + 1;
         }
 
-        move_player(&mut p2, p2_move);
+        move_player(&mut p2, *p2_move);
         if (p2 as usize) >= board.len() {
             return 2 * (count + 1);
         }

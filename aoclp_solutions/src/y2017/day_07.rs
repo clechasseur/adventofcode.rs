@@ -11,7 +11,9 @@ use aoclp::solvers_impl::input::safe_get_input_as_many;
 use itertools::Itertools;
 
 pub fn part_1() -> String {
-    Tower::build().bottom.borrow().name.clone()
+    let tower = Tower::build();
+    let bottom = tower.bottom.borrow();
+    bottom.name.clone()
 }
 
 pub fn part_2() -> usize {
@@ -71,7 +73,7 @@ impl Program {
             .filter(|(_, imbalance)| imbalance.is_some())
             .at_most_one()
         {
-            Ok(Some(&(_, imbalance))) => imbalance,
+            Ok(Some((_, imbalance))) => *imbalance,
             Ok(None) => {
                 let programs: Vec<_> = sub_data
                     .into_iter()
@@ -80,7 +82,7 @@ impl Program {
                     .dedup_by_with_count(|sp1, sp2| {
                         weights[&sp1.borrow().name] == weights[&sp2.borrow().name]
                     })
-                    .sorted_by_key(|&(count, _)| count)
+                    .sorted_by_key(|(count, _)| *count)
                     .map(|(_, sub_program)| sub_program)
                     .collect();
 

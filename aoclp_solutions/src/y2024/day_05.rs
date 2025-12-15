@@ -35,7 +35,7 @@ impl Rule {
     }
 
     pub fn positions_in(&self, v: &[u64]) -> (Option<usize>, Option<usize>) {
-        (v.iter().position(|&n| n == self.0), v.iter().position(|&n| n == self.1))
+        (v.iter().position(|n| *n == self.0), v.iter().position(|n| *n == self.1))
     }
 
     pub fn applies_to(&self, page_1: u64, page_2: u64) -> bool {
@@ -70,9 +70,9 @@ impl Update {
             .0
             .iter()
             .copied()
-            .sorted_by(|&page_1, &page_2| {
-                match rules.iter().find(|rule| rule.applies_to(page_1, page_2)) {
-                    Some(rule) if rule.first() == page_1 => Ordering::Less,
+            .sorted_by(|page_1, page_2| {
+                match rules.iter().find(|rule| rule.applies_to(*page_1, *page_2)) {
+                    Some(rule) if rule.first() == *page_1 => Ordering::Less,
                     Some(_) => Ordering::Greater,
                     _ => Ordering::Equal,
                 }

@@ -19,7 +19,7 @@ fn input() -> Vec<Vec<i64>> {
 #[allow(clippy::ptr_arg)]
 fn safe(levels: &Vec<i64>) -> bool {
     let signum = (levels[0] - levels[1]).signum();
-    levels.iter().tuple_windows().all(|(&a, &b)| {
+    levels.iter().tuple_windows().all(|(a, b)| {
         let new_diff = a - b;
         new_diff.signum() == signum && (1i64..=3).contains(&new_diff.abs())
     })

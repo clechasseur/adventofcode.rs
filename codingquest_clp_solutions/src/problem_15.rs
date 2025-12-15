@@ -50,7 +50,7 @@ impl CelestialBodies {
                 .four_neighbours()
                 .filter(|neighbour| !cache.contains(neighbour))
                 .filter(|neighbour| !pieces.contains_key(neighbour))
-                .filter(|neighbour| data.get(neighbour).is_some_and(|&data| data != 0))
+                .filter(|neighbour| data.get(neighbour).is_some_and(|data| *data != 0))
                 .collect_vec();
             pieces.extend(neighbours.iter().map(|pt| (*pt, data[pt])));
             stack.extend(neighbours.iter().copied());

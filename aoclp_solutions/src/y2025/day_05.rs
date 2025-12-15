@@ -9,7 +9,7 @@ pub fn part_1() -> usize {
     let (fresh_ids, available_ids) = input();
     available_ids
         .into_iter()
-        .filter(|&id| fresh_ids.iter().any(|r| r.0.contains(&id)))
+        .filter(|id| fresh_ids.iter().any(|r| r.0.contains(id)))
         .count()
 }
 

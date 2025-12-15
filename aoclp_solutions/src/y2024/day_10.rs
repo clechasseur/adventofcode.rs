@@ -41,9 +41,9 @@ impl Map {
     fn trailheads(&self) -> impl Iterator<Item = Trailhead> + use<'_> {
         self.heightmap
             .iter()
-            .filter(|(_, &t)| t == 0)
-            .filter_map(move |(&p, _)| {
-                let dist = dij::build(self, p).dist;
+            .filter(|(_, t)| **t == 0)
+            .filter_map(move |(p, _)| {
+                let dist = dij::build(self, *p).dist;
                 let score = dist.values().filter(|d| **d == 9).count();
                 if score == 0 {
                     return None;
@@ -51,12 +51,12 @@ impl Map {
 
                 let mut cache = HashMap::new();
                 let trailhead = Trailhead {
-                    start: p,
+                    start: *p,
                     score,
                     rating: dist
                         .iter()
                         .filter(|(_, d)| **d == 9)
-                        .map(|(&p, _)| Self::path_count(p, &dist, &mut cache))
+                        .map(|(p, _)| Self::path_count(*p, &dist, &mut cache))
                         .sum(),
                 };
                 Some(trailhead)

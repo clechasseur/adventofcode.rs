@@ -42,7 +42,7 @@ fn packet() -> impl Iterator<Item = (Turtle, Option<u8>)> {
                     .or_else(|| Some(turtle.turn_right().advance()))
             })
             .map(|t| (t, at(&t)))
-            .filter(|&(_, c)| c != b' ')
+            .filter(|(_, c)| *c != b' ')
             .map(|(t, c)| (t, Some(c).filter(u8::is_ascii_uppercase)))
     })
 }

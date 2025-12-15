@@ -83,7 +83,7 @@ impl From<Vec<Vec<char>>> for Cluster {
         value.into_iter().enumerate().for_each(|(y, row)| {
             row.into_iter()
                 .enumerate()
-                .filter(|&(_, node)| node == '#')
+                .filter(|(_, node)| *node == '#')
                 .for_each(|(x, _)| {
                     let node = Node::new(x as i64, y as i64);
                     cluster.set_state(&node, NodeState::Infected);

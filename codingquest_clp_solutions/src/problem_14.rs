@@ -56,9 +56,9 @@ impl Rules {
 
 impl From<&[(&str, &str)]> for Rules {
     fn from(value: &[(&str, &str)]) -> Self {
-        let rules: HashMap<_, _> = value
+        let rules = value
             .iter()
-            .flat_map(|&(guess, colored)| {
+            .flat_map(|(guess, colored)| {
                 guess
                     .chars()
                     .enumerate()

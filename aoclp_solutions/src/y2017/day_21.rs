@@ -45,7 +45,7 @@ impl Pattern {
     pub fn on_count(&self) -> usize {
         self.0
             .iter()
-            .map(|line| line.bytes().filter(|&b| b == b'#').count())
+            .map(|line| line.bytes().filter(|b| *b == b'#').count())
             .sum()
     }
 

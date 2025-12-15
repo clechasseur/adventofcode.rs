@@ -203,7 +203,7 @@ where
 /// minimum `x` and `y` values of `a` and `b`, and the point with the maximum
 /// `x` and `y` values of `a` and `b`.
 ///
-/// Put another way, if we see `a` and `b` as being  any two opposite corners of a
+/// Put another way, if we see `a` and `b` as being any two opposite corners of a
 /// rectangle, then this function returns the top-left and bottom-right corners of
 /// that rectangle, in that order.
 pub fn min_max<T>(a: Pt<T>, b: Pt<T>) -> (Pt<T>, Pt<T>)

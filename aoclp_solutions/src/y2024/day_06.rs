@@ -58,12 +58,12 @@ impl Lab {
             || self
                 .extra_obstacle
                 .as_ref()
-                .map(|&extra| extra == pt)
+                .map(|extra| *extra == pt)
                 .unwrap_or_default()
     }
 
     pub fn guard_path(&self) -> impl Iterator<Item = Turtle> + '_ {
-        successors(Some(self.guard()), |&guard| self.advance_guard(guard))
+        successors(Some(self.guard()), |guard| self.advance_guard(*guard))
     }
 
     pub fn advance_guard(&self, mut guard: Turtle) -> Option<Turtle> {
@@ -88,9 +88,9 @@ impl From<Vec<Vec<char>>> for Lab {
             .flat_map(|(y, line)| {
                 line.iter()
                     .enumerate()
-                    .map(move |(x, &c)| (Pt::new(x as i64, y as i64), c))
+                    .map(move |(x, c)| (Pt::new(x as i64, y as i64), *c))
             })
-            .filter(|&(_, c)| c == '#')
+            .filter(|(_, c)| *c == '#')
             .map(|(pt, _)| pt)
             .collect();
         let guard_start_pos = input
@@ -99,7 +99,7 @@ impl From<Vec<Vec<char>>> for Lab {
             .filter_map(|(y, line)| {
                 line.iter()
                     .enumerate()
-                    .find_position(|(_, &c)| c == '^')
+                    .find_position(|(_, c)| **c == '^')
                     .map(|(x, _)| Pt::new(x as i64, y as i64))
             })
             .exactly_one()

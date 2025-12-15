@@ -2,6 +2,7 @@ use std::str::FromStr;
 use std::sync::OnceLock;
 use itertools::Itertools;
 use aoclp::anyhow::Context;
+use aoclp::captures::CapturesHelper;
 use aoclp::regex::Regex;
 use aoclp::solvers_impl::input::safe_get_input;
 
@@ -61,12 +62,10 @@ impl FromStr for Region {
         let captures = re
             .captures(s)
             .with_context(|| format!("invalid region spec: {s}"))?;
-        let width = &captures["width"];
-        let height = &captures["height"];
-        let presents = &captures["presents"];
 
-        let width = width.parse()?;
-        let height = height.parse()?;
+        let width = captures.ez_get("width");
+        let height = captures.ez_get("height");
+        let presents = &captures["presents"];
         let presents: Vec<_> = presents
             .split_ascii_whitespace()
             .map(|p| p.parse::<usize>())
@@ -84,7 +83,7 @@ fn parse_input<I, S>(input: I) -> (Vec<Present>, Vec<Region>)
 where
     I: IntoIterator<Item = S>,
     <I as IntoIterator>::IntoIter: Clone,
-    S: AsRef<str>,
+    S: AsRef<str> + Clone,
 {
     static INDEX_REGEX: OnceLock<Regex> = OnceLock::new();
     let index_re =
@@ -109,8 +108,7 @@ where
         match index_re.captures(index_s) {
             None => break,
             Some(index_cap) => {
-                let index = &index_cap["idx"];
-                let index: usize = index.parse().unwrap();
+                let index: usize = index_cap.ez_get("idx");
                 if index != i {
                     panic!("expected present #{i}, found present #{index}");
                 }

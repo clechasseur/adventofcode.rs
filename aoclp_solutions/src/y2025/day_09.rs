@@ -126,7 +126,7 @@ fn walls(red_tiles: &[Pt]) -> impl Iterator<Item = GridLine> + use<'_> {
     let get_direction = |a: Pt, b: Pt| {
         let displacement = Pt::new((b.x - a.x).signum(), (b.y - a.y).signum());
         Direction4::iter()
-            .find(|&d| d.displacement() == displacement)
+            .find(|d| d.displacement() == displacement)
             .unwrap()
     };
 
@@ -134,7 +134,7 @@ fn walls(red_tiles: &[Pt]) -> impl Iterator<Item = GridLine> + use<'_> {
         .iter()
         .copied()
         .cycle()
-        .skip_while(move |&p| p != starting_point)
+        .skip_while(move |p| *p != starting_point)
         .take(red_tiles.len() + 2)
         .tuple_windows()
         .scan(true, move |turned_right, (a, b, c)| {

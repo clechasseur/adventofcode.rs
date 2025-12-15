@@ -34,9 +34,9 @@ impl Bank {
                 [pos..=self.batteries.len() - num_batteries + count]
                 .iter()
                 .enumerate()
-                .fold(None::<(usize, u32)>, |acc, (i, &joltage)| match acc {
-                    None => Some((i, joltage)),
-                    Some((_, acc_joltage)) if joltage > acc_joltage => Some((i, joltage)),
+                .fold(None::<(usize, u32)>, |acc, (i, joltage)| match acc {
+                    None => Some((i, *joltage)),
+                    Some((_, acc_joltage)) if *joltage > acc_joltage => Some((i, *joltage)),
                     acc => acc,
                 })
                 .unwrap();

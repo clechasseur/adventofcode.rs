@@ -30,7 +30,7 @@ where
     T: Iterator<Item = u64>,
 {
     fn picky(self, multiple_of: u64) -> impl Iterator<Item = u64> {
-        self.filter(move |&value| value % multiple_of == 0)
+        self.filter(move |value| value % multiple_of == 0)
     }
 }
 
@@ -49,7 +49,7 @@ where
 {
     a.zip(b)
         .take(rounds)
-        .filter(|&(a, b)| (a & 0xffff) == (b & 0xffff))
+        .filter(|(a, b)| (a & 0xffff) == (b & 0xffff))
         .count()
 }
 

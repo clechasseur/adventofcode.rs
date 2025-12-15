@@ -28,7 +28,7 @@ fn possible_ops(num: usize, elusive_elephants: bool) -> impl Iterator<Item = Vec
     repeat_n(
         OPS.iter()
             .take(num_ops)
-            .map(ToString::to_string)
+            .map(<_>::to_string)
             .collect_vec(),
         num,
     )
@@ -54,7 +54,7 @@ impl Equation {
                         self.terms
                             .iter()
                             .skip(1)
-                            .map(ToString::to_string)
+                            .map(<_>::to_string)
                             .interleave(ops),
                     )
                     .join(" ");

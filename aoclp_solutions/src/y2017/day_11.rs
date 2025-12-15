@@ -12,7 +12,7 @@ pub fn part_1() -> usize {
 
 pub fn part_2() -> usize {
     child_path()
-        .sorted_by_key(|&pt| -manhattan(Pt::zero(), pt))
+        .sorted_by_key(|pt| -manhattan(Pt::zero(), *pt))
         .map(distance_to)
         .next()
         .unwrap()
@@ -34,11 +34,11 @@ fn distance_to(goal: Pt) -> usize {
 }
 
 fn path_to(goal: Pt) -> impl Iterator<Item = Pt> {
-    successors(Some(zero()), move |&pt: &Pt| {
+    successors(Some(zero()), move |pt: &Pt| {
         match ((goal.x - pt.x).signum(), (goal.y - pt.y).signum()) {
             (0, 0) => None,
-            (0, y) => Some(pt + Pt::new(0, y * 2)),
-            (x, y) => Some(pt + Pt::new(x, y)),
+            (0, y) => Some(*pt + Pt::new(0, y * 2)),
+            (x, y) => Some(*pt + Pt::new(x, y)),
         }
     })
 }

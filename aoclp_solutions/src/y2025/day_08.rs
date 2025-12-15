@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use aoclp::num::Zero;
+use aoclp::num::zero;
 use aoclp::positioning::pt_3d::{euclidian_squared, Pt3d};
 use aoclp::solvers_impl::input::safe_get_input_as_many;
 use itertools::Itertools;
@@ -25,7 +25,7 @@ fn circuits(all: bool) -> (HashMap<Pt3d, usize>, HashMap<usize, usize>, (Pt3d, P
     let mut circuit_id = 0usize;
     let mut circuits = HashMap::new();
     let mut circuit_sizes = HashMap::new();
-    let mut last_pair = (Pt3d::zero(), Pt3d::zero());
+    let mut last_pair = (zero(), zero());
     boxes
         .into_iter()
         .array_combinations()
