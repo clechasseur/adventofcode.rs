@@ -31,11 +31,8 @@ where
     fn from(value: I) -> Self {
         let shape = value
             .map(|line| {
-                line.as_ref()
-                    .chars()
-                    .map(|c| c == '#')
-                    .collect_array()
-                    .unwrap()
+                let line = line.as_ref();
+                line.bytes().map(|c| c == b'#').collect_array().unwrap()
             })
             .collect_array()
             .unwrap();
@@ -83,46 +80,37 @@ fn parse_input<I, S>(input: I) -> (Vec<Present>, Vec<Region>)
 where
     I: IntoIterator<Item = S>,
     <I as IntoIterator>::IntoIter: Clone,
-    S: AsRef<str> + Clone,
+    S: AsRef<str>,
 {
     static INDEX_REGEX: OnceLock<Regex> = OnceLock::new();
     let index_re = INDEX_REGEX.get_or_init(|| Regex::new(r"^(?<idx>\d+):\s*$").unwrap());
 
-    let mut it = input.into_iter().peekable();
+    let it = input.into_iter();
+
+    let mut present_it = it
+        .clone()
+        .take_while(|line| line.as_ref().parse::<Region>().is_err());
     let mut presents = Vec::new();
     let mut i = 0;
     loop {
-        // if let Some(line) = it.peek() && line.as_ref().trim_ascii().is_empty() {
-        //
-        // }
-
-        let index_s = it.next().expect("end of data before regions!");
-        let index_s = index_s.as_ref();
-        if index_s.trim_ascii().is_empty() {
-            continue;
-        }
-
-        match index_re.captures(index_s) {
+        match present_it.next() {
             None => break,
-            Some(index_cap) => {
+            Some(s) if s.as_ref().trim_ascii().is_empty() => continue,
+            Some(s) => {
+                let index_cap = index_re.captures(s.as_ref()).unwrap();
                 let index: usize = index_cap.ez_get("idx");
                 if index != i {
                     panic!("expected present #{i}, found present #{index}");
                 }
 
-                let present: Present = it.clone().take(3).into();
+                let present: Present = present_it.by_ref().take(3).into();
                 presents.push(present);
-
-                it = it.dropping(3);
                 i += 1;
             },
         }
     }
 
-    let regions = it
-        .skip_while(|l| l.as_ref().trim_ascii().is_empty())
-        .map(|l| l.as_ref().parse().unwrap())
-        .collect();
+    let regions = it.filter_map(|l| l.as_ref().parse().ok()).collect();
 
     (presents, regions)
 }
