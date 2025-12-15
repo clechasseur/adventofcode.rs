@@ -2,10 +2,10 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use std::str::FromStr;
 
-use aoclp::anyhow::{anyhow, Context};
+use aoclp::anyhow::{Context, anyhow};
 use aoclp::solvers_impl::input::safe_get_input_as_many;
 
-use crate::y2017::helpers::duet::{read_register, read_value, Queue, Registers, Value};
+use crate::y2017::helpers::duet::{Queue, Registers, Value, read_register, read_value};
 
 pub fn part_1() -> i64 {
     let program = input().into();

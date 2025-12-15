@@ -3,7 +3,7 @@ use std::sync::OnceLock;
 
 use aoclp::anyhow::Context;
 use aoclp::regex::Regex;
-use aoclp::solvers_impl::input::{safe_get_input_as_many, Input};
+use aoclp::solvers_impl::input::{Input, safe_get_input_as_many};
 use itertools::Itertools;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use z3::ast::Int;

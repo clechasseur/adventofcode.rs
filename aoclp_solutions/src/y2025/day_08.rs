@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use aoclp::num::zero;
-use aoclp::positioning::pt_3d::{euclidian_squared, Pt3d};
+use aoclp::positioning::pt_3d::{Pt3d, euclidian_squared};
 use aoclp::solvers_impl::input::safe_get_input_as_many;
 use itertools::Itertools;
 

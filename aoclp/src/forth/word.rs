@@ -102,7 +102,7 @@ where
 ///
 /// use aoclp::forth;
 /// use aoclp::forth::stack::Stack;
-/// use aoclp::forth::word::{wrap_fn_word, Words};
+/// use aoclp::forth::word::{Words, wrap_fn_word};
 ///
 /// fn add_10(stack: &mut Stack, _dictionary: &Words) -> forth::Result<()> {
 ///     let value = stack.pop()?;

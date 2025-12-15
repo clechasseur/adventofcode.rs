@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use aoclp::dij;
 use aoclp::positioning::direction::four_points::Direction4;
-use aoclp::positioning::pt::{matrix_to_map, Pt};
+use aoclp::positioning::pt::{Pt, matrix_to_map};
 use aoclp::solvers_impl::input::safe_get_input_as_terrain;
 use strum::IntoEnumIterator;
 

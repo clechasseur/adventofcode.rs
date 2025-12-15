@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::iter::successors;
 use std::ops::Range;
 
-use aoclp::positioning::pt::{matrix_to_map, Pt};
+use aoclp::positioning::pt::{Pt, matrix_to_map};
 use aoclp::solvers_impl::input::safe_get_input_as_terrain;
 use itertools::Itertools;
 

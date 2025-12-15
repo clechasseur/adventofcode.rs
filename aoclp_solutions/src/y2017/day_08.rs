@@ -1,4 +1,4 @@
-use std::cmp::{max, Ordering};
+use std::cmp::{Ordering, max};
 use std::collections::HashMap;
 use std::str::FromStr;
 

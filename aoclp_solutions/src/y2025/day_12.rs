@@ -1,10 +1,11 @@
 use std::str::FromStr;
 use std::sync::OnceLock;
-use itertools::Itertools;
+
 use aoclp::anyhow::Context;
 use aoclp::captures::CapturesHelper;
 use aoclp::regex::Regex;
 use aoclp::solvers_impl::input::safe_get_input;
+use itertools::Itertools;
 
 pub fn part_1() -> usize {
     let input = input();
@@ -54,10 +55,9 @@ impl FromStr for Region {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         static REGEX: OnceLock<Regex> = OnceLock::new();
-        let re =
-            REGEX.get_or_init(|| {
-                Regex::new(r"^(?<width>\d+)x(?<height>\d+):\s+(?<presents>(?:\d+\s*)+)$").unwrap()
-            });
+        let re = REGEX.get_or_init(|| {
+            Regex::new(r"^(?<width>\d+)x(?<height>\d+):\s+(?<presents>(?:\d+\s*)+)$").unwrap()
+        });
 
         let captures = re
             .captures(s)
@@ -86,10 +86,7 @@ where
     S: AsRef<str> + Clone,
 {
     static INDEX_REGEX: OnceLock<Regex> = OnceLock::new();
-    let index_re =
-        INDEX_REGEX.get_or_init(|| {
-            Regex::new(r"^(?<idx>\d+):\s*$").unwrap()
-        });
+    let index_re = INDEX_REGEX.get_or_init(|| Regex::new(r"^(?<idx>\d+):\s*$").unwrap());
 
     let mut it = input.into_iter().peekable();
     let mut presents = Vec::new();

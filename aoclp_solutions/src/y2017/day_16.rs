@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
-use aoclp::anyhow::{anyhow, Context};
+use aoclp::anyhow::{Context, anyhow};
 use aoclp::looping::LoopingItertools;
 use aoclp::solvers_impl::input::safe_get_input_as_one_vec;
 use itertools::Itertools;

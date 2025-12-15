@@ -3,9 +3,9 @@
 use std::rc::Rc;
 
 use crate::forth;
+use crate::forth::Value;
 use crate::forth::stack::Stack;
 use crate::forth::word::{Word, WordRc, Words};
-use crate::forth::Value;
 
 /// A Forth [`Word`] that pushes a [`Value`] on the [`Stack`] when [`call`]ed.
 ///

@@ -83,9 +83,11 @@ pub type Result<T> = std::result::Result<T, Error>;
 ///
 /// let mut forth = Forth::new();
 /// assert!(forth.eval("1 2 + 3 * DUP 4 SWAP").is_ok());
-/// assert!(forth
-///     .eval(": deflabox OVER DUP ; deflabox 23 deflabox")
-///     .is_ok());
+/// assert!(
+///     forth
+///         .eval(": deflabox OVER DUP ; deflabox 23 deflabox")
+///         .is_ok()
+/// );
 /// assert_eq!(&[9, 4, 9, 4, 4, 23, 4, 4], forth.stack());
 /// ```
 ///
@@ -254,9 +256,11 @@ impl Forth {
     /// use aoclp::forth::Forth;
     ///
     /// let mut forth = Forth::new();
-    /// assert!(forth
-    ///     .eval(": foo 1 ; : bar foo ; : foo 2 ; foo bar")
-    ///     .is_ok());
+    /// assert!(
+    ///     forth
+    ///         .eval(": foo 1 ; : bar foo ; : foo 2 ; foo bar")
+    ///         .is_ok()
+    /// );
     /// assert_eq!(&[2, 1], forth.stack());
     /// ```
     ///

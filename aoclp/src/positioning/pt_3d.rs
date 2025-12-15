@@ -4,10 +4,10 @@ use std::ops::{Add, AddAssign, RangeBounds, Sub, SubAssign};
 use std::str::FromStr;
 use std::sync::OnceLock;
 
-use num::{cast, NumCast};
+use num::{NumCast, cast};
 
 use crate::captures::CapturesHelper;
-use crate::num::{zero, Signed, Zero};
+use crate::num::{Signed, Zero, zero};
 use crate::regex::Regex;
 
 /// A point in 3D space.

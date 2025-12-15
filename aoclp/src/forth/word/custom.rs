@@ -32,10 +32,10 @@ impl Word for CustomWord {
     ///
     /// use aoclp::forth;
     /// use aoclp::forth::stack::Stack;
+    /// use aoclp::forth::word::Words;
     /// use aoclp::forth::word::builtins::add_builtin_words;
     /// use aoclp::forth::word::custom::CustomWord;
     /// use aoclp::forth::word::value::ValueWord;
-    /// use aoclp::forth::word::Words;
     ///
     /// let mut words = Words::new();
     /// add_builtin_words(&mut words);

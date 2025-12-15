@@ -1,9 +1,9 @@
 //! Definition of built-in arithmetic Forth words, like `+`.
 
 use crate::forth;
+use crate::forth::Value;
 use crate::forth::stack::Stack;
 use crate::forth::word::Words;
-use crate::forth::Value;
 
 // A little helper macro to save on code duplication for simple arithmetic operators.
 macro_rules! arith_op {

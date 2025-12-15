@@ -10,10 +10,10 @@ use std::sync::OnceLock;
 use strum::IntoEnumIterator;
 
 use crate::captures::CapturesHelper;
-use crate::num::{zero, Signed, Zero};
+use crate::num::{Signed, Zero, zero};
+use crate::positioning::direction::MovementDirection;
 use crate::positioning::direction::eight_points::Direction8;
 use crate::positioning::direction::four_points::Direction4;
-use crate::positioning::direction::MovementDirection;
 use crate::regex::Regex;
 
 /// A point in 2D space.

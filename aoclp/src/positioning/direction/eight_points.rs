@@ -2,7 +2,7 @@ use std::ops::{Add, AddAssign, Neg, Sub, SubAssign};
 
 use strum::{Display, EnumCount, EnumIter, EnumProperty, FromRepr};
 
-use crate::num::{one, zero, One, Zero};
+use crate::num::{One, Zero, one, zero};
 use crate::positioning::direction::{Direction, MovementDirection};
 use crate::positioning::pt::Pt;
 

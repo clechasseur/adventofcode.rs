@@ -2,7 +2,7 @@ use std::iter::once;
 
 use aoclp::forth::Forth;
 use aoclp::solvers_impl::input::safe_get_input_as_many_vecs;
-use itertools::{repeat_n, Itertools};
+use itertools::{Itertools, repeat_n};
 
 pub fn part_1() -> i64 {
     solve(true)
@@ -25,14 +25,8 @@ const OPS: &[&str] = &["+", "*", "||"];
 
 fn possible_ops(num: usize, elusive_elephants: bool) -> impl Iterator<Item = Vec<String>> {
     let num_ops = if elusive_elephants { OPS.len() - 1 } else { OPS.len() };
-    repeat_n(
-        OPS.iter()
-            .take(num_ops)
-            .map(<_>::to_string)
-            .collect_vec(),
-        num,
-    )
-    .multi_cartesian_product()
+    repeat_n(OPS.iter().take(num_ops).map(<_>::to_string).collect_vec(), num)
+        .multi_cartesian_product()
 }
 
 #[derive(Debug, Clone)]

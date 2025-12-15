@@ -35,7 +35,9 @@ impl Message {
             .unwrap();
 
         if invalid_row_checksum_diff != invalid_col_checksum_diff {
-            panic!("Invalid row {invalid_row}'s checksum diff ({invalid_row_checksum_diff}) is not equal to col {invalid_col}'s checksum diff ({invalid_col_checksum_diff})!");
+            panic!(
+                "Invalid row {invalid_row}'s checksum diff ({invalid_row_checksum_diff}) is not equal to col {invalid_col}'s checksum diff ({invalid_col_checksum_diff})!"
+            );
         }
 
         let wrong_byte = self.data[invalid_row][invalid_col];

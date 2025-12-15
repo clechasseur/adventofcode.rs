@@ -1,7 +1,7 @@
 use std::iter::successors;
 
-use aoclp::num::{zero, Zero};
-use aoclp::positioning::pt::{manhattan, Pt};
+use aoclp::num::{Zero, zero};
+use aoclp::positioning::pt::{Pt, manhattan};
 use aoclp::solvers_impl::input::safe_get_input_as_one_vec;
 use itertools::Itertools;
 use strum::EnumString;

@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 use std::str::FromStr;
 
-use aoclp::anyhow::{anyhow, Context};
+use aoclp::anyhow::{Context, anyhow};
 use aoclp::solvers_impl::input::safe_get_input_as_many;
 use itertools::Itertools;
 use primes::is_prime;
 use strum::EnumDiscriminants;
 
-use crate::y2017::helpers::duet::{read_register, read_value, Registers, Value};
+use crate::y2017::helpers::duet::{Registers, Value, read_register, read_value};
 
 pub fn part_1() -> usize {
     let program = Program::default();

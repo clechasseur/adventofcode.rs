@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet, VecDeque};
 
-use codingquest_clp::aoclp::positioning::pt::{matrix_to_map, Pt};
+use codingquest_clp::aoclp::positioning::pt::{Pt, matrix_to_map};
 use codingquest_clp::solvers_impl::input::get_input;
 use itertools::Itertools;
 

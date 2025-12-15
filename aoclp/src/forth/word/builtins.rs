@@ -3,7 +3,7 @@
 pub mod arith;
 pub mod stack;
 
-use crate::forth::word::{wrap_fn_word, Words};
+use crate::forth::word::{Words, wrap_fn_word};
 
 /// Adds all built-in [`Word`](crate::word::Word) to the given [word map](Words).
 pub fn add_builtin_words(words: &mut Words) {

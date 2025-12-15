@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 use std::iter;
 
-use aoclp::num::{zero, Zero};
+use aoclp::num::{Zero, zero};
 use aoclp::positioning::direction::four_points::Direction4;
 use aoclp::positioning::direction::{Direction, MovementDirection};
-use aoclp::positioning::pt::{manhattan, Pt};
+use aoclp::positioning::pt::{Pt, manhattan};
 use aoclp::solvers_impl::input::safe_get_input;
 use itertools::Itertools;
 
