@@ -10,6 +10,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
   CI: 1
+  READ_ONLY_GITHUB_TOKEN: ${{ secrets.READ_ONLY_GITHUB_TOKEN }}
 
 jobs:
   clippy:
