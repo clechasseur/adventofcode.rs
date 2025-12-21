@@ -3,10 +3,10 @@ use std::sync::OnceLock;
 
 use aoclp::anyhow::Context;
 use aoclp::captures::CapturesHelper;
+use aoclp::mapping::canvas::Canvas;
 use aoclp::regex::Regex;
 use aoclp::solvers_impl::input::safe_get_input;
 use itertools::Itertools;
-use aoclp::mapping::canvas::Canvas;
 
 pub fn part_1() -> usize {
     let input = input();
@@ -84,10 +84,7 @@ where
                     panic!("expected present #{i}, found present #{index}");
                 }
 
-                let present = Present::from_lines(
-                    present_it.by_ref().take(3),
-                    |c| c == '#'
-                );
+                let present = Present::from_lines(present_it.by_ref().take(3), |c| c == '#');
                 presents.push(present);
                 i += 1;
             },

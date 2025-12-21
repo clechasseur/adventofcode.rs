@@ -1,4 +1,5 @@
 use std::iter::{repeat_n, successors};
+
 use itertools::Itertools;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -20,7 +21,7 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
                 .into_iter()
                 .map(move |s| s.as_ref().chars().map(&mut f).collect_array().unwrap())
                 .collect_array()
-                .unwrap()
+                .unwrap(),
         )
     }
 
@@ -46,7 +47,12 @@ where
     T: Clone,
 {
     pub fn of(value: T) -> Self {
-        Self((0..H).map(move |_| repeat_n(value.clone(), W).collect_array().unwrap()).collect_array().unwrap())
+        Self(
+            (0..H)
+                .map(move |_| repeat_n(value.clone(), W).collect_array().unwrap())
+                .collect_array()
+                .unwrap(),
+        )
     }
 
     pub fn flipped_horizontally(&self) -> Self {
@@ -55,12 +61,11 @@ where
 
     pub fn flipped_vertically(&self) -> Self {
         Self(
-            self
-                .0
+            self.0
                 .iter()
                 .map(|l| l.iter().cloned().rev().collect_array().unwrap())
                 .collect_array()
-                .unwrap()
+                .unwrap(),
         )
     }
 
@@ -105,11 +110,12 @@ where
     V: Into<T>,
 {
     fn from(value: IR) -> Self {
-        Self(value
-            .into_iter()
-            .map(|r| r.into_iter().map(<_>::into).collect_array().unwrap())
-            .collect_array()
-            .unwrap()
+        Self(
+            value
+                .into_iter()
+                .map(|r| r.into_iter().map(<_>::into).collect_array().unwrap())
+                .collect_array()
+                .unwrap(),
         )
     }
 }
