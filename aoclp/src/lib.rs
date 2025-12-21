@@ -1,10 +1,10 @@
 //! Helper library for Advent of Code.
 
 pub mod captures;
-pub mod dij;
 pub mod forth;
 pub mod functional;
 pub mod looping;
+pub mod mapping;
 pub mod positioning;
 pub mod solvers_impl;
 pub mod str;

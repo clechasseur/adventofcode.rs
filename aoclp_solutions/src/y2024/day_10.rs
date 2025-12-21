@@ -1,10 +1,8 @@
 use std::collections::HashMap;
 
-use aoclp::dij;
-use aoclp::positioning::direction::four_points::Direction4;
+use aoclp::mapping::dij;
 use aoclp::positioning::pt::{Pt, matrix_to_map};
 use aoclp::solvers_impl::input::safe_get_input_as_terrain;
-use strum::IntoEnumIterator;
 
 pub fn part_1() -> usize {
     Map::default().trailheads().map(|h| h.score).sum()
@@ -73,8 +71,8 @@ impl Map {
             return 1;
         }
 
-        let count = Direction4::iter()
-            .map(|d| p + d)
+        let count = p
+            .four_neighbours()
             .filter(|n| dist.get(n).is_some_and(|d| *d == p_dist - 1))
             .map(|n| Self::path_count(n, dist, cache))
             .sum();
@@ -87,8 +85,7 @@ impl Map {
 impl dij::Graph<Pt> for Map {
     fn neighbours(&self, node: &Pt) -> impl Iterator<Item = Pt> {
         let height = self.heightmap[node];
-        Direction4::iter()
-            .map(|d| *node + d)
+        node.four_neighbours()
             .filter(move |n| self.heightmap.get(n).is_some_and(|h| *h == height + 1))
     }
 }

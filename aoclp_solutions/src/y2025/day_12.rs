@@ -6,6 +6,7 @@ use aoclp::captures::CapturesHelper;
 use aoclp::regex::Regex;
 use aoclp::solvers_impl::input::safe_get_input;
 use itertools::Itertools;
+use aoclp::mapping::canvas::Canvas;
 
 pub fn part_1() -> usize {
     let input = input();
@@ -18,33 +19,13 @@ pub fn part_2() -> usize {
     0
 }
 
-#[derive(Debug, Copy, Clone)]
-struct Present {
-    shape: [[bool; 3]; 3],
-}
-
-impl<I, S> From<I> for Present
-where
-    I: Iterator<Item = S>,
-    S: AsRef<str>,
-{
-    fn from(value: I) -> Self {
-        let shape = value
-            .map(|line| {
-                let line = line.as_ref();
-                line.bytes().map(|c| c == b'#').collect_array().unwrap()
-            })
-            .collect_array()
-            .unwrap();
-        Self { shape }
-    }
-}
+type Present = Canvas<bool, 3>;
 
 #[derive(Debug, Clone)]
 struct Region {
-    width: usize,
-    height: usize,
-    presents: Vec<usize>,
+    pub width: usize,
+    pub height: usize,
+    pub presents: Vec<usize>,
 }
 
 impl FromStr for Region {
@@ -103,7 +84,10 @@ where
                     panic!("expected present #{i}, found present #{index}");
                 }
 
-                let present: Present = present_it.by_ref().take(3).into();
+                let present = Present::from_lines(
+                    present_it.by_ref().take(3),
+                    |c| c == '#'
+                );
                 presents.push(present);
                 i += 1;
             },
