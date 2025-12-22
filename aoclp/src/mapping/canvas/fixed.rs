@@ -1,4 +1,5 @@
 use std::iter::{repeat_n, successors};
+
 use itertools::Itertools;
 
 /// A fixed-size rectangular canvas in 2D space that can be rotated and flipped.
@@ -15,19 +16,10 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let matrix = [
-    ///     [1, 2, 3],
-    ///     [4, 5, 6]
-    /// ];
+    /// let matrix = [[1, 2, 3], [4, 5, 6]];
     ///
     /// let canvas = Canvas::new(matrix);
-    /// assert_eq!(
-    ///     [
-    ///         [1, 2, 3],
-    ///         [4, 5, 6],
-    ///     ],
-    ///     canvas.0,
-    /// );
+    /// assert_eq!([[1, 2, 3], [4, 5, 6]], canvas.0);
     /// ```
     pub fn new(data: [[T; W]; H]) -> Self {
         Self(data)
@@ -45,13 +37,7 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     ///               456";
     ///
     /// let canvas = Canvas::from_lines(matrix.lines(), |c| c.to_digit(10).unwrap());
-    /// assert_eq!(
-    ///     [
-    ///         [1, 2, 3],
-    ///         [4, 5, 6],
-    ///     ],
-    ///     canvas.0,
-    /// );
+    /// assert_eq!([[1, 2, 3], [4, 5, 6]], canvas.0);
     /// ```
     pub fn from_lines<F, I, S>(lines: I, mut f: F) -> Self
     where
@@ -80,13 +66,7 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     ///               456";
     ///
     /// let canvas = Canvas::from_line_bytes(matrix.lines(), |c| c - b'0');
-    /// assert_eq!(
-    ///     [
-    ///         [1, 2, 3],
-    ///         [4, 5, 6],
-    ///     ],
-    ///     canvas.0,
-    /// );
+    /// assert_eq!([[1, 2, 3], [4, 5, 6]], canvas.0);
     /// ```
     pub fn from_line_bytes<F, I, S>(lines: I, mut f: F) -> Self
     where
@@ -110,10 +90,7 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let canvas = Canvas::new([
-    ///     [1, 2, 3],
-    ///     [4, 5, 6],
-    /// ]);
+    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
     /// assert_eq!(3, canvas.width());
     /// ```
     pub const fn width(&self) -> usize {
@@ -127,10 +104,7 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let canvas = Canvas::new([
-    ///     [1, 2, 3],
-    ///     [4, 5, 6],
-    /// ]);
+    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
     /// assert_eq!(2, canvas.height());
     /// ```
     pub const fn height(&self) -> usize {
@@ -144,10 +118,7 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let canvas = Canvas::new([
-    ///     [1, 2, 3],
-    ///     [4, 5, 6],
-    /// ]);
+    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
     /// assert_eq!(6, canvas.count());
     /// ```
     ///
@@ -169,10 +140,7 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     /// # use itertools::Itertools;
     ///
-    /// let canvas = Canvas::new([
-    ///     [1, 2, 3],
-    ///     [4, 5, 6],
-    /// ]);
+    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
     /// assert_eq!(vec![1, 2, 3, 4, 5, 6], canvas.iter().flat_map(identity).copied().collect_vec());
     /// ```
     pub fn iter(&self) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = &T>> {
@@ -186,17 +154,8 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let canvas = Canvas::new([
-    ///     [1, 2, 3],
-    ///     [4, 5, 6],
-    /// ]);
-    /// assert_eq!(
-    ///     [
-    ///         [4, 5, 6],
-    ///         [1, 2, 3],
-    ///     ],
-    ///     canvas.flip_horizontally().0,
-    /// );
+    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// assert_eq!([[4, 5, 6], [1, 2, 3]], canvas.flip_horizontally().0);
     /// ```
     pub fn flip_horizontally(self) -> Self {
         Self(self.0.into_iter().rev().collect_array().unwrap())
@@ -209,17 +168,8 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let canvas = Canvas::new([
-    ///     [1, 2, 3],
-    ///     [4, 5, 6],
-    /// ]);
-    /// assert_eq!(
-    ///     [
-    ///         [3, 2, 1],
-    ///         [6, 5, 4],
-    ///     ],
-    ///     canvas.flip_vertically().0,
-    /// );
+    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// assert_eq!([[3, 2, 1], [6, 5, 4]], canvas.flip_vertically().0);
     /// ```
     pub fn flip_vertically(self) -> Self {
         Self(
@@ -238,18 +188,8 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let canvas = Canvas::new([
-    ///     [1, 2, 3],
-    ///     [4, 5, 6],
-    /// ]);
-    /// assert_eq!(
-    ///     [
-    ///         [3, 6],
-    ///         [2, 5],
-    ///         [1, 4],
-    ///     ],
-    ///     canvas.rotate_left().0,
-    /// );
+    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// assert_eq!([[3, 6], [2, 5], [1, 4]], canvas.rotate_left().0);
     /// ```
     pub fn rotate_left(self) -> Canvas<T, H, W> {
         Canvas(self.into_columns().rev().collect_array().unwrap())
@@ -263,25 +203,25 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     /// # use itertools::Itertools;
     ///
-    /// let canvas = Canvas::new([
-    ///     [1, 2, 3],
-    ///     [4, 5, 6],
-    /// ]);
-    /// assert_eq!(
-    ///     vec![
-    ///         [1, 4],
-    ///         [2, 5],
-    ///         [3, 6],
-    ///     ],
-    ///     canvas.into_columns().collect_vec(),
-    /// );
+    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// assert_eq!(vec![[1, 4], [2, 5], [3, 6]], canvas.into_columns().collect_vec());
     /// ```
     ///
     /// [iterator]: DoubleEndedIterator
     pub fn into_columns(self) -> impl DoubleEndedIterator<Item = [T; H]> {
-        let mut rows: [_; H] = self.0.into_iter().map(|r| r.into_iter()).collect_array().unwrap();
+        let mut rows: [_; H] = self
+            .0
+            .into_iter()
+            .map(|r| r.into_iter())
+            .collect_array()
+            .unwrap();
         let cols: [_; W] = (0..W)
-            .map(move |_| rows.iter_mut().map(|r| r.next().unwrap()).collect_array().unwrap())
+            .map(move |_| {
+                rows.iter_mut()
+                    .map(|r| r.next().unwrap())
+                    .collect_array()
+                    .unwrap()
+            })
             .collect_array()
             .unwrap();
         cols.into_iter()
@@ -300,13 +240,7 @@ where
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
     /// let canvas = Canvas::<_, 3, 2>::of('#');
-    /// assert_eq!(
-    ///     [
-    ///         ['#', '#', '#'],
-    ///         ['#', '#', '#'],
-    ///     ],
-    ///     canvas.0,
-    /// );
+    /// assert_eq!([['#', '#', '#'], ['#', '#', '#']], canvas.0);
     /// ```
     pub fn of(value: T) -> Self {
         Self(
@@ -337,40 +271,13 @@ where
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let canvas = Canvas::new([
-    ///     [1, 2],
-    ///     [3, 4],
-    /// ]);
+    /// let canvas = Canvas::new([[1, 2], [3, 4]]);
     ///
     /// let mut rotations = canvas.into_rotations();
-    /// assert_eq!(
-    ///     [
-    ///         [1, 2],
-    ///         [3, 4],
-    ///     ],
-    ///     rotations.next().unwrap().0,
-    /// );
-    /// assert_eq!(
-    ///     [
-    ///         [2, 4],
-    ///         [1, 3],
-    ///     ],
-    ///     rotations.next().unwrap().0,
-    /// );
-    /// assert_eq!(
-    ///     [
-    ///         [4, 3],
-    ///         [2, 1],
-    ///     ],
-    ///     rotations.next().unwrap().0,
-    /// );
-    /// assert_eq!(
-    ///     [
-    ///         [3, 1],
-    ///         [4, 2],
-    ///     ],
-    ///     rotations.next().unwrap().0,
-    /// );
+    /// assert_eq!([[1, 2], [3, 4]], rotations.next().unwrap().0);
+    /// assert_eq!([[2, 4], [1, 3]], rotations.next().unwrap().0);
+    /// assert_eq!([[4, 3], [2, 1]], rotations.next().unwrap().0);
+    /// assert_eq!([[3, 1], [4, 2]], rotations.next().unwrap().0);
     /// assert!(rotations.next().is_none());
     /// ```
     pub fn into_rotations(self) -> impl Iterator<Item = Self> {
@@ -394,19 +301,16 @@ where
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     /// # use itertools::Itertools;
     ///
-    /// let canvas = Canvas::new([
-    ///     [1, 2],
-    ///     [3, 4],
-    /// ]);
+    /// let canvas = Canvas::new([[1, 2], [3, 4]]);
     ///
     /// assert_eq!(16, canvas.clone().into_variations().count());
     /// assert_eq!(8, canvas.clone().into_variations().unique().count());
-    /// assert!(canvas.into_variations().find(|c| {
-    ///     *c == Canvas::new([
-    ///         [1, 3],
-    ///         [2, 4],
-    ///     ])
-    /// }).is_some());
+    /// assert!(
+    ///     canvas
+    ///         .into_variations()
+    ///         .find(|c| { *c == Canvas::new([[1, 3], [2, 4]]) })
+    ///         .is_some()
+    /// );
     /// ```
     pub fn into_variations(self) -> impl Iterator<Item = Self> {
         vec![self.clone(), self.flip_horizontally()]
