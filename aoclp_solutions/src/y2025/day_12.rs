@@ -3,7 +3,7 @@ use std::sync::OnceLock;
 
 use aoclp::anyhow::Context;
 use aoclp::captures::CapturesHelper;
-use aoclp::mapping::canvas::Canvas;
+use aoclp::mapping::canvas::fixed::Canvas;
 use aoclp::regex::Regex;
 use aoclp::solvers_impl::input::safe_get_input;
 use itertools::Itertools;
