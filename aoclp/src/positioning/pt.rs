@@ -11,6 +11,7 @@ use strum::IntoEnumIterator;
 
 use crate::captures::CapturesHelper;
 use crate::num::{Signed, Zero, zero};
+use crate::positioning::Point;
 use crate::positioning::direction::MovementDirection;
 use crate::positioning::direction::eight_points::Direction8;
 use crate::positioning::direction::four_points::Direction4;
@@ -60,6 +61,10 @@ where
     {
         x_bounds.contains(&self.x) && y_bounds.contains(&self.y)
     }
+}
+
+impl<T> Point for Pt<T> {
+    type Coord = T;
 }
 
 impl<T, U, V> From<(U, V)> for Pt<T>

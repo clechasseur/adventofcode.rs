@@ -8,6 +8,7 @@ use num::{NumCast, cast};
 
 use crate::captures::CapturesHelper;
 use crate::num::{Signed, Zero, zero};
+use crate::positioning::Point;
 use crate::regex::Regex;
 
 /// A point in 3D space.
@@ -60,6 +61,10 @@ where
     {
         Pt3d::new(cast(self.x).unwrap(), cast(self.y).unwrap(), cast(self.z).unwrap())
     }
+}
+
+impl<T> Point for Pt3d<T> {
+    type Coord = T;
 }
 
 impl<T, U, V, W> From<(U, V, W)> for Pt3d<T>

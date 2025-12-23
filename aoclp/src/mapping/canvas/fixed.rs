@@ -1,6 +1,12 @@
+use std::collections::HashMap;
 use std::iter::{repeat_n, successors};
+use std::ops::{Index, IndexMut};
 
 use itertools::Itertools;
+use num::ToPrimitive;
+
+use crate::positioning::Point;
+use crate::positioning::pt::{Pt, matrix_to_map};
 
 /// A fixed-size rectangular canvas in 2D space that can be rotated and flipped.
 ///
@@ -226,6 +232,36 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
             .unwrap();
         cols.into_iter()
     }
+
+    /// Converts the canvas into a [map](HashMap) associating each canvas piece
+    /// to its corresponding [point](Pt).
+    ///
+    /// The top-left corner of the canvas is at position `(0, 0)`.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use std::collections::HashMap;
+    /// # use aoclp::mapping::canvas::fixed::Canvas;
+    /// # use aoclp::positioning::pt::Pt;
+    ///
+    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// let map = canvas.into_map();
+    /// assert_eq!(
+    ///     HashMap::from([
+    ///         (Pt::new(0, 0), 1),
+    ///         (Pt::new(1, 0), 2),
+    ///         (Pt::new(2, 0), 3),
+    ///         (Pt::new(0, 1), 4),
+    ///         (Pt::new(1, 1), 5),
+    ///         (Pt::new(2, 1), 6),
+    ///     ]),
+    ///     map,
+    /// );
+    /// ```
+    pub fn into_map(self) -> HashMap<Pt<usize>, T> {
+        matrix_to_map(self.0)
+    }
 }
 
 impl<T, const W: usize, const H: usize> Canvas<T, W, H>
@@ -324,8 +360,73 @@ impl<T, const W: usize, const H: usize> Default for Canvas<T, W, H>
 where
     T: Default + Clone,
 {
+    /// Returns a [`Canvas`] filled with the default piece value.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use aoclp::mapping::canvas::fixed::Canvas;
+    ///
+    /// let canvas = Canvas::<i32, 3, 2>::default();
+    /// assert_eq!([[0, 0, 0], [0, 0, 0]], canvas.0);
+    /// ```
     fn default() -> Self {
         Self::of(T::default())
+    }
+}
+
+impl<T, const W: usize, const H: usize, PT> Index<PT> for Canvas<T, W, H>
+where
+    PT: Into<Pt>,
+    <Pt as Point>::Coord: ToPrimitive,
+{
+    type Output = T;
+
+    /// Returns a reference to the canvas piece at the given [point](Pt).
+    /// Also works with coordinate tuples.
+    ///
+    /// The top-left canvas piece is at position `(0, 0)`.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use aoclp::mapping::canvas::fixed::Canvas;
+    /// # use aoclp::positioning::pt::Pt;
+    ///
+    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// assert_eq!(5, canvas[Pt::new(1, 1)]);
+    /// assert_eq!(3, canvas[(2, 0)]);
+    /// ```
+    fn index(&self, index: PT) -> &Self::Output {
+        let index = index.into();
+        &self.0[index.y.to_usize().unwrap()][index.x.to_usize().unwrap()]
+    }
+}
+
+impl<T, const W: usize, const H: usize, PT> IndexMut<PT> for Canvas<T, W, H>
+where
+    PT: Into<Pt>,
+    <Pt as Point>::Coord: ToPrimitive,
+{
+    /// Returns a mutable reference the canvas piece at the given [point](Pt).
+    /// Also works with coordinate tuples.
+    ///
+    /// The top-left canvas piece is at position `(0, 0)`.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use aoclp::mapping::canvas::fixed::Canvas;
+    /// # use aoclp::positioning::pt::Pt;
+    ///
+    /// let mut canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// canvas[Pt::new(1, 1)] = 9;
+    /// canvas[(2, 0)] = 7;
+    /// assert_eq!([[1, 2, 7], [4, 9, 6]], canvas.0);
+    /// ```
+    fn index_mut(&mut self, index: PT) -> &mut Self::Output {
+        let index = index.into();
+        &mut self.0[index.y.to_usize().unwrap()][index.x.to_usize().unwrap()]
     }
 }
 
@@ -335,6 +436,20 @@ where
     IV: IntoIterator<Item = V>,
     V: Into<T>,
 {
+    /// Creates a [`Canvas`] from a two-dimensional matrix as returned by
+    /// an [iterator] of row [iterator]s.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use aoclp::mapping::canvas::fixed::Canvas;
+    ///
+    /// let matrix = vec![vec![1, 2, 3], vec![4, 5, 6]];
+    /// let canvas: Canvas<i32, 3, 2> = matrix.into();
+    /// assert_eq!([[1, 2, 3], [4, 5, 6]], canvas.0);
+    /// ```
+    ///
+    /// [iterator]: Iterator
     fn from(value: IR) -> Self {
         Self(
             value
