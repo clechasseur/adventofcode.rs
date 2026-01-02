@@ -1,3 +1,4 @@
+use std::array;
 use std::collections::HashMap;
 use std::iter::{repeat_n, successors};
 use std::ops::{Index, IndexMut};
@@ -15,8 +16,9 @@ use crate::positioning::pt::{Pt, matrix_to_map};
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Canvas<T, const W: usize, const H: usize = W>(pub [[T; W]; H]);
 
+// noinspection DuplicatedCode
 impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
-    /// Creates a new [`Canvas`] from a matrix of fixed-size arrays.
+    /// Creates a new [`Canvas`] from a two-dimensional matrix of fixed-size arrays.
     ///
     /// # Example
     ///
@@ -25,11 +27,39 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     ///
     /// let matrix = [[1, 2, 3], [4, 5, 6]];
     ///
-    /// let canvas = Canvas::new(matrix);
+    /// let canvas = Canvas::from_array_matrix(matrix);
     /// assert_eq!([[1, 2, 3], [4, 5, 6]], canvas.0);
     /// ```
-    pub fn new(data: [[T; W]; H]) -> Self {
-        Self(data)
+    pub fn from_array_matrix(matrix: [[T; W]; H]) -> Self {
+        Self(matrix)
+    }
+
+    /// Creates a new [`Canvas`] from a two-dimensional matrix of pieces.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use aoclp::mapping::canvas::fixed::Canvas;
+    ///
+    /// let matrix = vec![vec![1, 2, 3], vec![4, 5, 6]];
+    ///
+    /// let canvas = Canvas::from_matrix(matrix);
+    /// assert_eq!([[1, 2, 3], [4, 5, 6]], canvas.0);
+    /// ```
+    ///
+    /// [iterator]: Iterator
+    pub fn from_matrix<IR, IT>(matrix: IR) -> Self
+    where
+        IR: IntoIterator<Item = IT>,
+        IT: IntoIterator<Item = T>,
+    {
+        Self(
+            matrix
+                .into_iter()
+                .map(|r| r.into_iter().collect_array().unwrap())
+                .collect_array()
+                .unwrap(),
+        )
     }
 
     /// Creates a new [`Canvas`] from lines of text, using a closure to convert every `char`
@@ -97,7 +127,7 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// let canvas = Canvas::from_array_matrix([[1, 2, 3], [4, 5, 6]]);
     /// assert_eq!(3, canvas.width());
     /// ```
     pub const fn width(&self) -> usize {
@@ -111,7 +141,7 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// let canvas = Canvas::from_array_matrix([[1, 2, 3], [4, 5, 6]]);
     /// assert_eq!(2, canvas.height());
     /// ```
     pub const fn height(&self) -> usize {
@@ -125,7 +155,7 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// let canvas = Canvas::from_array_matrix([[1, 2, 3], [4, 5, 6]]);
     /// assert_eq!(6, canvas.count());
     /// ```
     ///
@@ -145,10 +175,16 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// ```
     /// # use std::convert::identity;
     /// # use aoclp::mapping::canvas::fixed::Canvas;
-    /// # use itertools::Itertools;
     ///
-    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
-    /// assert_eq!(vec![1, 2, 3, 4, 5, 6], canvas.iter().flat_map(identity).copied().collect_vec());
+    /// let canvas = Canvas::from_array_matrix([[1, 2, 3], [4, 5, 6]]);
+    /// assert_eq!(
+    ///     vec![1, 2, 3, 4, 5, 6],
+    ///     canvas
+    ///         .iter()
+    ///         .flat_map(identity)
+    ///         .copied()
+    ///         .collect::<Vec<_>>()
+    /// );
     /// ```
     pub fn iter(&self) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = &T>> {
         self.0.iter().map(|row| row.iter())
@@ -161,7 +197,7 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// let canvas = Canvas::from_array_matrix([[1, 2, 3], [4, 5, 6]]);
     /// assert_eq!([[4, 5, 6], [1, 2, 3]], canvas.flip_horizontally().0);
     /// ```
     pub fn flip_horizontally(self) -> Self {
@@ -175,7 +211,7 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// let canvas = Canvas::from_array_matrix([[1, 2, 3], [4, 5, 6]]);
     /// assert_eq!([[3, 2, 1], [6, 5, 4]], canvas.flip_vertically().0);
     /// ```
     pub fn flip_vertically(self) -> Self {
@@ -195,7 +231,7 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// let canvas = Canvas::from_array_matrix([[1, 2, 3], [4, 5, 6]]);
     /// assert_eq!([[3, 6], [2, 5], [1, 4]], canvas.rotate_left().0);
     /// ```
     pub fn rotate_left(self) -> Canvas<T, H, W> {
@@ -208,10 +244,9 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     ///
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
-    /// # use itertools::Itertools;
     ///
-    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
-    /// assert_eq!(vec![[1, 4], [2, 5], [3, 6]], canvas.into_columns().collect_vec());
+    /// let canvas = Canvas::from_array_matrix([[1, 2, 3], [4, 5, 6]]);
+    /// assert_eq!(vec![[1, 4], [2, 5], [3, 6]], canvas.into_columns().collect::<Vec<_>>());
     /// ```
     ///
     /// [iterator]: DoubleEndedIterator
@@ -246,7 +281,7 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     /// # use aoclp::positioning::pt::Pt;
     ///
-    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// let canvas = Canvas::from_array_matrix([[1, 2, 3], [4, 5, 6]]);
     /// let map = canvas.into_map();
     /// assert_eq!(
     ///     HashMap::from([
@@ -309,7 +344,7 @@ where
     /// ```
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let canvas = Canvas::new([[1, 2], [3, 4]]);
+    /// let canvas = Canvas::from_array_matrix([[1, 2], [3, 4]]);
     ///
     /// let mut rotations = canvas.into_rotations();
     /// assert_eq!([[1, 2], [3, 4]], rotations.next().unwrap().0);
@@ -339,14 +374,14 @@ where
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     /// # use itertools::Itertools;
     ///
-    /// let canvas = Canvas::new([[1, 2], [3, 4]]);
+    /// let canvas = Canvas::from_array_matrix([[1, 2], [3, 4]]);
     ///
     /// assert_eq!(16, canvas.clone().into_variations().count());
     /// assert_eq!(8, canvas.clone().into_variations().unique().count());
     /// assert!(
     ///     canvas
     ///         .into_variations()
-    ///         .find(|c| { *c == Canvas::new([[1, 3], [2, 4]]) })
+    ///         .find(|c| { *c == Canvas::from_array_matrix([[1, 3], [2, 4]]) })
     ///         .is_some()
     /// );
     /// ```
@@ -396,7 +431,7 @@ where
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     /// # use aoclp::positioning::pt::Pt;
     ///
-    /// let canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// let canvas = Canvas::from_array_matrix([[1, 2, 3], [4, 5, 6]]);
     /// assert_eq!(5, canvas[Pt::new(1, 1)]);
     /// assert_eq!(3, canvas[(2, 0)]);
     /// ```
@@ -423,7 +458,7 @@ where
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     /// # use aoclp::positioning::pt::Pt;
     ///
-    /// let mut canvas = Canvas::new([[1, 2, 3], [4, 5, 6]]);
+    /// let mut canvas = Canvas::from_array_matrix([[1, 2, 3], [4, 5, 6]]);
     /// canvas[Pt::new(1, 1)] = 9;
     /// canvas[(2, 0)] = 7;
     /// assert_eq!([[1, 2, 7], [4, 9, 6]], canvas.0);
@@ -434,33 +469,30 @@ where
     }
 }
 
-impl<T, const W: usize, const H: usize, IR, IV, V> From<IR> for Canvas<T, W, H>
-where
-    IR: IntoIterator<Item = IV>,
-    IV: IntoIterator<Item = V>,
-    V: Into<T>,
-{
-    /// Creates a [`Canvas`] from a two-dimensional matrix as returned by
-    /// an [iterator] of row [iterator]s.
+impl<T, const W: usize, const H: usize> IntoIterator for Canvas<T, W, H> {
+    type Item = array::IntoIter<T, W>;
+    type IntoIter = array::IntoIter<Self::Item, H>;
+
+    /// Converts the [`Canvas`] into an [iterator] of its rows. Each row is itself an
+    /// [iterator] that returns canvas pieces.
+    ///
+    /// [iterator]: Iterator
     ///
     /// # Example
     ///
     /// ```
+    /// # use std::convert::identity;
     /// # use aoclp::mapping::canvas::fixed::Canvas;
     ///
-    /// let matrix = vec![vec![1, 2, 3], vec![4, 5, 6]];
-    /// let canvas: Canvas<i32, 3, 2> = matrix.into();
-    /// assert_eq!([[1, 2, 3], [4, 5, 6]], canvas.0);
+    /// let canvas = Canvas::from_array_matrix([[1, 2, 3], [4, 5, 6]]);
+    /// assert_eq!(vec![1, 2, 3, 4, 5, 6], canvas.into_iter().flat_map(identity).collect::<Vec<_>>());
     /// ```
-    ///
-    /// [iterator]: Iterator
-    fn from(value: IR) -> Self {
-        Self(
-            value
-                .into_iter()
-                .map(|r| r.into_iter().map(<_>::into).collect_array().unwrap())
-                .collect_array()
-                .unwrap(),
-        )
+    fn into_iter(self) -> Self::IntoIter {
+        self.0
+            .into_iter()
+            .map(<_>::into_iter)
+            .collect_array()
+            .unwrap()
+            .into_iter()
     }
 }
