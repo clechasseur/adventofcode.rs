@@ -1,4 +1,6 @@
 use std::collections::HashMap;
+use std::fmt::Debug;
+use std::hash::Hash;
 use std::iter::{repeat_n, successors};
 use std::ops::{Index, IndexMut};
 use std::vec;
@@ -242,7 +244,12 @@ impl<T> Canvas<T> {
     ///     map,
     /// );
     /// ```
-    pub fn into_map(self) -> HashMap<Pt<usize>, T> {
+    pub fn into_map<PT>(self) -> HashMap<Pt<PT>, T>
+    where
+        PT: TryFrom<usize>,
+        <PT as TryFrom<usize>>::Error: Debug,
+        Pt<PT>: Copy + Hash + Eq,
+    {
         matrix_to_map(self.0)
     }
 
