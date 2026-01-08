@@ -1,5 +1,7 @@
 use std::array;
 use std::collections::HashMap;
+use std::fmt::Debug;
+use std::hash::Hash;
 use std::iter::{repeat_n, successors};
 use std::ops::{Index, IndexMut};
 
@@ -295,7 +297,12 @@ impl<T, const W: usize, const H: usize> Canvas<T, W, H> {
     ///     map,
     /// );
     /// ```
-    pub fn into_map(self) -> HashMap<Pt<usize>, T> {
+    pub fn into_map<PT>(self) -> HashMap<Pt<PT>, T>
+    where
+        PT: TryFrom<usize>,
+        <PT as TryFrom<usize>>::Error: Debug,
+        Pt<PT>: Copy + Hash + Eq,
+    {
         matrix_to_map(self.0)
     }
 }
