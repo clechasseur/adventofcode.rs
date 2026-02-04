@@ -7,7 +7,7 @@ default-members = ["aoclp_solutions"]
 anyhow = "1.0.100"
 aocf = "0.1.21"
 bit-vec = "0.8.0"
-clap = { version = "4.5.56", features = ["derive"] }
+clap = { version = "4.5.57", features = ["derive"] }
 derive-where = "1.6.0"
 fancy-regex = "0.17.0"
 itertools = "0.14.0"
