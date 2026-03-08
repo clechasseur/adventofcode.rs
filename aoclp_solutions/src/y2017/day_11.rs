@@ -4,7 +4,7 @@ use aoclp::num::zero;
 use aoclp::positioning::pt::{Pt, manhattan};
 use aoclp::solvers_impl::input::safe_get_input_as_one_vec;
 use itertools::Itertools;
-use strum::EnumString;
+use gratte::EnumString;
 
 pub fn part_1() -> usize {
     distance_to(child_position())

@@ -5,7 +5,7 @@ use aoclp::anyhow::{Context, anyhow};
 use aoclp::solvers_impl::input::safe_get_input_as_many;
 use itertools::Itertools;
 use primes::is_prime;
-use strum::EnumDiscriminants;
+use gratte::EnumDiscriminants;
 
 use crate::y2017::helpers::duet::{Registers, Value, read_register, read_value};
 

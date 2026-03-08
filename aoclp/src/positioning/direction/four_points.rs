@@ -1,6 +1,6 @@
 use std::ops::{Add, AddAssign, Neg, Sub, SubAssign};
 
-use strum::{Display, EnumCount, EnumIter, EnumProperty, FromRepr};
+use gratte::{Display, EnumCount, EnumIter, EnumProperty, FromRepr};
 
 use crate::num::{One, Zero, one, zero};
 use crate::positioning::direction::{Direction, MovementDirection};

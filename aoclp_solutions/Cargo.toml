@@ -10,7 +10,7 @@ bit-vec = { workspace = true }
 clap = { workspace = true, features = ["derive"] }
 derive-where = { workspace = true }
 itertools = { workspace = true }
+gratte = { workspace = true }
 primes = { workspace = true }
 rayon = { workspace = true }
-strum = { workspace = true, features = ["derive"] }
 z3 = { workspace = true, features = ["gh-release"] }
