@@ -2,7 +2,6 @@
 name = "codingquest_clp_solutions"
 version = "0.1.0"
 edition = "2024"
-rust-version = "1.85.0"
 
 [dependencies]
 clap = { workspace = true, features = ["derive"] }
