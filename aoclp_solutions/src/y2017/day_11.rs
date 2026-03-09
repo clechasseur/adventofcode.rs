@@ -3,8 +3,8 @@ use std::iter::successors;
 use aoclp::num::zero;
 use aoclp::positioning::pt::{Pt, manhattan};
 use aoclp::solvers_impl::input::safe_get_input_as_one_vec;
-use itertools::Itertools;
 use gratte::EnumString;
+use itertools::Itertools;
 
 pub fn part_1() -> usize {
     distance_to(child_position())
