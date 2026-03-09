@@ -23,7 +23,7 @@ pub struct Layer {
 
 impl Layer {
     pub fn catches(&self, delay: usize) -> bool {
-        (self.depth + delay) % ((self.range - 1) * 2) == 0
+        (self.depth + delay).is_multiple_of((self.range - 1) * 2)
     }
 
     pub fn severity(&self) -> usize {
