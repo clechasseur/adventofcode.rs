@@ -53,7 +53,7 @@ impl Pattern {
     /// enhances each pattern by applying the corresponding rule, then reconstructs the larger
     /// pattern using all enhanced sub-patterns.
     pub fn enhance(&self, rules: &Rules) -> Self {
-        let chunk_size = if self.size() % 2 == 0 { 2 } else { 3 };
+        let chunk_size = if self.size().is_multiple_of(2) { 2 } else { 3 };
 
         Self(
             self.0

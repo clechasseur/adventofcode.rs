@@ -57,7 +57,7 @@ fn invalid_fancy(id: usize) -> bool {
 }
 
 fn invalid_of_size(mut id: usize, num_digits: usize, of_size: usize) -> bool {
-    if num_digits % of_size == 0 {
+    if num_digits.is_multiple_of(of_size) {
         let window = 10_usize.pow(of_size as u32);
         let expected = id % window;
         while id != 0 {

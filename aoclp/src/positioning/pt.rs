@@ -7,7 +7,7 @@ use std::ops::{Add, AddAssign, Mul, MulAssign, RangeBounds, Sub, SubAssign};
 use std::str::FromStr;
 use std::sync::OnceLock;
 
-use strum::IntoEnumIterator;
+use gratte::IntoEnumIterator;
 
 use crate::captures::CapturesHelper;
 use crate::num::{Signed, Zero, zero};

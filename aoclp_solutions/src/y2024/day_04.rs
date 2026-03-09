@@ -4,7 +4,7 @@ use std::iter::successors;
 use aoclp::positioning::direction::eight_points::Direction8;
 use aoclp::positioning::pt::{Pt, matrix_to_map};
 use aoclp::solvers_impl::input::safe_get_input_as_terrain;
-use strum::IntoEnumIterator;
+use gratte::IntoEnumIterator;
 
 pub fn part_1() -> usize {
     WordSearch::default().xmas_count()

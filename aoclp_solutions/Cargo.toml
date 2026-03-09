@@ -2,7 +2,6 @@
 name = "aoclp_solutions"
 version = "0.1.0"
 edition = "2024"
-rust-version = "1.85.0"
 
 [dependencies]
 aoclp = { path = "../aoclp" }
@@ -10,7 +9,7 @@ bit-vec = { workspace = true }
 clap = { workspace = true, features = ["derive"] }
 derive-where = { workspace = true }
 itertools = { workspace = true }
+gratte = { workspace = true }
 primes = { workspace = true }
 rayon = { workspace = true }
-strum = { workspace = true, features = ["derive"] }
 z3 = { workspace = true, features = ["gh-release"] }

@@ -5,8 +5,8 @@ use aoclp::positioning::direction::four_points::Direction4;
 use aoclp::positioning::direction::{Direction, MovementDirection};
 use aoclp::positioning::pt::{Pt, min_max, rectangle_corners, rectangular_area};
 use aoclp::solvers_impl::input::{Input, safe_get_input_as_many};
+use gratte::IntoEnumIterator;
 use itertools::Itertools;
-use strum::IntoEnumIterator;
 
 pub fn part_1() -> i64 {
     input()
