@@ -6,7 +6,7 @@ default-members = ["aoclp_solutions"]
 [workspace.dependencies]
 anyhow = "1.0.102"
 aocf = "0.1.21"
-bit-vec = "0.8.0"
+bit-vec = "0.9.1"
 clap = { version = "4.5.60", features = ["derive"] }
 derive-where = "1.6.0"
 fancy-regex = "0.17.0"
