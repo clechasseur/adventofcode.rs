@@ -1,5 +1,8 @@
 set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
 
+rustflags := env("RUSTFLAGS", "") + (if env("CI", "") != "" { " --cfg ci" } else { "" })
+export RUSTFLAGS := rustflags
+
 toolchain := ""
 tool := "cargo"
 
@@ -119,7 +122,7 @@ update *extra_args:
 
 # Run `cargo llvm-cov` to produce code coverage
 @llvm-cov *extra_args: (_run-tests cargo_llvm_cov "--codecov --output-path codecov.json" package_flag all_targets_flag all_features_flag target_tuple_flag extra_args)
-    {{cargo_llvm_cov}} report --html {{ if env('CI', '') == '' { '--open' } else { '' } }}
+    {{cargo_llvm_cov}} report --html {{open_flag}}
 
 # Generate documentation with rustdoc
 doc: _doc
@@ -155,8 +158,13 @@ msrv-full *extra_args: (prep "--manifest-backup-suffix .msrv-prep.outer.bak --no
 _msrv-check *extra_args: (_rimraf "target/msrv-target") (check "--target-dir target/msrv-target" extra_args)
 
 # Perform `cargo publish` dry-run on a package
-test-package *extra_args:
-    {{cargo}} publish {{package_flag}} --dry-run {{extra_args}}
+test-package *extra_args: (_publish "--dry-run" extra_args)
+
+# Run `cargo publish` to publish crates
+publish *extra_args: (_publish extra_args)
+
+_publish *extra_args:
+    {{cargo}} publish --locked {{package_flag}} {{all_features_flag}} {{target_tuple_flag}} {{extra_args}}
 
 # Run `cargo msrv-prep`
 prep *extra_args:
