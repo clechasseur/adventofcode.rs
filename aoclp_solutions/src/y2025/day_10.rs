@@ -60,7 +60,7 @@ impl Machine {
             .map(|i| Int::new_const(format!("button{i}")))
             .collect_vec();
         for b in &buttons {
-            opt.assert(&b.ge(0));
+            opt.assert(b.ge(0));
         }
 
         let presses = buttons
@@ -80,7 +80,7 @@ impl Machine {
                 .iter()
                 .skip(1)
                 .fold(matching_buttons[0] + 0, |acc, b| acc + *b);
-            opt.assert(&jolt.eq(j_req as u64));
+            opt.assert(jolt.eq(j_req as u64));
         }
 
         opt.minimize(&presses);
