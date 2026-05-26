@@ -13,8 +13,8 @@ macro_rules! build_solvers {
     };
     ( $fn_name:ident, $({ $year:literal, [$($day:literal),+] }),+ ) => {
         $crate::paste::paste! {
-            pub fn $fn_name() -> $crate::solvers_impl::solvers::Solvers {
-                let mut solvers = $crate::solvers_impl::solvers::Solvers::default();
+            pub fn $fn_name() -> $crate::solvers::build::Solvers {
+                let mut solvers = $crate::solvers::build::Solvers::default();
                 $(
                     $(
                         solvers.push_day($year, [<y $year>]::[<day_ $day>]::part_1, [<y $year>]::[<day_ $day>]::part_2);

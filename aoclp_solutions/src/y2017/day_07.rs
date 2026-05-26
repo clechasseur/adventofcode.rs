@@ -7,7 +7,7 @@ use std::sync::OnceLock;
 
 use aoclp::captures::CapturesHelper;
 use aoclp::regex::Regex;
-use aoclp::solvers_impl::input::safe_get_input_as_many;
+use aoclp::solvers::input::safe_get_input_as_many;
 use itertools::Itertools;
 
 pub fn part_1() -> String {

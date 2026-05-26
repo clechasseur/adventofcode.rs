@@ -1,6 +1,6 @@
 use std::ops::Mul;
 
-use aoclp::solvers_impl::input::safe_get_input;
+use aoclp::solvers::input::safe_get_input;
 
 use crate::y2017::helpers::knot_hash::KnotHash;
 

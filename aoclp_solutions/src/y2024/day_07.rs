@@ -1,7 +1,7 @@
 use std::iter::once;
 
 use aoclp::forth::Forth;
-use aoclp::solvers_impl::input::safe_get_input_as_many_vecs;
+use aoclp::solvers::input::safe_get_input_as_many_vecs;
 use itertools::{Itertools, repeat_n};
 
 pub fn part_1() -> i64 {
