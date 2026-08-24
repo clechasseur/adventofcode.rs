@@ -8,7 +8,7 @@ use aoclp::captures::CapturesHelper;
 use aoclp::num::zero;
 use aoclp::positioning::pt_3d::{Pt3d, manhattan};
 use aoclp::regex::Regex;
-use aoclp::solvers_impl::input::safe_get_input_as_many;
+use aoclp::solvers::input::safe_get_input_as_many;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {

@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::rc::Rc;
 
-use aoclp::solvers_impl::input::safe_get_input;
+use aoclp::solvers::input::safe_get_input;
 use bit_vec::BitVec;
 use gratte::EnumString;
 use itertools::Itertools;

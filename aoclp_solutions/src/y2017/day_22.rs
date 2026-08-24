@@ -1,7 +1,7 @@
 use aoclp::positioning::direction::four_points::Direction4;
 use aoclp::positioning::pt::Pt;
 use aoclp::positioning::turtle::Turtle;
-use aoclp::solvers_impl::input::safe_get_input_as_terrain;
+use aoclp::solvers::input::safe_get_input_as_terrain;
 use gratte::{EnumCount, FromRepr};
 
 pub fn part_1() -> usize {

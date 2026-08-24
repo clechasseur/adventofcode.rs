@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use aoclp::solvers_impl::input::safe_get_input_as_one_vec;
+use aoclp::solvers::input::safe_get_input_as_one_vec;
 
 pub fn part_1() -> usize {
     realloc_loop().cycles()

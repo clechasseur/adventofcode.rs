@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::str::FromStr;
 
 use aoclp::anyhow::{Context, anyhow};
-use aoclp::solvers_impl::input::safe_get_input_as_many;
+use aoclp::solvers::input::safe_get_input_as_many;
 use gratte::EnumDiscriminants;
 use itertools::Itertools;
 use primes::is_prime;
