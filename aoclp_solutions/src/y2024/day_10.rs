@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use aoclp::mapping::dij;
 use aoclp::positioning::pt::{Pt, matrix_to_map};
-use aoclp::solvers_impl::input::safe_get_input_as_terrain;
+use aoclp::solvers::input::safe_get_input_as_terrain;
 
 pub fn part_1() -> usize {
     Map::default().trailheads().map(|h| h.score).sum()

@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 
-use aoclp::solvers_impl::input::safe_get_input_as_many_vecs_of_two_types;
+use aoclp::solvers::input::safe_get_input_as_many_vecs_of_two_types;
 use itertools::Itertools;
 
 pub fn part_1() -> u64 {

@@ -3,7 +3,7 @@ use std::rc::Rc;
 use std::str::FromStr;
 
 use aoclp::anyhow::{Context, anyhow};
-use aoclp::solvers_impl::input::safe_get_input_as_many;
+use aoclp::solvers::input::safe_get_input_as_many;
 
 use crate::y2017::helpers::duet::{Queue, Registers, Value, read_register, read_value};
 

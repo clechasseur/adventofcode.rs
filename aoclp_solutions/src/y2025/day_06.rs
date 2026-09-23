@@ -1,5 +1,5 @@
 use aoclp::forth::Forth;
-use aoclp::solvers_impl::input::safe_get_input;
+use aoclp::solvers::input::safe_get_input;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {

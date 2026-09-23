@@ -2,7 +2,7 @@ use std::cmp::{max, min};
 use std::ops::RangeInclusive;
 use std::str::FromStr;
 
-use aoclp::solvers_impl::input::safe_get_input_as_many_of_two_types;
+use aoclp::solvers::input::safe_get_input_as_many_of_two_types;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {

@@ -1,4 +1,4 @@
-use aoclp::solvers_impl::input::safe_get_input_as;
+use aoclp::solvers::input::safe_get_input_as;
 
 pub fn part_1() -> usize {
     let mut spinlock = Spinlock::default();

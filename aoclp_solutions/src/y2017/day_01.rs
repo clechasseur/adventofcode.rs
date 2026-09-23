@@ -1,4 +1,4 @@
-use aoclp::solvers_impl::input::safe_get_input;
+use aoclp::solvers::input::safe_get_input;
 
 pub fn part_1() -> u32 {
     sum(&input(), 1)
