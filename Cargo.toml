@@ -8,7 +8,7 @@ anyhow = "1.0.102"
 aocf = "0.1.21"
 bit-vec = "0.9.1"
 clap = { version = "4.6.1", features = ["derive"] }
-derive-where = "1.6.1"
+derive-where = "1.7.0"
 fancy-regex = "0.18.0"
 gratte = "2.0.0"
 itertools = "0.14.0"
