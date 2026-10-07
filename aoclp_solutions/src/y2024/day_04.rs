@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 use std::iter::successors;
 
+use aoclp::aoc::Input;
 use aoclp::positioning::direction::eight_points::Direction8;
 use aoclp::positioning::pt::{Pt, matrix_to_map};
-use aoclp::solvers::input::safe_get_input_as_terrain;
 use gratte::IntoEnumIterator;
 
 pub fn part_1() -> usize {
@@ -75,6 +75,6 @@ impl From<Vec<Vec<char>>> for WordSearch {
 
 impl Default for WordSearch {
     fn default() -> Self {
-        safe_get_input_as_terrain(2024, 4).into()
+        Input::for_puzzle(2024, 4).into_terrain().into()
     }
 }

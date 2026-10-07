@@ -1,4 +1,4 @@
-use aoclp::solvers::input::safe_get_input_as_many_vecs;
+use aoclp::aoc::Input;
 use itertools::Itertools;
 
 pub fn part_1() -> i32 {
@@ -28,5 +28,5 @@ pub fn part_2() -> i32 {
 }
 
 fn input() -> Vec<Vec<i32>> {
-    safe_get_input_as_many_vecs(2017, 2)
+    Input::for_puzzle(2017, 2).split_lines_into()
 }

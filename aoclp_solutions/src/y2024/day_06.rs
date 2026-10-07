@@ -3,11 +3,11 @@ use std::iter::successors;
 use std::ops::Range;
 use std::rc::Rc;
 
+use aoclp::aoc::Input;
 use aoclp::looping::LoopingItertools;
 use aoclp::positioning::direction::four_points::Direction4;
 use aoclp::positioning::pt::Pt;
 use aoclp::positioning::turtle::Turtle;
-use aoclp::solvers::input::safe_get_input_as_terrain;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
@@ -116,5 +116,5 @@ impl From<Vec<Vec<char>>> for Lab {
 }
 
 fn input() -> Lab {
-    safe_get_input_as_terrain(2024, 6).into()
+    Input::for_puzzle(2024, 6).into_terrain().into()
 }

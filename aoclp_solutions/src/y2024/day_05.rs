@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 
-use aoclp::solvers::input::safe_get_input_as_many_vecs_of_two_types;
+use aoclp::aoc::Input;
 use itertools::Itertools;
 
 pub fn part_1() -> u64 {
@@ -22,7 +22,7 @@ pub fn part_2() -> u64 {
 }
 
 fn input() -> (Vec<Rule>, Vec<Update>) {
-    let (rules, updates) = safe_get_input_as_many_vecs_of_two_types(2024, 5);
+    let (rules, updates) = Input::for_puzzle(2024, 5).split_two_types_of_lines_into();
     (rules.into_iter().map_into().collect(), updates.into_iter().map_into().collect())
 }
 

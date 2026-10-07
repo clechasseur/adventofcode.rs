@@ -1,8 +1,8 @@
 use std::iter::successors;
 
+use aoclp::aoc::Input;
 use aoclp::num::zero;
 use aoclp::positioning::pt::{Pt, manhattan};
-use aoclp::solvers::input::safe_get_input_as_one_vec;
 use gratte::EnumString;
 use itertools::Itertools;
 
@@ -68,5 +68,5 @@ impl HexDirection {
 }
 
 fn input() -> Vec<HexDirection> {
-    safe_get_input_as_one_vec(2017, 11)
+    Input::for_puzzle(2017, 11).split_into()
 }

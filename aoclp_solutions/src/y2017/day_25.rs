@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::rc::Rc;
 
-use aoclp::solvers::input::safe_get_input;
+use aoclp::aoc::Input;
 use bit_vec::BitVec;
 use gratte::EnumString;
 use itertools::Itertools;
@@ -215,5 +215,5 @@ impl Default for TuringMachine {
 }
 
 fn input() -> String {
-    safe_get_input(2017, 25)
+    Input::for_puzzle(2017, 25).into_string()
 }

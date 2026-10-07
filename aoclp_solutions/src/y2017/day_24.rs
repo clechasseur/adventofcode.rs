@@ -1,7 +1,7 @@
 use std::convert::Infallible;
 use std::str::FromStr;
 
-use aoclp::solvers::input::safe_get_input_as_many;
+use aoclp::aoc::Input;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
@@ -95,5 +95,5 @@ impl FromStr for Part {
 }
 
 fn initial_parts() -> Vec<Part> {
-    safe_get_input_as_many(2017, 24)
+    Input::for_puzzle(2017, 24).lines_into()
 }

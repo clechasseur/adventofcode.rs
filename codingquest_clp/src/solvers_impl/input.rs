@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::Path;
 
-use aoclp::solvers::input::Input;
+use aoclp::aoc::Input;
 
 pub fn get_input<S>(input: S) -> crate::Result<Input<'static>>
 where

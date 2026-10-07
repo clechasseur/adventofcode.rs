@@ -1,7 +1,7 @@
 use std::iter::successors;
 use std::str::FromStr;
 
-use aoclp::solvers::input::safe_get_input_as_many;
+use aoclp::aoc::Input;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
@@ -86,5 +86,5 @@ impl From<Vec<Generator>> for Generators {
 }
 
 fn initial_values() -> Generators {
-    safe_get_input_as_many(2017, 15).into()
+    Input::for_puzzle(2017, 15).lines_into().into()
 }

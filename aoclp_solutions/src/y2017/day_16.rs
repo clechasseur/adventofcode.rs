@@ -2,8 +2,8 @@ use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
 use aoclp::anyhow::{Context, anyhow};
+use aoclp::aoc::Input;
 use aoclp::looping::LoopingItertools;
-use aoclp::solvers::input::safe_get_input_as_one_vec;
 use itertools::Itertools;
 
 pub fn part_1() -> String {
@@ -75,7 +75,7 @@ impl FromStr for Move {
 }
 
 fn moves() -> Vec<Move> {
-    safe_get_input_as_one_vec(2017, 16)
+    Input::for_puzzle(2017, 16).split_into()
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]

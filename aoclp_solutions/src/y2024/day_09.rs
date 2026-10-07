@@ -1,4 +1,4 @@
-use aoclp::solvers::input::safe_get_input;
+use aoclp::aoc::Input;
 use gratte::{EnumCount, EnumIs, FromRepr};
 use itertools::repeat_n;
 
@@ -109,5 +109,5 @@ where
 const EXAMPLE: &str = "2333133121414131402";
 
 fn input() -> String {
-    safe_get_input(2024, 9)
+    Input::for_puzzle(2024, 9).into_string()
 }

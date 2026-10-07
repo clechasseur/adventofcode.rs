@@ -1,7 +1,7 @@
 use std::collections::{BTreeSet, HashSet};
 
+use aoclp::aoc::Input;
 use aoclp::positioning::pt::{Pt, filtered_matrix_to_map};
-use aoclp::solvers::input::safe_get_input_as_terrain;
 
 pub fn part_1() -> usize {
     let rolls: HashSet<Pt> = filtered_matrix_to_map(input(), |_, c| *c != '.')
@@ -38,5 +38,5 @@ pub fn part_2() -> usize {
 }
 
 fn input() -> Vec<Vec<char>> {
-    safe_get_input_as_terrain(2025, 4)
+    Input::for_puzzle(2025, 4).into_terrain()
 }

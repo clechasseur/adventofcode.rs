@@ -12,12 +12,12 @@ pub struct DiskCache {
     path: PathBuf,
 }
 
-const CACHE_PATH_ENV_VAR: &str = "AOCLP_CACHE_PATH";
-const DEFAULT_CACHE_PATH: &str = ".aoclp";
+pub const CACHE_PATH_ENV_VAR: &str = "AOCLP_CACHE_PATH";
+pub const DEFAULT_CACHE_PATH: &str = ".aoclp";
 
-const CACHE_FILE_EXT: &str = ".txt";
-const CACHE_FILE_TMP_EXT: &str = ".txt.tmp";
-const CACHE_FILE_PC_EXT: &str = ".txt.pc";
+pub const CACHE_FILE_EXT: &str = ".txt";
+pub const CACHE_FILE_TMP_EXT: &str = ".txt.tmp";
+pub const CACHE_FILE_PC_EXT: &str = ".txt.pc";
 
 impl DiskCache {
     pub fn new() -> crate::Result<Self> {

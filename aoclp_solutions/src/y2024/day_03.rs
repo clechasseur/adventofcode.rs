@@ -1,6 +1,6 @@
+use aoclp::aoc::Input;
 use aoclp::captures::CapturesHelper;
 use aoclp::regex::Regex;
-use aoclp::solvers::input::safe_get_input;
 
 pub fn part_1() -> i64 {
     sum_of_muls(false)
@@ -11,7 +11,7 @@ pub fn part_2() -> i64 {
 }
 
 fn sum_of_muls(dos_and_donts: bool) -> i64 {
-    let input = safe_get_input(2024, 3);
+    let input = Input::for_puzzle(2024, 3).into_string();
 
     let re =
         Regex::new(r"(?<mul>mul)\((?<a>\d{1,3}),(?<b>\d{1,3})\)|(?<do>do)\(\)|(?<dont>don't)\(\)")

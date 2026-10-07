@@ -1,10 +1,10 @@
 use std::fmt;
 use std::iter::once;
 
+use aoclp::aoc::Input;
 use aoclp::positioning::direction::four_points::Direction4;
 use aoclp::positioning::direction::{Direction, MovementDirection};
 use aoclp::positioning::pt::{Pt, min_max, rectangle_corners, rectangular_area};
-use aoclp::solvers::input::{Input, safe_get_input_as_many};
 use gratte::IntoEnumIterator;
 use itertools::Itertools;
 
@@ -168,9 +168,9 @@ const EXAMPLE: &str = "\
     7,3";
 
 fn input() -> Vec<Pt> {
-    safe_get_input_as_many(2025, 9)
+    Input::for_puzzle(2025, 9).lines_into()
 }
 
 fn example() -> Vec<Pt> {
-    Input::for_example(EXAMPLE).safe_into_many()
+    Input::for_example(EXAMPLE).lines_into()
 }

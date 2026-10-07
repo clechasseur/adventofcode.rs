@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
+use aoclp::aoc::Input;
 use aoclp::positioning::pt::Pt;
-use aoclp::solvers::input::safe_get_input;
 
 use crate::y2017::helpers::knot_hash::KnotHash;
 
@@ -87,5 +87,5 @@ impl Disk {
 }
 
 fn input() -> String {
-    safe_get_input(2017, 14)
+    Input::for_puzzle(2017, 14).into_string()
 }

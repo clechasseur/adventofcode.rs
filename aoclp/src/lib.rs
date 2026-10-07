@@ -1,5 +1,6 @@
 //! Helper library for Advent of Code.
 
+pub mod aoc;
 pub mod cache;
 pub mod captures;
 pub mod forth;

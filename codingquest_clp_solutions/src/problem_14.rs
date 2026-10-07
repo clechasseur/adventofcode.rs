@@ -20,7 +20,7 @@ pub fn solve() -> String {
 fn word_list() -> Vec<String> {
     get_input(get_problem_input_data(14).unwrap())
         .unwrap()
-        .safe_into_many()
+        .lines_into()
 }
 
 const GUESSES: &[(&str, &str)] =

@@ -1,9 +1,9 @@
 use std::ops::RangeInclusive;
 use std::str::FromStr;
 
+use aoclp::aoc::Input;
 use aoclp::functional::ConsumingPredHelper;
 use aoclp::num::Integer;
-use aoclp::solvers::input::safe_get_input_as_one_vec;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
@@ -96,5 +96,5 @@ impl FromStr for IdRange {
 }
 
 fn input() -> Vec<IdRange> {
-    safe_get_input_as_one_vec(2025, 2)
+    Input::for_puzzle(2025, 2).split_into()
 }

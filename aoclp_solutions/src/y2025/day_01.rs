@@ -2,7 +2,7 @@ use std::iter::{once, successors};
 use std::str::FromStr;
 
 use aoclp::anyhow::anyhow;
-use aoclp::solvers::input::safe_get_input_as_many;
+use aoclp::aoc::Input;
 use aoclp::str::StrHelper;
 
 pub fn part_1() -> usize {
@@ -14,7 +14,7 @@ pub fn part_2() -> usize {
 }
 
 fn input() -> Vec<Rotation> {
-    safe_get_input_as_many(2025, 1)
+    Input::for_puzzle(2025, 1).lines_into()
 }
 
 fn moves() -> impl Iterator<Item = i64> {

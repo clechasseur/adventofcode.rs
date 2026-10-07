@@ -1,4 +1,4 @@
-use aoclp::solvers::input::safe_get_input_as_many_pairs;
+use aoclp::aoc::Input;
 use itertools::Itertools;
 
 pub fn part_1() -> i64 {
@@ -16,7 +16,8 @@ fn list<F>(f: F) -> impl Iterator<Item = i64>
 where
     F: Fn((i64, i64)) -> i64,
 {
-    safe_get_input_as_many_pairs(2024, 1)
+    Input::for_puzzle(2024, 1)
+        .lines_into_pairs()
         .into_iter()
         .map(f)
         .sorted_unstable()

@@ -1,9 +1,9 @@
 use std::iter::successors;
 
+use aoclp::aoc::Input;
 use aoclp::positioning::direction::four_points::Direction4;
 use aoclp::positioning::pt::Pt;
 use aoclp::positioning::turtle::Turtle;
-use aoclp::solvers::input::safe_get_input_as_many;
 
 pub fn part_1() -> String {
     packet().filter_map(|(_, c)| c.map(char::from)).collect()
@@ -48,5 +48,5 @@ fn packet() -> impl Iterator<Item = (Turtle, Option<u8>)> {
 }
 
 fn input() -> Vec<String> {
-    safe_get_input_as_many(2017, 19)
+    Input::for_puzzle(2017, 19).lines_into()
 }

@@ -1,5 +1,5 @@
+use aoclp::aoc::Input;
 use aoclp::forth::Forth;
-use aoclp::solvers::input::safe_get_input;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
@@ -109,5 +109,5 @@ fn parse_operators(input: &str) -> Vec<String> {
 }
 
 fn input() -> String {
-    safe_get_input(2025, 6)
+    Input::for_puzzle(2025, 6).into_string()
 }

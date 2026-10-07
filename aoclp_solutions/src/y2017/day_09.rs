@@ -1,4 +1,4 @@
-use aoclp::solvers::input::safe_get_input;
+use aoclp::aoc::Input;
 
 pub fn part_1() -> usize {
     Group::root().total_score()
@@ -95,5 +95,5 @@ impl Group {
 }
 
 fn input() -> String {
-    safe_get_input(2017, 9)
+    Input::for_puzzle(2017, 9).into_string()
 }

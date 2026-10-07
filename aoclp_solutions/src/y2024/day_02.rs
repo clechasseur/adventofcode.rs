@@ -1,4 +1,4 @@
-use aoclp::solvers::input::safe_get_input_as_many_vecs;
+use aoclp::aoc::Input;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
@@ -13,7 +13,7 @@ pub fn part_2() -> usize {
 }
 
 fn input() -> Vec<Vec<i64>> {
-    safe_get_input_as_many_vecs(2024, 2)
+    Input::for_puzzle(2024, 2).split_lines_into()
 }
 
 #[allow(clippy::ptr_arg)]
