@@ -136,8 +136,8 @@ impl Universe {
     pub fn distances(&self) -> impl Iterator<Item = (usize, usize, i64)> + '_ {
         self.0
             .iter()
-            .tuple_combinations()
-            .map(|(p1, p2)| (p1.id, p2.id, manhattan(p1.position, p2.position)))
+            .array_combinations()
+            .map(|[p1, p2]| (p1.id, p2.id, manhattan(p1.position, p2.position)))
     }
 }
 
