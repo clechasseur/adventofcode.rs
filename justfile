@@ -195,7 +195,7 @@ unprep *extra_args:
 # ----- Project-specific recipes -----
 
 _run_solutions bin_name *extra_args:
-    {{cargo}} run --package {{bin_name}} {{all_features_flag}} {{target_tuple_flag}} {{release_flag}} {{ if extra_args != '' { '-- ' + extra_args } else { '' } }}
+    {{cargo}} run --package {{bin_name}} {{all_features_flag}} {{target_tuple_flag}} --release {{ if extra_args != '' { '-- ' + extra_args } else { '' } }}
 
 # Run AoC solutions executable
 aoc *extra_args: (_run_solutions "aoclp_solutions" extra_args)
