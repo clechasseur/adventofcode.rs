@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::str::FromStr;
 
 use aoclp::anyhow::anyhow;
-use aoclp::solvers_impl::input::safe_get_input_as_many;
+use aoclp::aoc::Input;
 use itertools::Itertools;
 
 pub fn part_1() -> i64 {
@@ -121,5 +121,5 @@ where
 }
 
 fn input() -> Vec<Instruction> {
-    safe_get_input_as_many(2017, 8)
+    Input::for_puzzle(2017, 8).lines_into()
 }

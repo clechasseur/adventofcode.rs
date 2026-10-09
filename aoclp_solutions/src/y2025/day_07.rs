@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
+use aoclp::aoc::Input;
 use aoclp::positioning::direction::four_points::Direction4;
 use aoclp::positioning::pt::{Pt, matrix_to_map};
-use aoclp::solvers_impl::input::safe_get_input_as_terrain;
 use derive_where::derive_where;
 use itertools::Itertools;
 
@@ -100,5 +100,5 @@ fn manifoldize() -> ManifoldizationResult {
 }
 
 fn input() -> Vec<Vec<char>> {
-    safe_get_input_as_terrain(2025, 7)
+    Input::for_puzzle(2025, 7).into_terrain()
 }

@@ -1,4 +1,4 @@
-use aoclp::solvers_impl::input::safe_get_input_as;
+use aoclp::aoc::Input;
 
 pub fn part_1() -> usize {
     let mut spinlock = Spinlock::default();
@@ -81,5 +81,5 @@ impl Default for GoodEnoughSpinlock {
 }
 
 fn input() -> usize {
-    safe_get_input_as(2017, 17)
+    Input::for_puzzle(2017, 17).into()
 }

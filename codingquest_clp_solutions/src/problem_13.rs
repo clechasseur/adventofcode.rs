@@ -59,7 +59,7 @@ impl Board {
                     .join("\n"),
             )
             .unwrap()
-            .safe_into_many_vecs()
+            .split_lines_into()
             .into_iter()
             .rev()
             .enumerate()
@@ -102,7 +102,7 @@ impl Moves {
                     .join("\n"),
             )
             .unwrap()
-            .safe_into_many_pairs(),
+            .lines_into_pairs(),
         }
     }
 }

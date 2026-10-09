@@ -2,8 +2,8 @@ use std::collections::HashMap;
 use std::iter::successors;
 use std::ops::Range;
 
+use aoclp::aoc::Input;
 use aoclp::positioning::pt::{Pt, matrix_to_map};
-use aoclp::solvers_impl::input::safe_get_input_as_terrain;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
@@ -90,5 +90,5 @@ impl Default for Map {
 }
 
 fn input() -> Vec<Vec<char>> {
-    safe_get_input_as_terrain(2024, 8)
+    Input::for_puzzle(2024, 8).into_terrain()
 }

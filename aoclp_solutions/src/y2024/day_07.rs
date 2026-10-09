@@ -1,7 +1,7 @@
 use std::iter::once;
 
+use aoclp::aoc::Input;
 use aoclp::forth::Forth;
-use aoclp::solvers_impl::input::safe_get_input_as_many_vecs;
 use itertools::{Itertools, repeat_n};
 
 pub fn part_1() -> i64 {
@@ -66,7 +66,8 @@ impl From<Vec<i64>> for Equation {
 }
 
 fn input() -> Vec<Equation> {
-    safe_get_input_as_many_vecs(2024, 7)
+    Input::for_puzzle(2024, 7)
+        .split_lines_into()
         .into_iter()
         .map_into()
         .collect()

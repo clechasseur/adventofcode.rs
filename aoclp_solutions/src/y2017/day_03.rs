@@ -1,11 +1,11 @@
 use std::collections::HashMap;
 use std::iter;
 
+use aoclp::aoc::Input;
 use aoclp::num::{Zero, zero};
 use aoclp::positioning::direction::four_points::Direction4;
 use aoclp::positioning::direction::{Direction, MovementDirection};
 use aoclp::positioning::pt::{Pt, manhattan};
-use aoclp::solvers_impl::input::safe_get_input;
 use itertools::Itertools;
 
 pub fn part_1() -> i64 {
@@ -66,5 +66,5 @@ fn spiral_stress_test() -> impl Iterator<Item = i64> {
 }
 
 fn input() -> usize {
-    safe_get_input(2017, 3).parse().unwrap()
+    Input::for_puzzle(2017, 3).into()
 }

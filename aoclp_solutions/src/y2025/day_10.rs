@@ -2,8 +2,8 @@ use std::str::FromStr;
 use std::sync::OnceLock;
 
 use aoclp::anyhow::Context;
+use aoclp::aoc::Input;
 use aoclp::regex::Regex;
-use aoclp::solvers_impl::input::{Input, safe_get_input_as_many};
 use itertools::Itertools;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use z3::ast::Int;
@@ -136,9 +136,9 @@ const EXAMPLE: &str = "\
     [.###.#] (0,1,2,3,4) (0,3,4) (0,1,2,4,5) (1,2) {10,11,11,5,10,5}";
 
 fn input() -> Vec<Machine> {
-    safe_get_input_as_many(2025, 10)
+    Input::for_puzzle(2025, 10).lines_into()
 }
 
 fn example() -> Vec<Machine> {
-    Input::for_example(EXAMPLE).safe_into_many()
+    Input::for_example(EXAMPLE).lines_into()
 }

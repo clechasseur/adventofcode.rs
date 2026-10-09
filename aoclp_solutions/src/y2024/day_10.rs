@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
+use aoclp::aoc::Input;
 use aoclp::mapping::dij;
 use aoclp::positioning::pt::{Pt, matrix_to_map};
-use aoclp::solvers_impl::input::safe_get_input_as_terrain;
 
 pub fn part_1() -> usize {
     Map::default().trailheads().map(|h| h.score).sum()
@@ -94,7 +94,8 @@ impl Default for Map {
     fn default() -> Self {
         Self {
             heightmap: matrix_to_map(
-                safe_get_input_as_terrain::<Tile>(2024, 10)
+                Input::for_puzzle(2024, 10)
+                    .into_terrain::<Tile>()
                     .into_iter()
                     .map(|y| y.into_iter().map(|t| t.height)),
             ),

@@ -1,12 +1,14 @@
 //! Helper library for Advent of Code.
 
+pub mod aoc;
+pub mod cache;
 pub mod captures;
 pub mod forth;
 pub mod functional;
 pub mod looping;
 pub mod mapping;
 pub mod positioning;
-pub mod solvers_impl;
+pub mod solvers;
 pub mod str;
 
 pub type Error = anyhow::Error;

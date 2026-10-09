@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use aoclp::solvers_impl::input::safe_get_input_as_one_vec;
+use aoclp::aoc::Input;
 
 pub fn part_1() -> usize {
     realloc_loop().cycles()
@@ -56,5 +56,5 @@ fn realloc_loop() -> LoopStatus {
 }
 
 fn input() -> Vec<usize> {
-    safe_get_input_as_one_vec(2017, 6)
+    Input::for_puzzle(2017, 6).split_into()
 }

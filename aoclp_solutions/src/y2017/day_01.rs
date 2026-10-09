@@ -1,4 +1,4 @@
-use aoclp::solvers_impl::input::safe_get_input;
+use aoclp::aoc::Input;
 
 pub fn part_1() -> u32 {
     sum(&input(), 1)
@@ -23,5 +23,5 @@ fn nth(input: &str, i: usize) -> char {
 }
 
 fn input() -> String {
-    safe_get_input(2017, 1)
+    Input::for_puzzle(2017, 1).into_string()
 }

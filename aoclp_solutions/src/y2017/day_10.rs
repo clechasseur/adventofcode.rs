@@ -1,6 +1,6 @@
 use std::ops::Mul;
 
-use aoclp::solvers_impl::input::safe_get_input;
+use aoclp::aoc::Input;
 
 use crate::y2017::helpers::knot_hash::KnotHash;
 
@@ -25,5 +25,5 @@ fn part_1_lengths() -> Vec<u8> {
 }
 
 fn input() -> String {
-    safe_get_input(2017, 10)
+    Input::for_puzzle(2017, 10).into_string()
 }

@@ -14,7 +14,7 @@ pub fn solve() -> u64 {
 fn sensor_data() -> Vec<Vec<u64>> {
     get_input(get_problem_input_data(15).unwrap())
         .unwrap()
-        .safe_into_many_vecs()
+        .split_lines_into()
 }
 
 #[derive(Debug)]

@@ -2,7 +2,7 @@ use std::cmp::{max, min};
 use std::ops::RangeInclusive;
 use std::str::FromStr;
 
-use aoclp::solvers_impl::input::safe_get_input_as_many_of_two_types;
+use aoclp::aoc::Input;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
@@ -58,5 +58,5 @@ impl FromStr for IdRange {
 }
 
 fn input() -> (Vec<IdRange>, Vec<usize>) {
-    safe_get_input_as_many_of_two_types(2025, 5)
+    Input::for_puzzle(2025, 5).two_types_of_lines_into()
 }

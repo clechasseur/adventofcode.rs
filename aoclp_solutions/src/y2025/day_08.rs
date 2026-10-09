@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
+use aoclp::aoc::Input;
 use aoclp::num::zero;
 use aoclp::positioning::pt_3d::{Pt3d, euclidian_squared};
-use aoclp::solvers_impl::input::safe_get_input_as_many;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
@@ -66,5 +66,5 @@ fn circuits(all: bool) -> (HashMap<Pt3d, usize>, HashMap<usize, usize>, (Pt3d, P
 }
 
 fn input() -> Vec<Pt3d> {
-    safe_get_input_as_many(2025, 8)
+    Input::for_puzzle(2025, 8).lines_into()
 }

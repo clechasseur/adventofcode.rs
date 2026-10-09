@@ -11,7 +11,7 @@ pub fn solve() -> u64 {
 fn message_data() -> Vec<Vec<String>> {
     get_input(get_problem_input_data(16).unwrap())
         .unwrap()
-        .safe_into_many_vecs()
+        .split_lines_into()
 }
 
 #[derive(Debug)]

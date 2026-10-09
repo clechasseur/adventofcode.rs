@@ -5,9 +5,9 @@ use std::rc::Rc;
 use std::str::FromStr;
 use std::sync::OnceLock;
 
+use aoclp::aoc::Input;
 use aoclp::captures::CapturesHelper;
 use aoclp::regex::Regex;
-use aoclp::solvers_impl::input::safe_get_input_as_many;
 use itertools::Itertools;
 
 pub fn part_1() -> String {
@@ -176,5 +176,5 @@ impl FromStr for ProgramSpec {
 }
 
 fn input() -> Vec<ProgramSpec> {
-    safe_get_input_as_many(2017, 7)
+    Input::for_puzzle(2017, 7).lines_into()
 }

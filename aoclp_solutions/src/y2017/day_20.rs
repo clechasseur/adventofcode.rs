@@ -4,11 +4,11 @@ use std::ops::Deref;
 use std::str::FromStr;
 use std::sync::OnceLock;
 
+use aoclp::aoc::Input;
 use aoclp::captures::CapturesHelper;
 use aoclp::num::zero;
 use aoclp::positioning::pt_3d::{Pt3d, manhattan};
 use aoclp::regex::Regex;
-use aoclp::solvers_impl::input::safe_get_input_as_many;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
@@ -136,8 +136,8 @@ impl Universe {
     pub fn distances(&self) -> impl Iterator<Item = (usize, usize, i64)> + '_ {
         self.0
             .iter()
-            .tuple_combinations()
-            .map(|(p1, p2)| (p1.id, p2.id, manhattan(p1.position, p2.position)))
+            .array_combinations()
+            .map(|[p1, p2]| (p1.id, p2.id, manhattan(p1.position, p2.position)))
     }
 }
 
@@ -161,5 +161,5 @@ impl Default for Universe {
 }
 
 fn input() -> Vec<Particle> {
-    safe_get_input_as_many(2017, 20)
+    Input::for_puzzle(2017, 20).lines_into()
 }

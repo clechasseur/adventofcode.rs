@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::str::FromStr;
 
 use aoclp::anyhow::{Context, anyhow};
-use aoclp::solvers_impl::input::safe_get_input_as_many;
+use aoclp::aoc::Input;
 use gratte::EnumDiscriminants;
 use itertools::Itertools;
 use primes::is_prime;
@@ -139,7 +139,7 @@ impl Default for Program {
 }
 
 fn input() -> Vec<Instruction> {
-    safe_get_input_as_many(2017, 23)
+    Input::for_puzzle(2017, 23).lines_into()
 }
 
 #[derive(Debug, Default)]

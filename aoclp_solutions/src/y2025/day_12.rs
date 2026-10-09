@@ -2,10 +2,10 @@ use std::str::FromStr;
 use std::sync::OnceLock;
 
 use aoclp::anyhow::Context;
+use aoclp::aoc::Input;
 use aoclp::captures::CapturesHelper;
 use aoclp::mapping::canvas::fixed::Canvas;
 use aoclp::regex::Regex;
-use aoclp::solvers_impl::input::safe_get_input;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
@@ -54,7 +54,7 @@ impl FromStr for Region {
 }
 
 fn input() -> (Vec<Present>, Vec<Region>) {
-    parse_input(safe_get_input(2025, 12).lines())
+    parse_input(Input::for_puzzle(2025, 12).into_string().lines())
 }
 
 fn parse_input<I, S>(input: I) -> (Vec<Present>, Vec<Region>)

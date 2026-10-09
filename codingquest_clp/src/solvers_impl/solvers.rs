@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::fmt::Display;
 
-use aoclp::solvers_impl::solvers::{Solver, SolverWrapper};
+use aoclp::solvers::{Solver, SolverWrapper};
 use itertools::Itertools;
 
 #[macro_export]

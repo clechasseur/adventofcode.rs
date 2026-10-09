@@ -1,6 +1,6 @@
 use std::iter::successors;
 
-use aoclp::solvers_impl::input::safe_get_input_as_many;
+use aoclp::aoc::Input;
 
 pub fn part_1() -> usize {
     steps(false)
@@ -27,5 +27,5 @@ fn maze(strange: bool) -> impl Iterator<Item = usize> {
 }
 
 fn input() -> Vec<isize> {
-    safe_get_input_as_many(2017, 5)
+    Input::for_puzzle(2017, 5).lines_into()
 }

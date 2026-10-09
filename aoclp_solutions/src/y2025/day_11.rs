@@ -3,8 +3,8 @@ use std::str::FromStr;
 use std::sync::OnceLock;
 
 use aoclp::anyhow::Context;
+use aoclp::aoc::Input;
 use aoclp::regex::Regex;
-use aoclp::solvers_impl::input::safe_get_input_as_many;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
@@ -73,5 +73,5 @@ impl FromStr for Device {
 }
 
 fn input() -> Vec<Device> {
-    safe_get_input_as_many(2025, 11)
+    Input::for_puzzle(2025, 11).lines_into()
 }

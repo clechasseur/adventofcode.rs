@@ -1,4 +1,4 @@
-use aoclp::solvers_impl::input::safe_get_input_as_many_pairs;
+use aoclp::aoc::Input;
 
 pub fn part_1() -> usize {
     input()
@@ -32,7 +32,8 @@ impl Layer {
 }
 
 fn input() -> Vec<Layer> {
-    safe_get_input_as_many_pairs(2017, 13)
+    Input::for_puzzle(2017, 13)
+        .lines_into_pairs()
         .into_iter()
         .map(|(depth, range)| Layer { depth, range })
         .collect()

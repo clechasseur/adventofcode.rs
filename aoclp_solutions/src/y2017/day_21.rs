@@ -4,7 +4,7 @@ use std::fmt::{Display, Formatter};
 use std::iter::successors;
 use std::str::FromStr;
 
-use aoclp::solvers_impl::input::safe_get_input_as_many;
+use aoclp::aoc::Input;
 use itertools::Itertools;
 
 pub fn part_1() -> usize {
@@ -206,5 +206,5 @@ impl Default for Rules {
 }
 
 fn input() -> Vec<String> {
-    safe_get_input_as_many(2017, 21)
+    Input::for_puzzle(2017, 21).lines_into()
 }
