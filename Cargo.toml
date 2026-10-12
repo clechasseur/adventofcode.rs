@@ -5,10 +5,10 @@ default-members = ["aoclp_solutions"]
 
 [workspace.dependencies]
 anyhow = "1.0.104"
-aocf = "0.1.21"
 bit-vec = "0.10.1"
 clap = "4.6.7"
 derive-where = "1.7.0"
+dotenv = { package = "dotenv-ng", version = "1.0.0" }
 fancy-regex = "0.19.2"
 gratte = "3.0.1"
 itertools = "0.15.0"

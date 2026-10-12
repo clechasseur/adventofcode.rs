@@ -1,13 +1,27 @@
 //! Helpers to interact with the Advent of Code website/API.
 
+use std::env;
+use std::env::VarError;
+use std::path::PathBuf;
 use std::str::FromStr;
+use std::sync::LazyLock;
 
-use aocf::Aoc;
+use anyhow::Context;
 use itertools::Itertools;
+use reqwest::blocking::Client;
+use reqwest::header::COOKIE;
 
 use crate::anyhow::anyhow;
+use crate::cache::DiskCache;
 
 pub const DEFAULT_INPUT_SEPARATORS: &[char] = &[' ', '\t', '|', ',', ':'];
+
+pub const AOC_BASE_URL: &str = "https://adventofcode.com";
+pub const AOC_BASE_URL_ENV_VAR: &str = "AOCLP_AOC_BASE_URL";
+pub const AOC_SESSION_ENV_VAR: &str = "AOCLP_AOC_SESSION";
+
+pub const CACHE_PATH_ENV_VAR: &str = "AOCLP_CACHE_PATH";
+pub const DEFAULT_CACHE_PATH: &str = ".aoclp";
 
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct PuzzleId {
@@ -60,25 +74,12 @@ impl<'a> Input<'a> {
             return Ok(self);
         }
 
-        let PuzzleId { year, day } = self.puzzle.ok_or(anyhow!("no puzzle ID set"))?;
+        let mut input = self.get_aoc_input()?;
+        if input.ends_with('\n') {
+            input.remove(input.len() - 1);
+        }
 
-        let mut aoc = Aoc::new()
-            .year(Some(year))
-            .day(Some(day))
-            .parse_cli(false)
-            .init()
-            .map_err(|e| anyhow!(e))?;
-
-        self.data = Some(
-            aoc.get_input(self.force)
-                .map(|mut input| {
-                    if input.ends_with('\n') {
-                        input.remove(input.len() - 1);
-                    }
-                    input
-                })
-                .map_err(|e| anyhow!(e))?,
-        );
+        self.data = Some(input);
         Ok(self)
     }
 
@@ -305,4 +306,78 @@ impl<'a> Input<'a> {
             })
             .collect()
     }
+
+    fn get_aoc_input(&self) -> crate::Result<String> {
+        let cache_key = self.cache_key()?;
+
+        if !self.force
+            && let Some(input) = INPUT_CACHE.get(cache_key.as_str())?
+        {
+            return Ok(input);
+        }
+
+        let client = Client::builder()
+            .user_agent(Self::http_user_agent())
+            .build()
+            .with_context(|| "failed to build AOC HTTP client")?;
+
+        let url = self.aoc_input_url()?;
+        let aoc_session = Self::aoc_session()?;
+        let cookie = format!("session={}", aoc_session);
+        let input = client
+            .get(url)
+            .header(COOKIE, cookie)
+            .send()
+            .with_context(|| "failed to fetch AOC input data")?
+            .error_for_status()
+            .with_context(|| "failed to fetch AOC input data?")?
+            .text()
+            .with_context(|| "failed to decode AOC input's charset")?;
+
+        INPUT_CACHE.set(cache_key.as_str(), input.as_str())?;
+        Ok(input)
+    }
+
+    fn cache_key(&self) -> crate::Result<String> {
+        self.puzzle
+            .map(|id| format!("aoc{}_{:0>2}", id.year, id.day))
+            .ok_or_else(|| anyhow!("cannot get cache key for example"))
+    }
+
+    fn aoc_session() -> crate::Result<String> {
+        match env::var(AOC_SESSION_ENV_VAR) {
+            Ok(aoc_session) => Ok(aoc_session),
+            Err(VarError::NotPresent) => Err(anyhow!(
+                "AOC session token needs to be passed via the {AOC_SESSION_ENV_VAR} environment variable"
+            )),
+            Err(err) => Err(anyhow!("failed to get AOC session token from environment: {err}")),
+        }
+    }
+
+    fn aoc_input_url(&self) -> crate::Result<String> {
+        let base_url = match env::var(AOC_BASE_URL_ENV_VAR) {
+            Ok(base_url) => Some(base_url),
+            Err(VarError::NotPresent) => None,
+            Err(err) => return Err(anyhow!("failed to get AOC base URL from environment: {err}")),
+        };
+        let base_url = base_url.as_ref().map(<_>::as_ref).unwrap_or(AOC_BASE_URL);
+
+        self.puzzle
+            .map(|id| format!("{base_url}/{}/day/{}/input", id.year, id.day))
+            .ok_or_else(|| anyhow!("cannot get AOC input URL for example"))
+    }
+
+    fn http_user_agent() -> String {
+        format!("clechasseur/{}@{}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
+    }
 }
+
+static INPUT_CACHE: LazyLock<DiskCache> = LazyLock::new(|| {
+    let path: PathBuf = match env::var(CACHE_PATH_ENV_VAR) {
+        Ok(path) => path.into(),
+        Err(VarError::NotPresent) => DEFAULT_CACHE_PATH.into(),
+        Err(err) => panic!("failed to get cache path from environment: {err}"),
+    };
+
+    DiskCache::new(path).expect("failed to create AOC solutions cache")
+});

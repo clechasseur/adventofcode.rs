@@ -4,16 +4,15 @@ My solutions to [Advent of Code](https://adventofcode.com/) puzzles in Rust 🦀
 
 ## Requirements
 
-* [Rust](https://www.rust-lang.org/) 1.81.0 or later
-* [aocf](https://crates.io/crates/aocf) CLI
+* [Rust](https://www.rust-lang.org/) 1.91.1 or later
 
 ## Setting your session cookie
 
 * Get your AoC session cookie by following [these instructions](https://github.com/nuxeh/aocf/blob/HEAD/cookie.md)
-* Save it locally by running:
+* Save it in a file named `.env` at the repository root:
 
-```shell
-aocf set-cookie <COOKIE>
+```dotenv
+AOCLP_AOC_SESSION=<COOKIE>
 ```
 
 ## Finding solutions

@@ -5,7 +5,6 @@ edition = "2024"
 
 [dependencies]
 anyhow = { workspace = true }
-aocf = { workspace = true }
 itertools = { workspace = true }
 gratte = { workspace = true }
 paste = { workspace = true }

@@ -32,5 +32,5 @@ codecov.json
 # Always include .keep files
 !**/.keep
 
-# aocf input cache
-.aocf/cache
+# aoclp input cache
+.aoclp
