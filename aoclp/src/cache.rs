@@ -1,8 +1,6 @@
-use std::env;
-use std::env::VarError;
 use std::error::Error;
 use std::fs::{create_dir_all, read_to_string, rename, write};
-use std::path::PathBuf;
+use std::path::{absolute, PathBuf, Path};
 use std::str::FromStr;
 
 use crate::anyhow::Context;
@@ -12,25 +10,16 @@ pub struct DiskCache {
     path: PathBuf,
 }
 
-pub const CACHE_PATH_ENV_VAR: &str = "AOCLP_CACHE_PATH";
-pub const DEFAULT_CACHE_PATH: &str = ".aoclp";
-
 pub const CACHE_FILE_EXT: &str = ".txt";
 pub const CACHE_FILE_TMP_EXT: &str = ".txt.tmp";
 pub const CACHE_FILE_PC_EXT: &str = ".txt.pc";
 
 impl DiskCache {
-    pub fn new() -> crate::Result<Self> {
-        let path: PathBuf = match env::var(CACHE_PATH_ENV_VAR) {
-            Ok(path) => path.into(),
-            Err(VarError::NotPresent) => DEFAULT_CACHE_PATH.into(),
-            Err(err) => {
-                return Err(err).with_context(|| "failed to get cache path from environment");
-            },
-        };
-        let path = path
-            .canonicalize()
-            .with_context(|| "failed to get absolute cache path")?;
+    pub fn new<P>(path: P) -> crate::Result<Self>
+    where
+        P: AsRef<Path>,
+    {
+        let path = absolute(path).with_context(|| "failed to get absolute cache path")?;
         create_dir_all(&path).with_context(|| "failed to create cache directory")?;
 
         Ok(Self { path })

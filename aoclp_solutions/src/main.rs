@@ -3,8 +3,17 @@ use std::time::Instant;
 use aoclp::solvers::Solvers;
 use aoclp_solutions::solvers;
 use clap::Parser;
+use dotenv::EnvLoader;
 
-fn main() {
+fn main() -> aoclp::Result<()> {
+    match unsafe { EnvLoader::new().load_and_modify() } {
+        Ok(_) => (),
+        Err(dotenv::Error::Io(io_err, _)) if io_err.kind() == std::io::ErrorKind::NotFound => {
+            println!(".env file not found in root")
+        },
+        Err(err) => return Err(err.into()),
+    }
+
     let solvers = solvers();
     let args = Cli::parse();
 
@@ -19,6 +28,8 @@ fn main() {
             run_year(&solvers, year, args.part);
         }
     }
+
+    Ok(())
 }
 
 fn run_year(solvers: &Solvers, year: i32, part: Option<u32>) {

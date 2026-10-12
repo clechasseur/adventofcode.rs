@@ -27,10 +27,10 @@ codecov.json
 
 # Local environment overrides
 .env
-.env.bak
+.env
 
 # Always include .keep files
 !**/.keep
 
-# aocf input cache
-.aocf/cache
+# aoclp input cache
+.aoclp

@@ -8,6 +8,7 @@ aoclp = { path = "../aoclp" }
 bit-vec = { workspace = true }
 clap = { workspace = true, features = ["derive"] }
 derive-where = { workspace = true }
+dotenv = { workspace = true }
 itertools = { workspace = true }
 gratte = { workspace = true }
 primes = { workspace = true }
