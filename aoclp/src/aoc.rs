@@ -5,10 +5,12 @@ use std::env::VarError;
 use std::path::PathBuf;
 use std::str::FromStr;
 use std::sync::LazyLock;
+
 use anyhow::Context;
 use itertools::Itertools;
 use reqwest::blocking::Client;
 use reqwest::header::COOKIE;
+
 use crate::anyhow::anyhow;
 use crate::cache::DiskCache;
 
@@ -308,7 +310,9 @@ impl<'a> Input<'a> {
     fn get_aoc_input(&self) -> crate::Result<String> {
         let cache_key = self.cache_key()?;
 
-        if !self.force && let Some(input) = INPUT_CACHE.get(cache_key.as_str())? {
+        if !self.force
+            && let Some(input) = INPUT_CACHE.get(cache_key.as_str())?
+        {
             return Ok(input);
         }
 
@@ -320,7 +324,8 @@ impl<'a> Input<'a> {
         let url = self.aoc_input_url()?;
         let aoc_session = Self::aoc_session()?;
         let cookie = format!("session={}", aoc_session);
-        let input = client.get(url)
+        let input = client
+            .get(url)
             .header(COOKIE, cookie)
             .send()
             .with_context(|| "failed to fetch AOC input data")?
@@ -342,7 +347,9 @@ impl<'a> Input<'a> {
     fn aoc_session() -> crate::Result<String> {
         match env::var(AOC_SESSION_ENV_VAR) {
             Ok(aoc_session) => Ok(aoc_session),
-            Err(VarError::NotPresent) => Err(anyhow!("AOC session token needs to be passed via the {AOC_SESSION_ENV_VAR} environment variable")),
+            Err(VarError::NotPresent) => Err(anyhow!(
+                "AOC session token needs to be passed via the {AOC_SESSION_ENV_VAR} environment variable"
+            )),
             Err(err) => Err(anyhow!("failed to get AOC session token from environment: {err}")),
         }
     }

@@ -1,6 +1,6 @@
 use std::error::Error;
 use std::fs::{create_dir_all, read_to_string, rename, write};
-use std::path::{absolute, PathBuf, Path};
+use std::path::{Path, PathBuf, absolute};
 use std::str::FromStr;
 
 use crate::anyhow::Context;
