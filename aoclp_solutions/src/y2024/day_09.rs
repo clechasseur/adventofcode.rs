@@ -1,6 +1,6 @@
 use aoclp::aoc::Input;
-use gratte::{EnumCount, EnumIs, FromRepr};
 use itertools::repeat_n;
+use strum::{EnumCount, EnumIs, FromRepr};
 
 pub fn part_1() -> usize {
     let mut blocks = blocks();

@@ -1,4 +1,6 @@
 //! Helpers to interact with the Advent of Code website/API.
+//!
+//! To fetch puzzle data, see [`Input`].
 
 use std::env;
 use std::env::VarError;
@@ -14,39 +16,170 @@ use reqwest::header::COOKIE;
 use crate::anyhow::anyhow;
 use crate::cache::DiskCache;
 
+/// Default [`separators`] used by [`Input`] when splitting input data lines into parts.
+///
+/// [`separators`]: Input::separators
 pub const DEFAULT_INPUT_SEPARATORS: &[char] = &[' ', '\t', '|', ',', ':'];
 
+/// Base Advent of Code website URL. Will be used unless overridden via [`AOC_BASE_URL_ENV_VAR`].
 pub const AOC_BASE_URL: &str = "https://adventofcode.com";
+
+/// Environment variable that can be used to override the [base Advent of Code website URL].
+///
+/// [base Advent of Code website URL]: AOC_BASE_URL
 pub const AOC_BASE_URL_ENV_VAR: &str = "AOCLP_AOC_BASE_URL";
+
+/// Environment variable that can be used to store the Advent of Code session cookie.
+///
+/// A valid session cookie is required to fetch puzzle input data from the AoC website.
+/// If not provided via this environment variable, must be set via [`session`].
+///
+/// [`session`]: Input::session
 pub const AOC_SESSION_ENV_VAR: &str = "AOCLP_AOC_SESSION";
 
+/// Environment variable that can be used to override the path where the input cache is stored.
+///
+/// The input cache is used to persist puzzle input data to avoid fetching it multiple times.
+/// If not specified via the environment, the [default value] will be used.
+///
+/// [default value]: DEFAULT_CACHE_PATH
 pub const CACHE_PATH_ENV_VAR: &str = "AOCLP_CACHE_PATH";
+
+/// Default path of the directory where input cache data is stored. Relative to the project root.
 pub const DEFAULT_CACHE_PATH: &str = ".aoclp";
 
+/// Key used to uniquely identify a puzzle, via its year and day.
 #[derive(Debug, Default, Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct PuzzleId {
-    year: i32,
-    day: u32,
+    /// Puzzle year.
+    pub year: i32,
+
+    /// Puzzle day.
+    pub day: u32,
 }
 
-#[derive(Debug)]
+/// Helper to fetch puzzle input data from the Advent of Code website.
+///
+/// ### Input data for puzzle
+///
+/// To fetch input data for a specific puzzle, use [`for_puzzle`]:
+///
+/// ```no_run
+/// # use aoclp::aoc::Input;
+///
+/// pub fn part_1() -> i64 {
+///     let input = Input::for_puzzle(2025, 1).into_string();
+///     // ...use input here...
+///     # 0
+/// }
+/// ```
+///
+/// The call to [`into_string`] fetches the data from AoC and caches it locally before returning it.
+/// Subsequent requests for the same input data will fetch the data from the cache instead of
+/// connecting to AoC directly.
+///
+/// ### Input data for example
+///
+/// AoC puzzles usually contain examples of input data and the result you would get if you used them.
+/// It's possible to test an algorithm with example data with [`for_example`]:
+///
+/// ```no_run
+/// # use aoclp::aoc::Input;
+///
+/// const EXAMPLE: &str = "...";
+///
+/// pub fn part_1() -> i64 {
+///     let input = Input::for_example(EXAMPLE).into_string();
+///     // ...use example data here...
+///     # 0
+/// }
+/// ```
+///
+/// ### AoC session cookie
+///
+/// In order to fetch puzzle data for your account, this helper requires a session cookie for the
+/// Advent of Code website. This cookie can be retrieved from the browser's cookies and is named
+/// `session`. For more details, follow [these instructions].
+///
+/// Once you have your session cookie, store it in an environment variable named [`AOCLP_AOC_SESSION`]
+/// and this helper will use it automatically. You can also set the session cookie explicitly via
+/// [`session`].
+///
+/// ### Input parsing
+///
+/// This helper provides methods to convert the data, initially read as a string, into other types.
+/// Any type implementing [`FromStr`] can be parsed automatically via [`into`]:
+///
+/// ```no_run
+/// # use std::convert::Infallible;
+/// # use std::str::FromStr;
+/// # use itertools::Itertools;
+/// # use aoclp::aoc::Input;
+///
+/// fn input_as_i64() -> i64 {
+///     Input::for_puzzle(2017, 1).into()
+/// }
+///
+/// struct MyPoint(i64, i64);
+///
+/// impl FromStr for MyPoint {
+///     type Err = Infallible;
+///
+///     fn from_str(s: &str) -> Result<Self, Self::Err> {
+///         let (x, y) = s
+///             .split(',')
+///             .map(|n| n.parse().unwrap())
+///             .collect_tuple()
+///             .unwrap();
+///         Ok(Self(x, y))
+///     }
+/// }
+///
+/// fn input_as_custom_type() -> MyPoint {
+///     Input::for_puzzle(2025, 2).into()
+/// }
+/// ```
+///
+/// There are also various helpers to parse the input data in common formats, like [`lines_into`] to
+/// parse each line as a different value, or [`split_into`] to split a line into multiple values
+/// separated by the [`separators`].
+///
+/// [`for_puzzle`]: Self::for_puzzle
+/// [`into_string`]: Self::into_string
+/// [these instructions]: https://github.com/clechasseur/aocf/blob/efe2bdef7c90735f5ffd1f4370f54d6817b9c9ba/cookie.md
+/// [`AOCLP_AOC_SESSION`]: AOC_SESSION_ENV_VAR
+/// [`session`]: Self::session
+/// [`into`]: Self::into
+/// [`lines_into`]: Self::lines_into
+/// [`split_into`]: Self::split_into
+/// [`separators`]: Self::separators
+#[derive(Debug, Clone)]
 pub struct Input<'a> {
     puzzle: Option<PuzzleId>,
     force: bool,
+    session: Option<String>,
     data: Option<String>,
     separators: &'a [char],
 }
 
 impl<'a> Input<'a> {
+    /// Creates an input helper for a specific AoC puzzle.
+    ///
+    /// Note: this will not fetch the data right away; data is fetched from the AoC website
+    /// only when it is requested in a specific format (via [`into_string`], for example).
+    ///
+    /// [`into_string`]: Self::into_string
     pub fn for_puzzle(year: i32, day: u32) -> Self {
         Self {
             puzzle: Some(PuzzleId { year, day }),
             force: false,
+            session: None,
             data: None,
             separators: DEFAULT_INPUT_SEPARATORS,
         }
     }
 
+    /// Creates an input helper for a puzzle example.
     pub fn for_example<S>(example: S) -> Self
     where
         S: Into<String>,
@@ -54,13 +187,34 @@ impl<'a> Input<'a> {
         Self {
             puzzle: None,
             force: false,
+            session: None,
             data: Some(example.into()),
             separators: DEFAULT_INPUT_SEPARATORS,
         }
     }
 
+    /// Sets whether this helper should fetch puzzle data from the AoC website, even if it
+    /// finds existing cached data.
+    ///
+    /// ```no_run
+    /// # use aoclp::aoc::Input;
+    ///
+    /// pub fn part_1() -> i64 {
+    ///     let input = Input::for_puzzle(2025, 1).force(true).into_string();
+    ///     // ...use input here...
+    ///     # 0
+    /// }
+    /// ```
     pub fn force(mut self, force: bool) -> Self {
         self.force = force;
+        self
+    }
+
+    pub fn session<S>(mut self, session: S) -> Self
+    where
+        S: Into<String>,
+    {
+        self.session = Some(session.into());
         self
     }
 
@@ -322,7 +476,7 @@ impl<'a> Input<'a> {
             .with_context(|| "failed to build AOC HTTP client")?;
 
         let url = self.aoc_input_url()?;
-        let aoc_session = Self::aoc_session()?;
+        let aoc_session = self.aoc_session()?;
         let cookie = format!("session={}", aoc_session);
         let input = client
             .get(url)
@@ -344,13 +498,17 @@ impl<'a> Input<'a> {
             .ok_or_else(|| anyhow!("cannot get cache key for example"))
     }
 
-    fn aoc_session() -> crate::Result<String> {
+    fn aoc_session(&self) -> crate::Result<String> {
+        if let Some(session) = self.session.as_ref() {
+            return Ok(session.clone());
+        }
+
         match env::var(AOC_SESSION_ENV_VAR) {
             Ok(aoc_session) => Ok(aoc_session),
             Err(VarError::NotPresent) => Err(anyhow!(
-                "AOC session token needs to be passed via the {AOC_SESSION_ENV_VAR} environment variable"
+                "AOC session cookie needs to be set via `session` or passed via the {AOC_SESSION_ENV_VAR} environment variable"
             )),
-            Err(err) => Err(anyhow!("failed to get AOC session token from environment: {err}")),
+            Err(err) => Err(anyhow!("failed to get AOC session cookie from environment: {err}")),
         }
     }
 
