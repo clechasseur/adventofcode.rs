@@ -1,0 +1,8 @@
+[advisories]
+ignore = [
+    # The following advisories are in zip 8.6.0. We should upgrade to zip 9.0.0+, but it is used by z3 so we
+    # must wait for them to update. z3 is only used in the solutions, not the crate, so it's fine for now.
+    "RUSTSEC-2026-0367", # Insecure Preservation of SUID/SGID Bits during ZIP Extraction Leading to Potential Privilege Escalation
+    "RUSTSEC-2026-0368", # zip: `ZipArchive::extract` creates symbolic links whose attacker-controlled targets are outside the destination directory
+    "RUSTSEC-2026-0369", # ZipStreamReader::extract() and ZipArchive::extract() apply Unix permissions through symlinks without confining the target
+]
