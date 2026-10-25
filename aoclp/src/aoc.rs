@@ -74,9 +74,9 @@ pub struct PuzzleId {
 /// }
 /// ```
 ///
-/// The call to [`into_string`] fetches the data from AoC and caches it locally before returning it.
-/// Subsequent requests for the same input data will fetch the data from the cache instead of
-/// connecting to AoC directly.
+/// The call to [`into_string`] fetches the data from AoC and caches it locally on disk before
+/// returning it. Subsequent requests for the same input data will fetch the data from the disk
+/// cache instead of connecting to AoC directly.
 ///
 /// ### Input data for example
 ///
@@ -196,6 +196,9 @@ impl<'a> Input<'a> {
     /// Sets whether this helper should fetch puzzle data from the AoC website, even if it
     /// finds existing cached data.
     ///
+    /// This should not be necessary in general unless the cached data is corrupted, since
+    /// puzzle data does not change by account.
+    ///
     /// ```no_run
     /// # use aoclp::aoc::Input;
     ///
@@ -210,6 +213,21 @@ impl<'a> Input<'a> {
         self
     }
 
+    /// Overrides the session cookie used to authenticate to the Aoc website.
+    ///
+    /// If not specified, the session cookie must be set via [`AOC_SESSION_ENV_VAR`].
+    ///
+    /// ```no_run
+    /// # use aoclp::aoc::Input;
+    ///
+    /// const SESSION_COOKIE: &str = "...";
+    ///
+    /// pub fn part_1() -> i64 {
+    ///     let input = Input::for_puzzle(2025, 1).session(SESSION_COOKIE).into_string();
+    ///     // ...use input here...
+    ///     # 0
+    /// }
+    /// ```
     pub fn session<S>(mut self, session: S) -> Self
     where
         S: Into<String>,
@@ -218,11 +236,27 @@ impl<'a> Input<'a> {
         self
     }
 
+    /// Overrides the list of separators used to split lines.
+    ///
+    /// Separators are used by methods like [`split_lines_into`].
+    ///
+    /// If not set, the [`DEFAULT_INPUT_SEPARATORS`] are used.
+    ///
+    /// [`split_lines_into`]: Self::split_lines_into
     pub fn separators(mut self, separators: &'a [char]) -> Self {
         self.separators = separators;
         self
     }
 
+    /// Tries fetching the input data from the AoC website. If successful,
+    /// the data is cached on disk.
+    ///
+    /// If the data already exists on disk, it is read from the cache instead
+    /// of contacting the AoC website. If the data has already been fetched
+    /// via a previous call to [`try_get`] or [`get`], the same data is returned.
+    ///
+    /// [`try_get`]: Self::try_get
+    /// [`get`]: Self::get
     pub fn try_get(mut self) -> crate::Result<Self> {
         if self.data.is_some() {
             return Ok(self);
@@ -237,6 +271,8 @@ impl<'a> Input<'a> {
         Ok(self)
     }
 
+    /// Tries to fetch the data from the AoC website using [`try_get`].
+    /// Panics if an error occurs.
     pub fn get(self) -> Self {
         self.try_get().expect("failed to get AOC puzzle input")
     }
