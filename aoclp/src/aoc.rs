@@ -223,7 +223,9 @@ impl<'a> Input<'a> {
     /// const SESSION_COOKIE: &str = "...";
     ///
     /// pub fn part_1() -> i64 {
-    ///     let input = Input::for_puzzle(2025, 1).session(SESSION_COOKIE).into_string();
+    ///     let input = Input::for_puzzle(2025, 1)
+    ///         .session(SESSION_COOKIE)
+    ///         .into_string();
     ///     // ...use input here...
     ///     # 0
     /// }
