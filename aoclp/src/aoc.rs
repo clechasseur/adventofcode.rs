@@ -144,6 +144,13 @@ pub struct PuzzleId {
 /// parse each line as a different value, or [`split_into`] to split a line into multiple values
 /// separated by the [`separators`].
 ///
+/// ### Do _and_ do not: there is `try`
+///
+/// Every parsing method comes in two flavours: a `try_...` version (ex: [`try_lines_into`]) that
+/// returns an error if something goes wrong, and a regular version (ex: [`lines_into`]) that
+/// panics instead. Given that this is meant to be used for running AoC solutions locally, the
+/// latter might be acceptable to most.
+///
 /// [`for_puzzle`]: Self::for_puzzle
 /// [`into_string`]: Self::into_string
 /// [these instructions]: https://github.com/clechasseur/aocf/blob/efe2bdef7c90735f5ffd1f4370f54d6817b9c9ba/cookie.md
@@ -153,6 +160,7 @@ pub struct PuzzleId {
 /// [`lines_into`]: Self::lines_into
 /// [`split_into`]: Self::split_into
 /// [`separators`]: Self::separators
+/// [`try_lines_into`]: Self::try_lines_into
 #[derive(Debug, Clone)]
 pub struct Input<'a> {
     puzzle: Option<PuzzleId>,
@@ -257,8 +265,15 @@ impl<'a> Input<'a> {
     /// of contacting the AoC website. If the data has already been fetched
     /// via a previous call to [`try_get`] or [`get`], the same data is returned.
     ///
+    /// ## Note
+    ///
+    /// It is not necessary to call this method explicitly - all the parsing
+    /// methods like [`into_string`] call this to get the data, which means it
+    /// will be fetched automatically.
+    ///
     /// [`try_get`]: Self::try_get
     /// [`get`]: Self::get
+    /// [`into_string`]: Self::into_string
     pub fn try_get(mut self) -> crate::Result<Self> {
         if self.data.is_some() {
             return Ok(self);
@@ -275,10 +290,32 @@ impl<'a> Input<'a> {
 
     /// Tries to fetch the data from the AoC website using [`try_get`].
     /// Panics if an error occurs.
+    ///
+    /// ## Note
+    ///
+    /// It is not necessary to call this method explicitly - all the parsing
+    /// methods like [`into_string`] call this to get the data, which means it
+    /// will be fetched automatically.
+    ///
+    /// [`into_string`]: Self::into_string
     pub fn get(self) -> Self {
         self.try_get().expect("failed to get AOC puzzle input")
     }
 
+    /// Attempts to parse the entire input data into a value that implements
+    /// `FromStr`. Returns an error if parsing fails.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// ## Note
+    ///
+    /// If you want the raw input data for manual parsing, [`into_string`] might be
+    /// easier to use.
+    ///
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
+    /// [`into_string`]: Self::into_string
     pub fn try_into<T>(self) -> crate::Result<T>
     where
         T: FromStr,
@@ -291,6 +328,30 @@ impl<'a> Input<'a> {
             .map_err(|e| anyhow!("failed to parse data: {e:?}"))
     }
 
+    /// Parse the entire input data into a value that implements `FromStr`.
+    /// Panics if parsing fails.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// # use aoclp::aoc::Input;
+    ///
+    /// fn input() -> usize {
+    ///     Input::for_puzzle(2017, 3).into()
+    /// }
+    /// ```
+    ///
+    /// ## Note
+    ///
+    /// If you want the raw input data for manual parsing, [`into_string`] might be
+    /// easier to use.
+    ///
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
+    /// [`into_string`]: Self::into_string
     pub fn into<T>(self) -> T
     where
         T: FromStr,
@@ -299,12 +360,26 @@ impl<'a> Input<'a> {
         self.try_into().unwrap()
     }
 
-    pub fn try_into_string(self) -> crate::Result<String> {
-        self.try_into()
-    }
-
+    /// Returns the entire input data, unparsed.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// # use aoclp::aoc::Input;
+    ///
+    /// fn input() -> String {
+    ///     Input::for_puzzle(2017, 3).into_string()
+    /// }
+    /// ```
+    ///
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
     pub fn into_string(self) -> String {
-        self.into()
+        self.try_into()
+            .expect("puzzle data should always be convertible to a string")
     }
 
     pub fn try_lines_into<T>(self) -> crate::Result<Vec<T>>
@@ -372,7 +447,7 @@ impl<'a> Input<'a> {
         <T as FromStr>::Err: std::fmt::Debug,
         <U as FromStr>::Err: std::fmt::Debug,
     {
-        let data = self.try_into_string()?;
+        let data = self.into_string();
 
         let first = Self::parse_lines(data.lines().take_while(|line| !line.is_empty()))?;
         let second = Self::parse_lines(data.lines().skip_while(|line| !line.is_empty()).skip(1))?;
@@ -401,7 +476,7 @@ impl<'a> Input<'a> {
         <U as FromStr>::Err: std::fmt::Debug,
     {
         let separators = self.separators;
-        let data = self.try_into_string()?;
+        let data = self.into_string();
 
         let first = Self::split_and_parse_lines(
             data.lines().take_while(|line| !line.is_empty()),
