@@ -28,7 +28,7 @@ jobs:
           cache: false
 
       - name: Rust Cache
-        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
         with:
           prefix-key: v1.0.0-rust
           cache-on-failure: true
@@ -39,13 +39,13 @@ jobs:
           version: v1.21.1
 
       - name: Install cargo-hack
-        uses: clechasseur/rs-cargo@v5.1.0
+        uses: clechasseur/rs-cargo@v5.1.1
         with:
           command: binstall
           args: -y cargo-hack@0.6.45
 
       - name: Run clippy
-        uses: clechasseur/rs-clippy-check@v6.1.0
+        uses: clechasseur/rs-clippy-check@v6.1.1
         with:
           args: --workspace --all-targets --feature-powerset -- -D warnings
           tool: cargo-hack
@@ -66,7 +66,7 @@ jobs:
           cache: false
 
       - name: Run Rustfmt
-        uses: clechasseur/rs-fmt-check@v4.0.8
+        uses: clechasseur/rs-fmt-check@v4.0.9
         with:
           args: --all
 
@@ -90,7 +90,7 @@ jobs:
           cache: false
 
       - name: Rust Cache
-        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
         with:
           prefix-key: v1.0.0-rust
           key: package-${{ matrix.package }}-msrv-pins-files-${{ hashFiles('**/msrv-pins.toml') }}
@@ -102,7 +102,7 @@ jobs:
           version: v1.21.1
 
       - name: Install required tools
-        uses: clechasseur/rs-cargo@v5.1.0
+        uses: clechasseur/rs-cargo@v5.1.1
         with:
           command: binstall
           args: -y just@1.58.0 cargo-hack@0.6.45 cargo-minimal-versions@0.1.37 cargo-msrv-prep@2.1.2
@@ -130,7 +130,7 @@ jobs:
           cache: false
 
       - name: Rust Cache
-        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
         with:
           prefix-key: v1.0.0-rust
           cache-on-failure: true
@@ -141,7 +141,7 @@ jobs:
           version: v1.21.1
 
       - name: Install required tools
-        uses: clechasseur/rs-cargo@v5.1.0
+        uses: clechasseur/rs-cargo@v5.1.1
         with:
           command: binstall
           args: -y just@1.58.0 cargo-hack@0.6.45
