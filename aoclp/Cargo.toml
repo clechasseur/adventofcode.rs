@@ -35,8 +35,8 @@ check-cfg = [
 [dependencies]
 anyhow = { workspace = true }
 itertools = { workspace = true }
-paste = { workspace = true }
 num = { workspace = true }
+paste = { workspace = true }
 regex = { workspace = true }
 reqwest = { workspace = true, features = ["blocking"] }
 strum = { workspace = true, features = ["derive"] }
