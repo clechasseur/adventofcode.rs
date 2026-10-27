@@ -382,6 +382,15 @@ impl<'a> Input<'a> {
             .expect("puzzle data should always be convertible to a string")
     }
 
+    /// Splits the input data into lines and attempts to parse each line into a
+    /// value that implements `FromStr`. Returns an error if parsing fails for any
+    /// single line.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
     pub fn try_lines_into<T>(self) -> crate::Result<Vec<T>>
     where
         T: FromStr,
@@ -390,12 +399,129 @@ impl<'a> Input<'a> {
         Self::parse_lines(self.into_string().lines())
     }
 
+    /// Splits the input data into lines and parses each line into a value that implements
+    /// `FromStr`. Returns the list of resulting values. Panics if parsing fails for any
+    /// single line.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// # use std::convert::Infallible;
+    /// # use std::str::FromStr;
+    ///
+    /// # use aoclp::aoc::Input;
+    ///
+    /// #[derive(Debug)]
+    /// pub struct ProgramSpec {
+    ///     pub name: String,
+    ///     pub weight: usize,
+    ///     pub sub_programs: Vec<String>,
+    /// }
+    ///
+    /// impl FromStr for ProgramSpec {
+    ///     type Err = Infallible;
+    ///
+    ///     fn from_str(s: &str) -> Result<Self, Self::Err> {
+    ///         // ...parsing implementation...
+    ///         # Ok(Self { name: "pbga".into(), weight: 66, sub_programs: vec![] })
+    ///     }
+    /// }
+    ///
+    /// fn input() -> Vec<ProgramSpec> {
+    ///     Input::for_puzzle(2017, 7).lines_into()
+    /// }
+    /// ```
+    ///
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
     pub fn lines_into<T>(self) -> Vec<T>
     where
         T: FromStr,
         <T as FromStr>::Err: std::fmt::Debug,
     {
         self.try_lines_into().unwrap()
+    }
+
+    /// Splits the input data's only line using the [`separators`] and attempts to parse
+    /// each element into a value implementing `FromStr`. Returns an error if the input
+    /// data is empty, if it contains more than one line or if parsing fails for any
+    /// single element.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// [`separators`]: Self::separators
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
+    pub fn try_split_into<T>(self) -> Result<Vec<T>, crate::Error>
+    where
+        T: FromStr,
+        <T as FromStr>::Err: std::fmt::Debug,
+    {
+        self.try_split_lines_into().and_then(|vecs| {
+            vecs.into_iter()
+                .exactly_one()
+                .map_err(|_| anyhow!("expected one line"))
+        })
+    }
+
+    /// Splits the input data's only line using the [`separators`] and parses each element
+    /// into a value implementing `FromStr`. Panics if the input data is empty, if it contains
+    /// more than one line or if parsing fails for any single element.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// # use aoclp::aoc::Input;
+    ///
+    /// #[derive(Debug, Copy, Clone, strum::EnumString)]
+    /// #[strum(serialize_all = "snake_case")]
+    /// enum HexDirection {
+    ///     NW,
+    ///     N,
+    ///     NE,
+    ///     SE,
+    ///     S,
+    ///     SW,
+    /// }
+    ///
+    /// fn input() -> Vec<HexDirection> {
+    ///     Input::for_puzzle(2017, 11).split_into()
+    /// }
+    /// ```
+    ///
+    /// [`separators`]: Self::separators
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
+    pub fn split_into<T>(self) -> Vec<T>
+    where
+        T: FromStr,
+        <T as FromStr>::Err: std::fmt::Debug,
+    {
+        self.try_split_into().unwrap()
+    }
+
+    pub fn try_split_lines_into<T>(self) -> Result<Vec<Vec<T>>, crate::Error>
+    where
+        T: FromStr,
+        <T as FromStr>::Err: std::fmt::Debug,
+    {
+        let separators = self.separators;
+        Self::split_and_parse_lines(self.into_string().lines(), separators)
+    }
+
+    pub fn split_lines_into<T>(self) -> Vec<Vec<T>>
+    where
+        T: FromStr,
+        <T as FromStr>::Err: std::fmt::Debug,
+    {
+        self.try_split_lines_into().unwrap()
     }
 
     pub fn try_lines_into_pairs<T>(self) -> crate::Result<Vec<(T, T)>>
@@ -421,23 +547,6 @@ impl<'a> Input<'a> {
         <T as FromStr>::Err: std::fmt::Debug,
     {
         self.try_lines_into_pairs().unwrap()
-    }
-
-    pub fn try_split_lines_into<T>(self) -> Result<Vec<Vec<T>>, crate::Error>
-    where
-        T: FromStr,
-        <T as FromStr>::Err: std::fmt::Debug,
-    {
-        let separators = self.separators;
-        Self::split_and_parse_lines(self.into_string().lines(), separators)
-    }
-
-    pub fn split_lines_into<T>(self) -> Vec<Vec<T>>
-    where
-        T: FromStr,
-        <T as FromStr>::Err: std::fmt::Debug,
-    {
-        self.try_split_lines_into().unwrap()
     }
 
     pub fn try_two_types_of_lines_into<T, U>(self) -> crate::Result<(Vec<T>, Vec<U>)>
@@ -497,23 +606,6 @@ impl<'a> Input<'a> {
         <U as FromStr>::Err: std::fmt::Debug,
     {
         self.try_split_two_types_of_lines_into().unwrap()
-    }
-
-    pub fn try_split_into<T>(self) -> Result<Vec<T>, crate::Error>
-    where
-        T: FromStr,
-        <T as FromStr>::Err: std::fmt::Debug,
-    {
-        self.try_split_lines_into()
-            .and_then(|vecs| vecs.into_iter().next().ok_or_else(|| anyhow!("empty data")))
-    }
-
-    pub fn split_into<T>(self) -> Vec<T>
-    where
-        T: FromStr,
-        <T as FromStr>::Err: std::fmt::Debug,
-    {
-        self.try_split_into().unwrap()
     }
 
     pub fn try_into_terrain<T>(self) -> crate::Result<Vec<Vec<T>>>
