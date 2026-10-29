@@ -3,8 +3,8 @@ use std::rc::Rc;
 
 use aoclp::aoc::Input;
 use bit_vec::BitVec;
-use gratte::EnumString;
 use itertools::Itertools;
+use strum::EnumString;
 
 pub fn part_1() -> usize {
     let mut machine = TuringMachine::default();

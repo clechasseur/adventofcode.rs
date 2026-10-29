@@ -3,8 +3,8 @@ use std::iter::successors;
 use aoclp::aoc::Input;
 use aoclp::num::zero;
 use aoclp::positioning::pt::{Pt, manhattan};
-use gratte::EnumString;
 use itertools::Itertools;
+use strum::EnumString;
 
 pub fn part_1() -> usize {
     distance_to(child_position())

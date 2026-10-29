@@ -2,7 +2,7 @@ use aoclp::aoc::Input;
 use aoclp::positioning::direction::four_points::Direction4;
 use aoclp::positioning::pt::Pt;
 use aoclp::positioning::turtle::Turtle;
-use gratte::{EnumCount, FromRepr};
+use strum::{EnumCount, FromRepr};
 
 pub fn part_1() -> usize {
     infections_after(10_000, false)
