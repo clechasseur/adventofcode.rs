@@ -3,9 +3,9 @@ use std::str::FromStr;
 
 use aoclp::anyhow::{Context, anyhow};
 use aoclp::aoc::Input;
-use gratte::EnumDiscriminants;
 use itertools::Itertools;
 use primes::is_prime;
+use strum::EnumDiscriminants;
 
 use crate::y2017::helpers::duet::{Registers, Value, read_register, read_value};
 

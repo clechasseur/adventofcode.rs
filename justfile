@@ -109,6 +109,10 @@ build *extra_args:
 update *extra_args:
     {{cargo}} update {{extra_args}}
 
+# Run `cargo audit`
+audit *extra_args:
+    {{cargo}} audit {{extra_args}}
+
 # Run `cargo tarpaulin` to produce code coverage
 @tarpaulin *extra_args: (_run-tests cargo_tarpaulin "--target-dir target/tarpaulin-target" extra_args)
     {{ if open == "true" { "just _open-tarpaulin" } else { "" } }}

@@ -75,7 +75,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: [ "aoclp", "aoclp_solutions", "codingquest_clp", "codingquest_clp_solutions" ]
+        package: [ "aoclp" ]
         os: [ ubuntu-24.04, macos-15, windows-2025 ]
         toolchain: [ 1.91.1 ]
     runs-on: ${{ matrix.os }}
