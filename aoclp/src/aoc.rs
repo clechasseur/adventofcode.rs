@@ -151,6 +151,12 @@ pub struct PuzzleId {
 /// panics instead. Given that this is meant to be used for running AoC solutions locally, the
 /// latter might be acceptable to most.
 ///
+/// ### Puzzle data cache path
+///
+/// By default, the local cache of puzzle data is stored in a subdirectory of the current directory
+/// named `.aoclp` (see [`DEFAULT_CACHE_PATH`]). It is possible to override this path by setting
+/// the [`AOCLP_CACHE_PATH`] environment variable.
+///
 /// [`for_puzzle`]: Self::for_puzzle
 /// [`into_string`]: Self::into_string
 /// [these instructions]: https://github.com/clechasseur/aocf/blob/efe2bdef7c90735f5ffd1f4370f54d6817b9c9ba/cookie.md
@@ -161,6 +167,7 @@ pub struct PuzzleId {
 /// [`split_into`]: Self::split_into
 /// [`separators`]: Self::separators
 /// [`try_lines_into`]: Self::try_lines_into
+/// [`AOCLP_CACHE_PATH`]: CACHE_PATH_ENV_VAR
 #[derive(Debug, Clone)]
 pub struct Input<'a> {
     puzzle: Option<PuzzleId>,
@@ -507,6 +514,16 @@ impl<'a> Input<'a> {
         self.try_split_into().unwrap()
     }
 
+    /// Splits the input data into lines, then splits each line using the [`separators`] and
+    /// attempts to parse each element into a value implementing `FromStr`. Returns an error if
+    /// parsing fails for any single element.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// [`separators`]: Self::separators
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
     pub fn try_split_lines_into<T>(self) -> Result<Vec<Vec<T>>, crate::Error>
     where
         T: FromStr,
@@ -516,6 +533,26 @@ impl<'a> Input<'a> {
         Self::split_and_parse_lines(self.into_string().lines(), separators)
     }
 
+    /// Splits the input data into lines, then splits each line using the [`separators`] and
+    /// attempts to parse each element into a value implementing `FromStr`. Panics if parsing
+    /// fails for any single element.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// # use aoclp::aoc::Input;
+    ///
+    /// fn input() -> Vec<Vec<i32>> {
+    ///     Input::for_puzzle(2017, 2).split_lines_into()
+    /// }
+    /// ```
+    ///
+    /// [`separators`]: Self::separators
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
     pub fn split_lines_into<T>(self) -> Vec<Vec<T>>
     where
         T: FromStr,
@@ -524,6 +561,17 @@ impl<'a> Input<'a> {
         self.try_split_lines_into().unwrap()
     }
 
+    /// Splits the input data into lines, then splits each line into a pair of elements using the
+    /// [`separators`], then attempts to parse both elements into a value implementing `FromStr`.
+    /// Returns an error if any line contains more than two elements or if parsing fails for any
+    /// single element.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// [`separators`]: Self::separators
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
     pub fn try_lines_into_pairs<T>(self) -> crate::Result<Vec<(T, T)>>
     where
         T: FromStr,
@@ -532,15 +580,37 @@ impl<'a> Input<'a> {
         let separators = self.separators;
         let vecs = Self::split_and_parse_lines(self.into_string().lines(), separators)?;
 
-        Ok(vecs
-            .into_iter()
+        vecs.into_iter()
             .map(|v| {
-                let (a, b) = v.into_iter().collect_tuple().unwrap();
-                (a, b)
+                let (a, b) = v
+                    .into_iter()
+                    .collect_tuple()
+                    .ok_or_else(|| anyhow!("expected line to contain pair of elements"))?;
+                Ok((a, b))
             })
-            .collect())
+            .collect()
     }
 
+    /// Splits the input data into lines, then splits each line into a pair of elements using the
+    /// [`separators`], then attempts to parse both elements into a value implementing `FromStr`.
+    /// Panics if any line contains more than two elements or if parsing fails for any single element.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// # use aoclp::aoc::Input;
+    ///
+    /// fn input() -> Vec<(i64, i64)> {
+    ///     Input::for_puzzle(2024, 1).lines_into_pairs()
+    /// }
+    /// ```
+    ///
+    /// [`separators`]: Self::separators
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
     pub fn lines_into_pairs<T>(self) -> Vec<(T, T)>
     where
         T: FromStr,
@@ -549,6 +619,16 @@ impl<'a> Input<'a> {
         self.try_lines_into_pairs().unwrap()
     }
 
+    /// Like [`try_lines_into`], but for puzzle input that contains two separate set of lines,
+    /// separated by an empty line. Splits both sections into lines and attempts to parse each line
+    /// into a value that implements `FromStr`. Returns an error if parsing fails for any single line.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// [`try_lines_into`]: Self::try_lines_into
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
     pub fn try_two_types_of_lines_into<T, U>(self) -> crate::Result<(Vec<T>, Vec<U>)>
     where
         T: FromStr,
@@ -564,6 +644,42 @@ impl<'a> Input<'a> {
         Ok((first, second))
     }
 
+    /// Like [`lines_into`], but for puzzle input that contains two separate set of lines, separated
+    /// by an empty line. Splits both sections into lines and attempts to parse each line into a
+    /// value that implements `FromStr`. Panics if parsing fails for any single line.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// # use std::ops::RangeInclusive;
+    /// # use std::str::FromStr;
+    ///
+    /// # use aoclp::aoc::Input;
+    /// # use itertools::Itertools;
+    ///
+    /// #[derive(Debug, Clone)]
+    /// struct IdRange(RangeInclusive<usize>);
+    ///
+    /// impl FromStr for IdRange {
+    ///     type Err = aoclp::Error;
+    ///
+    ///     fn from_str(s: &str) -> Result<Self, Self::Err> {
+    ///         let (from, to) = s.split('-').collect_tuple().unwrap();
+    ///         Ok(Self(from.parse()?..=to.parse()?))
+    ///     }
+    /// }
+    ///
+    /// fn input() -> (Vec<IdRange>, Vec<usize>) {
+    ///     Input::for_puzzle(2025, 5).two_types_of_lines_into()
+    /// }
+    /// ```
+    ///
+    /// [`lines_into`]: Self::lines_into
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
     pub fn two_types_of_lines_into<T, U>(self) -> (Vec<T>, Vec<U>)
     where
         T: FromStr,
@@ -574,6 +690,18 @@ impl<'a> Input<'a> {
         self.try_two_types_of_lines_into().unwrap()
     }
 
+    /// Like [`try_split_lines_into`], but for puzzle input that contains two separate set of lines,
+    /// separated by an empty line. Splits both sections into lines, then splits each line using the
+    /// [`separators`] and attempts to parse each element into a value implementing `FromStr`.
+    /// Returns an error if parsing fails for any single element.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// [`try_split_lines_into`]: Self::try_split_lines_into
+    /// [`separators`]: Self::separators
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
     #[allow(clippy::type_complexity)]
     pub fn try_split_two_types_of_lines_into<T, U>(
         self,
@@ -598,6 +726,49 @@ impl<'a> Input<'a> {
         Ok((first, second))
     }
 
+    /// Like [`split_lines_into`], but for puzzle input that contains two separate set of lines,
+    /// separated by an empty line. Splits both sections into lines, then splits each line using the
+    /// [`separators`] and attempts to parse each element into a value implementing `FromStr`.
+    /// Panics if parsing fails for any single element.
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// # use aoclp::aoc::Input;
+    /// # use itertools::Itertools;
+    ///
+    /// #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+    /// struct Rule(u64, u64);
+    ///
+    /// impl From<Vec<u64>> for Rule {
+    ///     fn from(v: Vec<u64>) -> Self {
+    ///         let (first, second) = v.into_iter().collect_tuple().unwrap();
+    ///         Self(first, second)
+    ///     }
+    /// }
+    ///
+    /// #[derive(Debug, Clone)]
+    /// struct Update(Vec<u64>);
+    ///
+    /// impl From<Vec<u64>> for Update {
+    ///     fn from(v: Vec<u64>) -> Self {
+    ///         Self(v)
+    ///     }
+    /// }
+    ///
+    /// fn input() -> (Vec<Rule>, Vec<Update>) {
+    ///     let (rules, updates) = Input::for_puzzle(2024, 5).split_two_types_of_lines_into();
+    ///     (rules.into_iter().map_into().collect(), updates.into_iter().map_into().collect())
+    /// }
+    /// ```
+    ///
+    /// [`split_lines_into`]: Self::split_lines_into
+    /// [`separators`]: Self::separators
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
     pub fn split_two_types_of_lines_into<T, U>(self) -> (Vec<Vec<T>>, Vec<Vec<U>>)
     where
         T: FromStr,
@@ -608,22 +779,43 @@ impl<'a> Input<'a> {
         self.try_split_two_types_of_lines_into().unwrap()
     }
 
-    pub fn try_into_terrain<T>(self) -> crate::Result<Vec<Vec<T>>>
-    where
-        T: From<char>,
-    {
-        Ok(self
-            .into::<String>()
-            .lines()
-            .map(|line| line.chars().map(Into::into).collect())
-            .collect())
-    }
-
+    /// Splits the input data into a matrix of characters representing a "terrain",
+    /// then converts each character into a "tile".
+    ///
+    /// Calls [`try_get`] to get the input data; if [`for_puzzle`] was used, this
+    /// will fetch the puzzle data from the AoC website automatically.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// # use aoclp::aoc::Input;
+    ///
+    /// #[derive(Debug, Copy, Clone)]
+    /// struct Tile {
+    ///     height: usize,
+    /// }
+    ///
+    /// impl From<char> for Tile {
+    ///     fn from(c: char) -> Self {
+    ///         Self { height: c.to_digit(10).unwrap() as usize }
+    ///     }
+    /// }
+    ///
+    /// fn input() -> Vec<Vec<Tile>> {
+    ///     Input::for_puzzle(2024, 10).into_terrain()
+    /// }
+    /// ```
+    ///
+    /// [`try_get`]: Self::try_get
+    /// [`for_puzzle`]: Self::for_puzzle
     pub fn into_terrain<T>(self) -> Vec<Vec<T>>
     where
         T: From<char>,
     {
-        self.try_into_terrain().unwrap()
+        self.into_string()
+            .lines()
+            .map(|line| line.chars().map(<_>::into).collect())
+            .collect()
     }
 
     fn parse_lines<T, L, S>(lines: L) -> crate::Result<Vec<T>>
