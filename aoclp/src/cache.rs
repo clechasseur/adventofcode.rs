@@ -5,16 +5,24 @@ use std::str::FromStr;
 
 use crate::anyhow::Context;
 
+/// A key/value map that stores data on disk.
+///
+/// Used by [`Input`] to cache puzzle data.
+///
+/// [`Input`]: crate::aoc::Input
 #[derive(Debug)]
 pub struct DiskCache {
     path: PathBuf,
 }
 
-pub const CACHE_FILE_EXT: &str = ".txt";
-pub const CACHE_FILE_TMP_EXT: &str = ".txt.tmp";
-pub const CACHE_FILE_PC_EXT: &str = ".txt.pc";
+const CACHE_FILE_EXT: &str = ".txt";
+const CACHE_FILE_TMP_EXT: &str = ".txt.tmp";
+const CACHE_FILE_PC_EXT: &str = ".txt.pc";
 
 impl DiskCache {
+    /// Creates a new disk cache storing data in the given directory.
+    ///
+    /// The cache directory will be created if it doesn't exist already.
     pub fn new<P>(path: P) -> crate::Result<Self>
     where
         P: AsRef<Path>,
@@ -25,6 +33,17 @@ impl DiskCache {
         Ok(Self { path })
     }
 
+    /// Returns the value stored in the cache for the given key.
+    ///
+    /// The key is used as file name to store the data, so must be a legal file name.
+    ///
+    /// ## Return value
+    ///
+    /// | When...                   | Return value     |
+    /// |---------------------------|------------------|
+    /// | Key is in the cache       | `Ok(Some(data))` |
+    /// | Key is not in the cache   | `Ok(None)`       |
+    /// | Error occurs loading data | `Err(error)`     |
     pub fn get<K, T>(&self, key: K) -> crate::Result<Option<T>>
     where
         K: AsRef<str>,
@@ -58,6 +77,10 @@ impl DiskCache {
         ))
     }
 
+    /// Stores a value in the cache, associating it with the given key. Any existing
+    /// data associated with that key is overwritten.
+    ///
+    /// The key is used as file name to store the data, so must be a legal file name.
     pub fn set<K, T>(&self, key: K, value: T) -> crate::Result<()>
     where
         K: AsRef<str>,
