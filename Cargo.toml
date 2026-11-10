@@ -5,7 +5,7 @@ default-members = ["aoclp_solutions"]
 
 [workspace.dependencies]
 anyhow = "1.0.104"
-bit-vec = "0.10.1"
+bit-vec = "0.10.2"
 clap = "4.6.7"
 derive-where = "1.7.0"
 dotenv = { package = "dotenv-ng", version = "1.0.0" }
