@@ -3,6 +3,44 @@ use std::iter::FusedIterator;
 use std::vec;
 
 pub trait LoopingItertools: Iterator {
+    /// Iterates the sequence to find a loop, then returns an iterator that will return the
+    /// same elements as this one, except the loop is efficiently repeated from an internal list.
+    ///
+    /// The goal of this is to use it on infinite looping sequences and still be able to efficiently
+    /// iterate the sequence. Also, because we define a fixed size limit on the returned sequence,
+    /// it's possible to use [`last`] and know the sequence's [`len`]. [`last`], [`len`] and [`nth`]
+    /// are all `O(1)`.
+    ///
+    /// If the sequence does not contain a loop, this method returns `None`.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// use aoclp::looping::LoopingItertools;
+    /// use aoclp::positioning::turtle::Turtle;
+    ///
+    /// // A function that returns the path of a guard on a plane. Computing the guard's
+    /// // movements is non-trivial and the path is long; at some point, it will loop back
+    /// // to a previously-seen position.
+    /// fn guard_path() -> impl Iterator<Item = Turtle> {
+    ///     // ... code here ...
+    ///     # std::iter::empty()
+    /// }
+    ///
+    /// pub fn part_2() -> usize {
+    ///     // The max loop size could be arbitrary if we don't know how to calculate it.
+    ///     let path = guard_path().looping(1_000_000).unwrap();
+    ///
+    ///     // This would be impossible to do with an infinite iterator.
+    ///     let last_pos = path.last();
+    ///
+    ///     # 0
+    /// }
+    /// ```
+    ///
+    /// [`last`]: Iterator::last
+    /// [`len`]: ExactSizeIterator::len
+    /// [`nth`]: Iterator::nth
     fn looping(self, size: usize) -> Option<Looping<Self::Item>>
     where
         Self: Sized,
