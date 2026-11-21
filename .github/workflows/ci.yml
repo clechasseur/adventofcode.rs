@@ -75,8 +75,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: [ "aoclp", "aoclp_solutions", "codingquest_clp", "codingquest_clp_solutions" ]
-        os: [ ubuntu-24.04, macos-15, windows-2025 ]
+        package: [ "aoclp" ]
+        os: [ ubuntu-26.04, macos-26, windows-2025 ]
         toolchain: [ 1.91.1 ]
     runs-on: ${{ matrix.os }}
     steps:
@@ -117,7 +117,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-24.04, macos-15, windows-2025 ]
+        os: [ ubuntu-26.04, macos-26, windows-2025 ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
