@@ -4,6 +4,125 @@ use std::marker::PhantomData;
 
 use itertools::Itertools;
 
+/// Macro used to gather functions used to solve [Advent of Code] puzzles
+/// and build a [`Solvers`] object allowing to call them easily.
+///
+/// ## Usage
+///
+/// In order to use this macro, your solver functions must follow a strict
+/// module structure so that the macro can locate the solver functions.
+/// Your project can contain solvers for multiple years. Each day must have
+/// two solver functions, one for each puzzle part.
+///
+/// The macro then generates a function named `solvers` that takes no
+/// argument and returns a [`Solvers`], which can then be used to invoke
+/// the solver for a given year, day and part (1 or 2).
+///
+/// Solver functions must be accessible from the macro invocation point.
+/// Each solver function must take no argument and return a type that
+/// implements [`Display`].
+///
+/// ## Example
+///
+/// ```
+/// # use aoclp::build_solvers;
+///
+/// /// First, a module for all puzzles in a given year.
+/// /// The name must be in the format `y<year>`.
+/// ///
+/// /// (Of course, the layout could
+/// pub mod y2024 {
+///     /// Next, a module for the solvers of the puzzles in a given day.
+///     /// The name must be in the format `day_<day>`.
+///     ///
+///     /// Trailing zeroes are optional.
+///     pub mod day_01 {
+///         /// Finally, two functions, one for each puzzle part.
+///         /// The name must be in the format `part_<part>` where `<part>`
+///         /// must be `1` or `2` (no trailing zeroes).
+///         pub fn part_1() -> usize {
+///             // ...
+///             # 0
+///         }
+///
+///         /// Each day must have two solvers, one for each part; if the
+///         /// second part isn't solved yet or if the day has only one
+///         /// part (e.g., the last day of the Advent calendar), simply
+///         /// define a function that returns a dummy value.
+///         pub fn part_2() -> usize {
+///             // ...
+///             # 0
+///         }
+///     }
+///
+///     /// Each year can have solvers for multiple days.
+///     pub mod day_02 {
+///         // ...
+///         # pub fn part_1() -> usize {
+///         #     0
+///         # }
+///         #
+///         # pub fn part_2() -> usize {
+///         #     0
+///         # }
+///     }
+/// }
+///
+/// /// Your project can contain solvers for multiple years.
+/// pub mod y2025 {
+///     pub mod day_01 {
+///         // ...
+///         # pub fn part_1() -> usize {
+///         #     0
+///         # }
+///         #
+///         # pub fn part_2() -> usize {
+///         #     0
+///         # }
+///     }
+/// }
+///
+/// /// This builds the `solvers` function.
+/// build_solvers! {
+///     { 2024, [01, 02] }, // If you used trailing zeroes, you must also use them here.
+///     { 2025, [01] }
+/// }
+///
+/// // This returns a `Solvers`.
+/// let aoc_solvers = solvers();
+///
+/// // `years` can be used to iterate all years for which there are solvers.
+/// // They will be returned as `i32` values, in ascending order.
+/// let mut years = aoc_solvers.years();
+/// assert_eq!(Some(2024), years.next());
+/// assert_eq!(Some(2025), years.next());
+/// assert_eq!(None, years.next());
+///
+/// // `days` can be used to iterate all days for which there are solvers in a given year.
+/// // They will be returned as `usize` values, in the order in which they have been
+/// // passed to the `build_solvers!` macro.
+/// let mut days = aoc_solvers.days(2024);
+/// assert_eq!(Some(1), days.next());
+/// assert_eq!(Some(2), days.next());
+/// assert_eq!(None, days.next());
+///
+/// // `solve` can be used to invoke the solver for a given year, day and puzzle part.
+/// // The value returned by the solver function will be converted to a string via
+/// // `to_string` and returned as a `String`.
+/// let solution = aoc_solvers.solve(2024, 1, 1);
+/// assert_eq!("0", solution);
+/// ```
+///
+/// ## See Also
+///
+/// For more information on the API used to invoke the solvers, see [`Solvers`].
+///
+/// For an example on how to use this API to build a command-line tool that can be
+/// used to invoke your solvers, see [this lib file] and [this main file].
+///
+/// [Advent of Code]: https://adventofcode.com/
+/// [this lib file]: https://github.com/clechasseur/adventofcode.rs/blob/d604ab1da82dd8fa1dc4fc9e6b0c7c6d322037f9/aoclp_solutions/src/lib.rs
+/// [this main file]: https://github.com/clechasseur/adventofcode.rs/blob/d604ab1da82dd8fa1dc4fc9e6b0c7c6d322037f9/aoclp_solutions/src/main.rs
 #[macro_export]
 macro_rules! build_solvers {
     ( $({ $year:literal, [$($day:literal),+] }),+ ) => {
