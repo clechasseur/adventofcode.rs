@@ -6,7 +6,7 @@ pub trait ConsumingPredHelper<T, U> {
     /// ## Example
     ///
     /// ```
-    /// use aoclp::functional::ConsumingPredHelper;
+    /// # use aoclp::functional::ConsumingPredHelper;
     ///
     /// let f = |x: String| x.len();
     /// let by_ref = f.with_ref();
@@ -40,7 +40,7 @@ pub trait ByRefPredHelper<T, U> {
     /// ## Example
     ///
     /// ```
-    /// use aoclp::functional::ByRefPredHelper;
+    /// # use aoclp::functional::ByRefPredHelper;
     ///
     /// let f = |x: &String| x.len();
     /// let by_val = f.without_ref();

@@ -16,8 +16,8 @@ pub trait LoopingItertools: Iterator {
     /// ## Example
     ///
     /// ```no_run
-    /// use aoclp::looping::LoopingItertools;
-    /// use aoclp::positioning::turtle::Turtle;
+    /// # use aoclp::looping::LoopingItertools;
+    /// # use aoclp::positioning::turtle::Turtle;
     ///
     /// // A function that returns the path of a guard on a plane. Computing the guard's
     /// // movements is non-trivial and the path is long; at some point, it will loop back
