@@ -9,16 +9,16 @@ anyhow = "1.0.104"
 itertools = "0.15.0"
 num = "0.4.3"
 paste = "1.0.15"
-regex = "1.13.1"
+regex = "1.13.2"
 reqwest = "0.13.5"
 strum = { version = "0.28.0", features = ["derive"] }
 
 # Others:
-bit-vec = "0.10.1"
-clap = "4.6.7"
+bit-vec = "0.10.2"
+clap = "4.6.9"
 derive-where = "1.7.0"
-dotenv = { package = "dotenv-ng", version = "1.0.0" }
-fancy-regex = "0.20.0"
+dotenv-ng = "1.0.0"
+fancy-regex = "0.20.2"
 primes = "0.4.0"
 rayon = "1.12.0"
-z3 = { version = "0.22.0", features = ["gh-release"] }
+z3 = { version = "0.24.0", features = ["gh-release"] }
