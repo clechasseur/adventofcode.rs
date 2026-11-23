@@ -4,7 +4,7 @@ members = ["aoclp", "aoclp_solutions", "codingquest_clp", "codingquest_clp_solut
 default-members = ["aoclp_solutions"]
 
 [workspace.dependencies]
-anyhow = "1.0.104"
+anyhow = "1.0.105"
 bit-vec = "0.10.2"
 clap = "4.6.9"
 derive-where = "1.7.0"
