@@ -15,7 +15,4 @@ pub fn add_builtin_words(words: &mut Words) {
     words.insert("DROP".into(), wrap_fn_word(stack::drop));
     words.insert("SWAP".into(), wrap_fn_word(stack::swap));
     words.insert("OVER".into(), wrap_fn_word(stack::over));
-
-    // AoC additions:
-    words.insert("||".into(), wrap_fn_word(arith::concatenate));
 }
