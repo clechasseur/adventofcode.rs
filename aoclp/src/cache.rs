@@ -1,3 +1,9 @@
+//! Naive disk-based cache implementation used by [`Input`] to cache puzzle data locally.
+//!
+//! See [`DiskCache`].
+//!
+//! [`Input`]: crate::aoc::Input
+
 use std::error::Error;
 use std::fs::{create_dir_all, read_to_string, rename, write};
 use std::path::{Path, PathBuf, absolute};

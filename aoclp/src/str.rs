@@ -1,5 +1,10 @@
+//! Provides [`StrHelper`], a helper trait for string operations.
+
 use std::str::FromStr;
 
+/// Helper trait providing extension methods for strings.
+///
+/// Supports both `String` and `&str`.
 pub trait StrHelper {
     /// Splits the string at the given position and parses each of the
     /// two segments using [`parse`].

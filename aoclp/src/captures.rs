@@ -1,3 +1,5 @@
+//! Regular expression capture helpers.
+
 use std::str::FromStr;
 
 use crate::regex::Captures;
