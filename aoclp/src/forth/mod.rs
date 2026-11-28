@@ -58,7 +58,7 @@ use crate::forth::stack::Stack;
 use crate::forth::word::builtins::add_builtin_words;
 use crate::forth::word::custom::CustomWord;
 use crate::forth::word::value::ValueWord;
-use crate::forth::word::{WordRc, Words};
+use crate::forth::word::{WordRc, Words, wrap_fn_word};
 
 /// Values that can be pushed to a Forth [`Stack`] (`i64`s).
 pub type Value = i64;
@@ -193,6 +193,18 @@ impl Forth {
     /// Returns a reference to the current values on the interpreter's stack.
     pub fn stack(&self) -> &[Value] {
         &self.stack
+    }
+
+    /// Adds a word to the dictionary. The given function will be called when
+    /// the word is processed by the interpreter.
+    ///
+    /// If the word was already defined, its existing definition will be overwritten.
+    pub fn define_word<S, F>(&mut self, word: S, op: F)
+    where
+        S: Into<String>,
+        F: Fn(&mut Stack, &Words) -> Result<()> + 'static,
+    {
+        self.words.insert(word.into(), wrap_fn_word(op));
     }
 
     /// Evaluates an input sequence and executes its operations.

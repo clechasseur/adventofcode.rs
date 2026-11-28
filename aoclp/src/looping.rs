@@ -1,8 +1,53 @@
+//! Provides [`looping`], a helper to efficiently iterate complex sequences that loop.
+//!
+//! [`looping`]: LoopingItertools::looping
+
 use std::cmp::min;
 use std::iter::FusedIterator;
 use std::vec;
 
+/// Helper trait providing the [`looping`] helper for [`Iterator`]s.
+///
+/// [`looping`]: Self::looping
 pub trait LoopingItertools: Iterator {
+    /// Iterates the sequence to find a loop, then returns an iterator that will return the
+    /// same elements as this one, except the loop is efficiently repeated from an internal list.
+    ///
+    /// The goal of this is to use it on infinite looping sequences and still be able to efficiently
+    /// iterate the sequence. Also, because we define a fixed size limit on the returned sequence,
+    /// it's possible to use [`last`] and know the sequence's [`len`]. [`last`], [`len`] and [`nth`]
+    /// are all `O(1)`.
+    ///
+    /// If the sequence does not contain a loop, this method returns `None`.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// # use aoclp::looping::LoopingItertools;
+    /// # use aoclp::positioning::turtle::Turtle;
+    ///
+    /// // A function that returns the path of a guard on a plane. Computing the guard's
+    /// // movements is non-trivial and the path is long; at some point, it will loop back
+    /// // to a previously-seen position.
+    /// fn guard_path() -> impl Iterator<Item = Turtle> {
+    ///     // ... code here ...
+    ///     # std::iter::empty()
+    /// }
+    ///
+    /// pub fn part_2() -> usize {
+    ///     // The max loop size could be arbitrary if we don't know how to calculate it.
+    ///     let path = guard_path().looping(1_000_000).unwrap();
+    ///
+    ///     // This would be impossible to do with an infinite iterator.
+    ///     let last_pos = path.last();
+    ///
+    ///     # 0
+    /// }
+    /// ```
+    ///
+    /// [`last`]: Iterator::last
+    /// [`len`]: ExactSizeIterator::len
+    /// [`nth`]: Iterator::nth
     fn looping(self, size: usize) -> Option<Looping<Self::Item>>
     where
         Self: Sized,
@@ -29,6 +74,12 @@ pub trait LoopingItertools: Iterator {
 
 impl<I> LoopingItertools for I where I: Iterator + ?Sized {}
 
+/// Iterator implementation allowing efficient traversal of looping sequences.
+/// Implements [`Iterator`], [`ExactSizeIterator`] and [`FusedIterator`].
+///
+/// For more information and usage, see [`looping`].
+///
+/// [`looping`]: LoopingItertools::looping
 #[derive(Debug, Clone)]
 pub struct Looping<T> {
     prefix: vec::IntoIter<T>,
@@ -50,10 +101,37 @@ impl<T> Looping<T> {
         }
     }
 
+    /// Returns the length of the sequence's "prefix": the part that
+    /// is before the loop.
+    ///
+    /// ## Example
+    ///
+    /// ```
+    /// # use aoclp::looping::LoopingItertools;
+    ///
+    /// // In this sequence, the prefix is `2, 7, 3`. The loop starts at 11.
+    /// let seq = [2, 7, 3, 11, 4, 9, 1, 11];
+    ///
+    /// let loopy = seq.into_iter().looping(seq.len()).unwrap();
+    /// assert_eq!(3, loopy.prefix_len());
+    /// ```
     pub fn prefix_len(&self) -> usize {
         self.prefix_len
     }
 
+    /// Returns the items of the sequence comprising the loop.
+    ///
+    /// ## Example
+    ///
+    /// ```
+    /// # use aoclp::looping::LoopingItertools;
+    ///
+    /// // In this sequence, the loop is `11, 4, 9, 1`.
+    /// let seq = [2, 7, 3, 11, 4, 9, 1, 11];
+    ///
+    /// let loopy = seq.into_iter().looping(seq.len()).unwrap();
+    /// assert_eq!([11, 4, 9, 1], loopy.cycle_items());
+    /// ```
     pub fn cycle_items(&self) -> &[T] {
         &self.cycle
     }

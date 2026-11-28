@@ -1,3 +1,4 @@
+use std::io;
 use std::time::Instant;
 
 use aoclp::solvers::Solvers;
@@ -8,7 +9,7 @@ use dotenv::EnvLoader;
 fn main() -> aoclp::Result<()> {
     match unsafe { EnvLoader::new().load_and_modify() } {
         Ok(_) => (),
-        Err(dotenv::Error::Io(io_err, _)) if io_err.kind() == std::io::ErrorKind::NotFound => {
+        Err(dotenv::Error::Io(io_err, _)) if io_err.kind() == io::ErrorKind::NotFound => {
             println!(".env file not found in root")
         },
         Err(err) => return Err(err.into()),

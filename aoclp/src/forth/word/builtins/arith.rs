@@ -1,7 +1,6 @@
 //! Definition of built-in arithmetic Forth words, like `+`.
 
 use crate::forth;
-use crate::forth::Value;
 use crate::forth::stack::Stack;
 use crate::forth::word::Words;
 
@@ -80,15 +79,4 @@ pub fn quot(stack: &mut Stack, _dictionary: &Words) -> forth::Result<()> {
             Ok(())
         },
     }
-}
-
-// AoC addition:
-pub fn concatenate(stack: &mut Stack, _dictionary: &Words) -> forth::Result<()> {
-    let right = stack.pop()?;
-    let left = stack.pop()?;
-    let merged: Value = format!("{left}{right}")
-        .parse()
-        .map_err(|_| forth::Error::InvalidWord)?;
-    stack.push(merged);
-    Ok(())
 }

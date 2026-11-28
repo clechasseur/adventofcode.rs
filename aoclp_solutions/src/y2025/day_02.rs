@@ -10,7 +10,7 @@ pub fn part_1() -> usize {
     let pred = invalid;
 
     // Replace `pred` with this for the slow, regex-based approach:
-    // let re = fancy_regex::Regex::new(r"^(\d+)\1$").unwrap();
+    // let re = re();
     // let pred = |id: usize| re.is_match(&id.to_string()).unwrap();
 
     sum(pred)
@@ -20,10 +20,14 @@ pub fn part_2() -> usize {
     let pred = invalid_fancy;
 
     // Replace `pred` with this for the slow, regex-based approach:
-    // let re = fancy_regex::Regex::new(r"^(\d+)\1+$").unwrap();
+    // let re = re();
     // let pred = |id: usize| re.is_match(&id.to_string()).unwrap();
 
     sum(pred)
+}
+
+fn re() -> fancy_regex::Regex {
+    fancy_regex::Regex::new(r"^(\d+)\1$").unwrap()
 }
 
 fn sum<P>(pred: P) -> usize
